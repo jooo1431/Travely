@@ -12,7 +12,7 @@ public class ReservationRequest {
     @ApiModelProperty(example = "1", position = 1)
     private long userIdx;
 
-    @ApiModelProperty(example = "3", position = 2)
+    @ApiModelProperty(example = "2", position = 2)
     private long storeIdx;
 
     @ApiModelProperty(example = "20181224", position = 3)

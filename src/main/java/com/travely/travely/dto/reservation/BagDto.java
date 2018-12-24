@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class BagDto {
     @ApiModelProperty(example = "2", position = 1)
     private long bagCount;
-    @ApiModelProperty(example = "캐리어", position = 2)
+    @ApiModelProperty(example = "Carrier", position = 2)
     private BagType bagType;
 
     @Builder

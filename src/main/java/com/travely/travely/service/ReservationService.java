@@ -30,13 +30,13 @@ public class ReservationService {
         reservationMapper.saveReservation(reservation);
 
         List<BagDto> bagDtoList = reservationRequest.getBagList();
-        for(int i=0;i<bagDtoList.size();i++){
-            reservationMapper.saveBaggages(reserveIdx,bagDtoList.get(i));
+        for (int i = 0; i < bagDtoList.size(); i++) {
+            reservationMapper.saveBaggages(reserveIdx, bagDtoList.get(i));
         }
 
-        //가격정보 넣어야함
+        //bagDtoList를 넘겨서 가격정보 넣어야함
 
-        return new ReservationResponse(reservation,bagDtoList);
+        return new ReservationResponse(reservation, bagDtoList);
 
     }
 }
