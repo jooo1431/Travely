@@ -1,11 +1,13 @@
 package com.travely.travely.domain;
 
-import com.travely.travely.dto.reservation.ReservationReqDto;
+import com.travely.travely.dto.reservation.ReservationRequest;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Reservation {
     private String reserveIdx;
     private long userIdx;
@@ -33,16 +35,16 @@ public class Reservation {
     }
 
     @Builder
-    public Reservation(final String reserveIdx, final ReservationReqDto reservationReqDto,final int state){
+    public Reservation(final String reserveIdx, final ReservationRequest reservationRequest, final int state) {
         this.reserveIdx = reserveIdx;
-        this.userIdx = reservationReqDto.getUserIdx();
-        this.storeIdx = reservationReqDto.getStoreIdx();
-        this.startDate = reservationReqDto.getStartDate();
-        this.startDay = reservationReqDto.getStartDay();
-        this.startTime = reservationReqDto.getStartTime();
-        this.endDate = reservationReqDto.getEndDate();
-        this.endDay = reservationReqDto.getEndDay();
-        this.endTime = reservationReqDto.getEndTime();
+        this.userIdx = reservationRequest.getUserIdx();
+        this.storeIdx = reservationRequest.getStoreIdx();
+        this.startDate = reservationRequest.getStartDate();
+        this.startDay = reservationRequest.getStartDay();
+        this.startTime = reservationRequest.getStartTime();
+        this.endDate = reservationRequest.getEndDate();
+        this.endDay = reservationRequest.getEndDay();
+        this.endTime = reservationRequest.getEndTime();
         this.state = state;
     }
 }

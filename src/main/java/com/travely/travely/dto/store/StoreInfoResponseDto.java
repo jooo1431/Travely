@@ -12,9 +12,9 @@ public class StoreInfoResponseDto {
     private String localName;
 
     public StoreInfoResponseDto(final StoreJoinLocal storeJoinLocal) {
-        this.storeName=storeJoinLocal.getStoreName();
+        this.storeName = storeJoinLocal.getStoreName();
         this.cnt = storeJoinLocal.getCnt();
-        this.storeIdx=storeJoinLocal.getStoreIdx();
+        this.storeIdx = storeJoinLocal.getStoreIdx();
         this.localName = storeJoinLocal.getLocalName();
     }
 }

@@ -41,11 +41,11 @@ public class UsersSaveRequestDto {
     private String phone;
 
     @AssertTrue(message = "비밀번호 확인과 비밀번호가 일치하지 않습니다.")
-    private boolean isEqualConfigPassword(){
+    private boolean isEqualConfigPassword() {
         return password.equals(configPassword);
     }
 
-    public Users toEntity(PasswordEncoder passwordEncoder){
+    public Users toEntity(PasswordEncoder passwordEncoder) {
         return Users.builder()
                 .email(email)
                 .name(name)
