@@ -12,7 +12,7 @@ public enum StateType {
         value = value;
     }
 
-    public int getValue(){
+    public int getValue() {
         return value;
     }
 

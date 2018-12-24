@@ -35,11 +35,6 @@ public class ReservationService {
             reservationMapper.saveBaggages(reserveIdx, bagDtoList.get(i));
         }
 
-
-        List<Baggages> baggages = reservationMapper.getBaggages(reserveIdx);
-        log.info(Integer.toString(baggages.get(0).getBagType().getValue()));
-        log.info(baggages.get(0).getBagType().name());
-
         //bagDtoList를 넘겨서 가격정보 넣어야함
 
         return new ReservationResponse(reservation, bagDtoList);
