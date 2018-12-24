@@ -45,6 +45,8 @@ public class BaseSecurityHandler implements AuthenticationSuccessHandler, Authen
                                         HttpServletResponse response,
                                         AuthenticationException exception) throws IOException {
         log.warn("[BadCredentialsException] credentials exception {}", exception.getMessage());
+
+        response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
         if(exception.getMessage().equals(LoginContentTypeException.MESSAGE)){
