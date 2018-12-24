@@ -30,7 +30,7 @@ public class StoreController {
     @PostMapping
     public ResponseEntity<List<StoreInfoResponseDto>> getStore() {
         List<StoreInfoResponseDto> storeInfoResponseDtos = storeService.getStoreInfo();
-        if(storeInfoResponseDtos!=null) return ResponseEntity.ok().body(storeInfoResponseDtos);
+        if (storeInfoResponseDtos != null) return ResponseEntity.ok().body(storeInfoResponseDtos);
         else return ResponseEntity.ok().build();
     }
 }

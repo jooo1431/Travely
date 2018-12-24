@@ -20,9 +20,9 @@ public class StoreService {
     public List<StoreInfoResponseDto> getStoreInfo() {
 
         final List<StoreJoinLocal> storeJoinLocals = storeMapper.getStoreInfo();
-        List<StoreInfoResponseDto> storeInfoResponseDtos=new ArrayList<>();
+        List<StoreInfoResponseDto> storeInfoResponseDtos = new ArrayList<>();
 
-        if(storeJoinLocals.get(0) == null ) return storeInfoResponseDtos;
+        if (storeJoinLocals.get(0) == null) return storeInfoResponseDtos;
 
         for (int i = 0; i < storeJoinLocals.size(); i++) {
             StoreInfoResponseDto temp = new StoreInfoResponseDto(storeJoinLocals.get(i));
