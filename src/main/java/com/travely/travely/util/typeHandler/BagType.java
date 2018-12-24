@@ -1,6 +1,9 @@
-package com.travely.travely.util;
+package com.travely.travely.util.typeHandler;
 
-public enum BagType {
+
+import com.travely.travely.util.typeHandler.CommonEnum;
+
+public enum BagType implements CommonEnum {
     Carrier(0,"캐리어"),
     etc(1,"기타");
 
@@ -11,10 +14,20 @@ public enum BagType {
         value=value;
         message=message;
     }
+
+    @Override
     public int getValue(){
         return value;
     }
+
+    @Override
     public String getMessage(){
         return message;
     }
+
+    @Override
+    public String toString(){
+        return "";
+    }
+
 }

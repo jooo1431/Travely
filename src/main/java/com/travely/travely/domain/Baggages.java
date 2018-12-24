@@ -1,6 +1,6 @@
 package com.travely.travely.domain;
 
-import com.travely.travely.util.BagType;
+import com.travely.travely.util.typeHandler.BagType;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

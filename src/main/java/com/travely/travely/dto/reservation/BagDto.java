@@ -1,7 +1,7 @@
 package com.travely.travely.dto.reservation;
 
 import com.travely.travely.domain.Baggages;
-import com.travely.travely.util.BagType;
+import com.travely.travely.util.typeHandler.BagType;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Getter;
