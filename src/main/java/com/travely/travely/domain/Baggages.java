@@ -1,5 +1,6 @@
 package com.travely.travely.domain;
 
+import com.travely.travely.util.BagType;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,11 +11,11 @@ import lombok.NoArgsConstructor;
 public class Baggages {
     private long bagIdx;
     private long bagCount;
-    private long bagType;
+    private BagType bagType;
     private String reserveIdx;
 
     @Builder
-    public Baggages(long bagIdx, long bagCount, long bagType, String reserveIdx) {
+    public Baggages(long bagIdx, long bagCount, BagType bagType, String reserveIdx) {
         this.bagIdx = bagIdx;
         this.bagCount = bagCount;
         this.bagType = bagType;

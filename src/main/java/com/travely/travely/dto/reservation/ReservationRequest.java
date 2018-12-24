@@ -2,10 +2,12 @@ package com.travely.travely.dto.reservation;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Getter
+@NoArgsConstructor
 public class ReservationRequest {
     @ApiModelProperty(example = "1", position = 1)
     private long userIdx;

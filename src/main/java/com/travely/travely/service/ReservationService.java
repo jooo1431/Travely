@@ -6,7 +6,7 @@ import com.travely.travely.dto.reservation.BagDto;
 import com.travely.travely.dto.reservation.ReservationRequest;
 import com.travely.travely.dto.reservation.ReservationResponse;
 import com.travely.travely.mapper.ReservationMapper;
-import com.travely.travely.util.TypeUtil;
+import com.travely.travely.util.StateType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,17 +25,18 @@ public class ReservationService {
     public ReservationResponse saveReservation(final ReservationRequest reservationRequest) {
         final UUID uuid = UUID.randomUUID();
         final String reserveIdx = uuid.toString();
-        final int state = TypeUtil.ReservationState.결제완료.ordinal();
+        final int state = StateType.결제완료.ordinal();
         Reservation reservation = new Reservation(reserveIdx, reservationRequest, state);
         reservationMapper.saveReservation(reservation);
 
-        List<Baggages> baggages = reservationMapper.getBaggages(reserveIdx);
-        List<BagDto> bagDtos=new ArrayList<>();
-        for(int i=0;i<baggages.size();i++){
-            BagDto temp = new BagDto(baggages.get(i));
-            bagDtos.add(temp);
+        List<BagDto> bagDtoList = reservationRequest.getBagList();
+        for(int i=0;i<bagDtoList.size();i++){
+            reservationMapper.saveBaggages(reserveIdx,bagDtoList.get(i));
         }
-        return new ReservationResponse(reservation,bagDtos);
+
+        //가격정보 넣어야함
+
+        return new ReservationResponse(reservation,bagDtoList);
 
     }
 }
