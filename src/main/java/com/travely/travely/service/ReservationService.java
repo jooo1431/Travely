@@ -31,7 +31,7 @@ public class ReservationService {
 
         //최소-최대 결제 시간에 따른 승인-불허 로직 들어가야함
 
-        Reservation reservation = new Reservation(reserveIdx, reservationRequest, StateType.PayOk);
+        Reservation reservation = new Reservation(reserveIdx, reservationRequest, StateType.ReserveOk);
         reservationMapper.saveReservation(reservation);
 
         List<BagDto> bagDtoList = reservationRequest.getBagList();
@@ -44,7 +44,7 @@ public class ReservationService {
         final long storeIdx = reservationRequest.getStoreIdx();
         Store store = storeMapper.getStoreFindByStoreIdx(storeIdx);
 
-        return new ReservationResponse(reservation, bagDtoList, store);
+        return new ReservationResponse(reservation, bagDtoList, store,4000);
 
     }
 }
