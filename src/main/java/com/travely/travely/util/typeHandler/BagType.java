@@ -27,7 +27,7 @@ public enum BagType implements CommonEnum {
 
     @Override
     public String toString() {
-        return "";
+        return "value = "+getValue()+", message = "+getMessage();
     }
 
 }
