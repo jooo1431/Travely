@@ -40,7 +40,7 @@ public class ReservationService {
         }
 
         //bagDtoList를 넘겨서 가격정보 넣어야함
-        
+
         final long storeIdx = reservationRequest.getStoreIdx();
         Store store = storeMapper.getStoreFindByStoreIdx(storeIdx);
 
