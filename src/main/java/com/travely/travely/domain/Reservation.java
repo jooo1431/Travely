@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class Reservation {
     private String reserveIdx;
-    private long userIdx;
+    private long underUserIdx;
     private long storeIdx;
     private String startDate;
     private String startDay;
@@ -22,9 +22,9 @@ public class Reservation {
     private StateType stateType;
 
     @Builder
-    public Reservation(String reserveIdx, long userIdx, long storeIdx, String startDate, String startDay, String startTime, String endDate, String endDay, String endTime, StateType stateType) {
+    public Reservation(String reserveIdx, long underUserIdx, long storeIdx, String startDate, String startDay, String startTime, String endDate, String endDay, String endTime, StateType stateType) {
         this.reserveIdx = reserveIdx;
-        this.userIdx = userIdx;
+        this.underUserIdx = underUserIdx;
         this.storeIdx = storeIdx;
         this.startDate = startDate;
         this.startDay = startDay;
@@ -38,7 +38,7 @@ public class Reservation {
     @Builder
     public Reservation(final String reserveIdx, final ReservationRequest reservationRequest, final StateType stateType) {
         this.reserveIdx = reserveIdx;
-        this.userIdx = reservationRequest.getUserIdx();
+        this.underUserIdx = reservationRequest.getUserIdx();
         this.storeIdx = reservationRequest.getStoreIdx();
         this.startDate = reservationRequest.getStartDate();
         this.startDay = reservationRequest.getStartDay();

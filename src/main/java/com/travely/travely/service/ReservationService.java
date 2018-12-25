@@ -1,11 +1,12 @@
 package com.travely.travely.service;
 
-import com.travely.travely.domain.Baggages;
 import com.travely.travely.domain.Reservation;
+import com.travely.travely.domain.Store;
 import com.travely.travely.dto.reservation.BagDto;
 import com.travely.travely.dto.reservation.ReservationRequest;
 import com.travely.travely.dto.reservation.ReservationResponse;
 import com.travely.travely.mapper.ReservationMapper;
+import com.travely.travely.mapper.StoreMapper;
 import com.travely.travely.util.typeHandler.StateType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,12 +22,12 @@ import java.util.UUID;
 public class ReservationService {
 
     private final ReservationMapper reservationMapper;
+    private final StoreMapper storeMapper;
 
     @Transactional
     public ReservationResponse saveReservation(final ReservationRequest reservationRequest) {
         final UUID uuid = UUID.randomUUID();
         final String reserveIdx = uuid.toString();
-        //final int state = StateType.PayOk.getValue();
 
         //최소-최대 결제 시간에 따른 승인-불허 로직 들어가야함
 
@@ -39,8 +40,11 @@ public class ReservationService {
         }
 
         //bagDtoList를 넘겨서 가격정보 넣어야함
+        
+        final long storeIdx = reservationRequest.getStoreIdx();
+        Store store = storeMapper.getStoreFindByStoreIdx(storeIdx);
 
-        return new ReservationResponse(reservation, bagDtoList);
+        return new ReservationResponse(reservation, bagDtoList, store);
 
     }
 }
