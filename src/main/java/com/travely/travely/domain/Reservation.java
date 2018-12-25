@@ -1,6 +1,7 @@
 package com.travely.travely.domain;
 
 import com.travely.travely.dto.reservation.ReservationRequest;
+import com.travely.travely.util.typeHandler.StateType;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,10 +19,10 @@ public class Reservation {
     private String endDate;
     private String endDay;
     private String endTime;
-    private long state;
+    private StateType stateType;
 
     @Builder
-    public Reservation(String reserveIdx, long userIdx, long storeIdx, String startDate, String startDay, String startTime, String endDate, String endDay, String endTime, long state) {
+    public Reservation(String reserveIdx, long userIdx, long storeIdx, String startDate, String startDay, String startTime, String endDate, String endDay, String endTime, StateType stateType) {
         this.reserveIdx = reserveIdx;
         this.userIdx = userIdx;
         this.storeIdx = storeIdx;
@@ -31,11 +32,11 @@ public class Reservation {
         this.endDate = endDate;
         this.endDay = endDay;
         this.endTime = endTime;
-        this.state = state;
+        this.stateType = stateType;
     }
 
     @Builder
-    public Reservation(final String reserveIdx, final ReservationRequest reservationRequest, final int state) {
+    public Reservation(final String reserveIdx, final ReservationRequest reservationRequest, final StateType stateType) {
         this.reserveIdx = reserveIdx;
         this.userIdx = reservationRequest.getUserIdx();
         this.storeIdx = reservationRequest.getStoreIdx();
@@ -45,6 +46,6 @@ public class Reservation {
         this.endDate = reservationRequest.getEndDate();
         this.endDay = reservationRequest.getEndDay();
         this.endTime = reservationRequest.getEndTime();
-        this.state = state;
+        this.stateType = stateType;
     }
 }

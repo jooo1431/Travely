@@ -2,6 +2,7 @@ package com.travely.travely.dto.reservation;
 
 import com.travely.travely.domain.Baggages;
 import com.travely.travely.domain.Reservation;
+import com.travely.travely.util.typeHandler.StateType;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -19,7 +20,7 @@ public class ReservationResponse {
     private String endDate;
     private String endDay;
     private String endTime;
-    private long state;
+    private StateType stateType;
     private List<BagDto> bags;
 
     @Builder
@@ -33,7 +34,7 @@ public class ReservationResponse {
         this.endDate = reservation.getEndDate();
         this.endDay = reservation.getEndDay();
         this.endTime = reservation.getEndTime();
-        this.state = reservation.getState();
+        this.stateType = reservation.getStateType();
         this.bags = bags;
     }
 }

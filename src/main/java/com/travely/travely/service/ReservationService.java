@@ -26,11 +26,11 @@ public class ReservationService {
     public ReservationResponse saveReservation(final ReservationRequest reservationRequest) {
         final UUID uuid = UUID.randomUUID();
         final String reserveIdx = uuid.toString();
-        final int state = StateType.PayOk.getValue();
+        //final int state = StateType.PayOk.getValue();
 
         //최소-최대 결제 시간에 따른 승인-불허 로직 들어가야함
 
-        Reservation reservation = new Reservation(reserveIdx, reservationRequest, state);
+        Reservation reservation = new Reservation(reserveIdx, reservationRequest, StateType.PayOk);
         reservationMapper.saveReservation(reservation);
 
         List<BagDto> bagDtoList = reservationRequest.getBagList();
