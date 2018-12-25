@@ -11,8 +11,8 @@ public enum BagType implements CommonEnum {
     private String message;
 
     private BagType(int value, String message) {
-        value = value;
-        message = message;
+        this.value = value;
+        this.message = message;
     }
 
     @Override

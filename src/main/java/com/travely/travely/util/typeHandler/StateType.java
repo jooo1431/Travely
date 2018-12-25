@@ -10,8 +10,8 @@ public enum StateType implements CommonEnum{
     private String message;
 
     private StateType(int value,String message) {
-        value = value;
-        message = message;
+        this.value = value;
+        this.message = message;
     }
 
     @Override
