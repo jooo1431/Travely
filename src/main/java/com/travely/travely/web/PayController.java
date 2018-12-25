@@ -22,10 +22,10 @@ import org.springframework.web.servlet.ModelAndView;
 public class PayController {
 
     @PostMapping("/")
-    public ModelAndView iAmPort(ReservationResponse reservationResponse){
+    public ModelAndView iAmPort(ReservationResponse reservationResponse) {
 
         ModelAndView payPage = new ModelAndView("iAmPort");
-        payPage.addObject("payInfo",reservationResponse);
+        payPage.addObject("payInfo", reservationResponse);
 
         return payPage;
     }
@@ -33,11 +33,11 @@ public class PayController {
 
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PostMapping("/complete")
-    public ResponseEntity<String> iAmPortResult(@RequestBody final IAmPortRequest iAmPortRequest){
-            //Request에 uid가 들어있다.
-            //발급받은 api키를 이용
-            //https://api.iamport.kr/users/getToken 에서 토큰발급후
-            //위조여부를 https://api.iamport.kr/payments/$imp_uid 에서 토큰과 함께 위조 확인
+    public ResponseEntity<String> iAmPortResult(@RequestBody final IAmPortRequest iAmPortRequest) {
+        //Request에 uid가 들어있다.
+        //발급받은 api키를 이용
+        //https://api.iamport.kr/users/getToken 에서 토큰발급후
+        //위조여부를 https://api.iamport.kr/payments/$imp_uid 에서 토큰과 함께 위조 확인
 
         return ResponseEntity.status(HttpStatus.CREATED).body(IAmPortTokenUtil.createToken());
     }

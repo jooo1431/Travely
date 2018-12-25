@@ -29,7 +29,7 @@ public class ReservationResponse {
 
 
     @Builder
-    public ReservationResponse(final Reservation reservation, final List<BagDto> bags, final Store store ,final long price) {
+    public ReservationResponse(final Reservation reservation, final List<BagDto> bags, final Store store, final long price) {
         this.reserveIdx = reservation.getReserveIdx();
         this.underUserIdx = reservation.getUnderUserIdx();
         this.startDate = reservation.getStartDate();
@@ -42,7 +42,7 @@ public class ReservationResponse {
 
         this.bags = bags;
 
-        this.price=price;
+        this.price = price;
 
         this.store = store;
     }

@@ -44,7 +44,7 @@ public class ReservationService {
         final long storeIdx = reservationRequest.getStoreIdx();
         Store store = storeMapper.getStoreFindByStoreIdx(storeIdx);
 
-        return new ReservationResponse(reservation, bagDtoList, store,4000);
+        return new ReservationResponse(reservation, bagDtoList, store, 4000);
 
     }
 }

@@ -41,31 +41,31 @@ public class IAmPortTokenUtil {
             connection.setUseCaches(false);
             connection.setDefaultUseCaches(false);
             //헤더값 설정
-            connection.setRequestProperty("Content-Type","application/json");
+            connection.setRequestProperty("Content-Type", "application/json");
 
             //보내줄 데이터를 설정
             Gson gson = new Gson();
             JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("imp_key",imp_key);
-            jsonObject.addProperty("imp_secret",imp_secret);
+            jsonObject.addProperty("imp_key", imp_key);
+            jsonObject.addProperty("imp_secret", imp_secret);
             final String json = gson.toJson(jsonObject);
 
             //데이터 전송
-            OutputStreamWriter wr= new OutputStreamWriter(connection.getOutputStream());
+            OutputStreamWriter wr = new OutputStreamWriter(connection.getOutputStream());
             wr.write(json);
             wr.flush();
 
             //response로 받자
-            final int HttpResult =connection.getResponseCode();
-            if(HttpResult ==HttpURLConnection.HTTP_OK){
-                InputStreamReader in = new InputStreamReader(connection.getInputStream(),"utf-8");
+            final int HttpResult = connection.getResponseCode();
+            if (HttpResult == HttpURLConnection.HTTP_OK) {
+                InputStreamReader in = new InputStreamReader(connection.getInputStream(), "utf-8");
                 BufferedReader br = new BufferedReader(in);
 
                 String line;
-                String result="";
+                String result = "";
 
-                while ((line = br.readLine())!= null) {
-                    result = result+line + "\n";
+                while ((line = br.readLine()) != null) {
+                    result = result + line + "\n";
                 }
                 br.close();
 
@@ -74,8 +74,8 @@ public class IAmPortTokenUtil {
                 JsonElement element = parser.parse(result);
                 token = element.getAsJsonObject().get("response").getAsJsonObject().get("access_token").getAsString();
 
-            }else{
-                log.info("Http Status Code : "+HttpResult);
+            } else {
+                log.info("Http Status Code : " + HttpResult);
             }
 
         } catch (MalformedURLException e) {
