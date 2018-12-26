@@ -20,6 +20,8 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
+
+
     @ApiOperation(value = "예약상태 저장", notes = "예약상태 저장 후 예약 정보 반환")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "예약 성공"),
@@ -28,6 +30,18 @@ public class ReservationController {
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PostMapping("/")
     public ResponseEntity<ReservationResponse> saveReservation(@RequestBody final ReservationRequest reservationRequest) {
+        ReservationResponse reservationResponse = reservationService.saveReservation(reservationRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(reservationResponse);
+    }
+
+    @ApiOperation(value = "예약정보 조회", notes = "예약정보 조회")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "예약 조회 성공"),
+            @ApiResponse(code = 500, message = "서버에러")
+    })
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @PostMapping("/")
+    public ResponseEntity<ReservationResponse> getReserVation(@RequestBody final ReservationRequest reservationRequest) {
         ReservationResponse reservationResponse = reservationService.saveReservation(reservationRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(reservationResponse);
     }
