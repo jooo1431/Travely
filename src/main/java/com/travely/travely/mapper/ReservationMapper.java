@@ -27,7 +27,7 @@ public interface ReservationMapper {
 
     //예약 목록 검색
     @Select("SELETE FROM reservation WHERE underUserIdx = #{underUserIdx}")
-    List<Reservation> getReservation(@Param("userIdx")final String underUserIdx);
+    Reservation getReservation(@Param("userIdx")final String underUserIdx);
 
     //예약 목록 삭제
     @Delete("DELETE FROM reservation WHERE underUserIdx = #{underUserIdx}")

@@ -1,5 +1,6 @@
 package com.travely.travely.service;
 
+import com.travely.travely.domain.Baggages;
 import com.travely.travely.domain.Reservation;
 import com.travely.travely.domain.Store;
 import com.travely.travely.dto.reservation.BagDto;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -57,10 +59,10 @@ public class ReservationService {
 
     @Transactional
     public boolean deleteReservation(final String userIdx){
-        
-        List<Reservation> reservations = reservationMapper.getReservation(userIdx);
 
-        if(reservations==null)
+        Reservation reservation = reservationMapper.getReservation(userIdx);
+
+        if(reservation==null)
             return false;
 
         try{
@@ -74,6 +76,26 @@ public class ReservationService {
 
     }
 
+
+    public ReservationResponse getReservation(final String userIdx){
+
+        Reservation reservation = reservationMapper.getReservation(userIdx);
+
+        if(reservation==null)
+            return null;
+
+        Store store = storeMapper.getStoreFindByStoreIdx(reservation.getStoreIdx());
+        List<Baggages> baggages = reservationMapper.getBaggages(reservation.getReserveIdx());
+        List<BagDto> bagDtos = new ArrayList<>();
+        for(int i=-0;i<baggages.size();i++){
+            BagDto temp = new BagDto(baggages.get(i));
+            bagDtos.add(temp);
+        }
+
+        ReservationResponse reservationResponse = new ReservationResponse(reservation,bagDtos,store,9999);
+
+        return reservationResponse;
+    }
 
     private boolean timeCheck(ReservationRequest reservationRequest){
         long diffHour= (reservationRequest.getEndTime().getTime()-reservationRequest.getStartTime().getTime())/1000/60/60;
