@@ -14,5 +14,5 @@ public interface StoreMapper {
     List<StoreJoinLocal> getStoreInfo();
 
     @Select("SELECT * FROM store WHERE storeIdx = #{storeIdx}")
-    Store getStoreFindByStoreIdx(@Param("storeIdx") final long sotreIdx);
+    Store getStoreFindByStoreIdx(@Param("storeIdx") final long storeIdx);
 }
