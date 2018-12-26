@@ -9,7 +9,7 @@ public class StoreDto {
     //업주 - 상가 조인필요 , 리뷰
 
     //업주이름
-    private String ownerName;
+    private String userName;
     //상가이름
     private String storeName;
     //상가전화번호
@@ -21,7 +21,7 @@ public class StoreDto {
     //상가영업시작시간
     private Timestamp openTime;
     //상가영업종료시간
-    private Timestamp closeRime;
+    private Timestamp closeTime;
     //상가주소
     private String address;
     //상가 평점
@@ -29,14 +29,14 @@ public class StoreDto {
     //상가id
     private long storeIdx;
 
-    public StoreDto(String ownerName, String storeName, String storeCall, double latitude, double longitude, Timestamp openTime, Timestamp closeRime, String address, double like, long storeIdx) {
-        this.ownerName = ownerName;
+    public StoreDto(String userName, String storeName, String storeCall, double latitude, double longitude, Timestamp openTime, Timestamp closeTime, String address, double like, long storeIdx) {
+        this.userName = userName;
         this.storeName = storeName;
         this.storeCall = storeCall;
         this.latitude = latitude;
         this.longitude = longitude;
         this.openTime = openTime;
-        this.closeRime = closeRime;
+        this.closeTime = closeTime;
         this.address = address;
         this.like = like;
         this.storeIdx = storeIdx;
