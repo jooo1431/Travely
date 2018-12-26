@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Getter
@@ -15,35 +16,19 @@ public class ReservationRequest {
     @ApiModelProperty(example = "2", position = 2)
     private long storeIdx;
 
-    @ApiModelProperty(example = "20181224", position = 3)
-    private String startDate;
+    @ApiModelProperty(position = 3)
+    private Timestamp startTime;
 
-    @ApiModelProperty(example = "월요일", position = 4)
-    private String startDay;
+    @ApiModelProperty(position = 4)
+    private Timestamp endTime;
 
-    @ApiModelProperty(example = "13:00", position = 5)
-    private String startTime;
-
-    @ApiModelProperty(example = "20181225", position = 6)
-    private String endDate;
-
-    @ApiModelProperty(example = "화요일", position = 7)
-    private String endDay;
-
-    @ApiModelProperty(example = "11:00", position = 8)
-    private String endTime;
-
-    @ApiModelProperty(position = 9)
+    @ApiModelProperty(position = 5)
     private List<BagDto> bagList;
 
-    public ReservationRequest(long userIdx, long storeIdx, String startDate, String startDay, String startTime, String endDate, String endDay, String endTime, List<BagDto> bagList) {
+    public ReservationRequest(final long userIdx, final long storeIdx, final Timestamp startTime, final Timestamp endTime, final List<BagDto> bagList) {
         this.userIdx = userIdx;
         this.storeIdx = storeIdx;
-        this.startDate = startDate;
-        this.startDay = startDay;
         this.startTime = startTime;
-        this.endDate = endDate;
-        this.endDay = endDay;
         this.endTime = endTime;
         this.bagList = bagList;
     }

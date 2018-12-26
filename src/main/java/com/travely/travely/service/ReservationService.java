@@ -30,6 +30,12 @@ public class ReservationService {
         final String reserveIdx = uuid.toString();
 
         //최소-최대 결제 시간에 따른 승인-불허 로직 들어가야함
+        //현재 4시간 이상일시 가격책정
+        if(timeCheck(reservationRequest)){
+
+        }else{
+
+        }
 
         Reservation reservation = new Reservation(reserveIdx, reservationRequest, StateType.ReserveOk);
         reservationMapper.saveReservation(reservation);
@@ -47,4 +53,12 @@ public class ReservationService {
         return new ReservationResponse(reservation, bagDtoList, store, 4000);
 
     }
+
+    private boolean timeCheck(ReservationRequest reservationRequest){
+        long diffHour= (reservationRequest.getEndTime().getTime()-reservationRequest.getStartTime().getTime())/1000/60/60;
+        if(diffHour<4)
+            return false;
+        else return true;
+    }
+
 }

@@ -6,6 +6,7 @@ import com.travely.travely.util.typeHandler.StateType;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Getter
@@ -13,12 +14,8 @@ public class ReservationResponse {
 
     private String reserveIdx;
     private long underUserIdx;
-    private String startDate;
-    private String startDay;
-    private String startTime;
-    private String endDate;
-    private String endDay;
-    private String endTime;
+    private Timestamp startTime;
+    private Timestamp endTime;
     private StateType stateType;
 
     private List<BagDto> bags;
@@ -32,11 +29,7 @@ public class ReservationResponse {
     public ReservationResponse(final Reservation reservation, final List<BagDto> bags, final Store store, final long price) {
         this.reserveIdx = reservation.getReserveIdx();
         this.underUserIdx = reservation.getUnderUserIdx();
-        this.startDate = reservation.getStartDate();
-        this.startDay = reservation.getStartDay();
         this.startTime = reservation.getStartTime();
-        this.endDate = reservation.getEndDate();
-        this.endDay = reservation.getEndDay();
         this.endTime = reservation.getEndTime();
         this.stateType = reservation.getStateType();
 
