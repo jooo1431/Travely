@@ -4,8 +4,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,20 +17,22 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+@Component
 @Slf4j
-public class IAmPortTokenUtil {
+public class IAmPortTokenUtil{
 
-    @Value("${iamportKey}")
-    private static String imp_key;
+    @Value("${iamport.key}")
+    public  String impKey;
 
-    @Value("${iamportSecret}")
-    private static String imp_secret;
+    @Value("${iamport.secret}")
+    public  String impSecret;
 
-    public static String createToken() {
+    public String createToken() {
 
         String token = "nothing";
 
         try {
+            log.info(impKey+" "+impSecret);
             //HTTP 접속
             URL url = new URL("https://api.iamport.kr/users/getToken");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -46,8 +50,8 @@ public class IAmPortTokenUtil {
             //보내줄 데이터를 설정
             Gson gson = new Gson();
             JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("imp_key", imp_key);
-            jsonObject.addProperty("imp_secret", imp_secret);
+            jsonObject.addProperty("imp_key", impKey);
+            jsonObject.addProperty("imp_secret", impSecret);
             final String json = gson.toJson(jsonObject);
 
             //데이터 전송

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 @Slf4j
 @RestController
@@ -21,15 +20,8 @@ import org.springframework.web.servlet.ModelAndView;
 @RequiredArgsConstructor
 public class PayController {
 
-    @PostMapping("/")
-    public ModelAndView iAmPort(ReservationResponse reservationResponse) {
 
-        ModelAndView payPage = new ModelAndView("iAmPort");
-        payPage.addObject("payInfo", reservationResponse);
-
-        return payPage;
-    }
-
+    private final IAmPortTokenUtil iAmPortTokenUtil;
 
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PostMapping("/complete")
@@ -39,7 +31,7 @@ public class PayController {
         //https://api.iamport.kr/users/getToken 에서 토큰발급후
         //위조여부를 https://api.iamport.kr/payments/$imp_uid 에서 토큰과 함께 위조 확인
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(IAmPortTokenUtil.createToken());
+        return ResponseEntity.status(HttpStatus.CREATED).body(iAmPortTokenUtil.createToken());
     }
 
 }
