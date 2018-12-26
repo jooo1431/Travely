@@ -34,9 +34,9 @@ public class BaseSecurityHandler implements AuthenticationSuccessHandler, Authen
                                         HttpServletResponse response,
                                         Authentication authentication) {
 
-        UserDetails userDetails = new UserDetailsImpl(authentication.getName(), new ArrayList<>(authentication.getAuthorities()));
+        UserDetailsImpl userDetailsImpl = new UserDetailsImpl(authentication.getName(), new ArrayList<>(authentication.getAuthorities()));
         response.setContentType(MediaType.APPLICATION_JSON.toString());
-        response.setHeader(JwtInfo.HEADER_NAME, JwtUtil.createToken(userDetails));
+        response.setHeader(JwtInfo.HEADER_NAME, JwtUtil.createToken(userDetailsImpl));
         log.info("[request end] -> {}",request.getRequestURI());
     }
 
