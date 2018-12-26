@@ -4,6 +4,7 @@ import com.travely.travely.domain.Baggages;
 import com.travely.travely.domain.Reservation;
 import com.travely.travely.dto.reservation.BagDto;
 import org.apache.ibatis.annotations.*;
+import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 
@@ -23,4 +24,12 @@ public interface ReservationMapper {
     //예약번호에 따른 짐 목록 추출
     @Select("SELECT * FROM baggage WHERE reserveIdx = #{reserveIdx}")
     List<Baggages> getBaggages(@Param("reserveIdx") final String reserveIdx);
+
+    //예약 목록 검색
+    @Select("SELETE FROM reservation WHERE underUserIdx = #{underUserIdx}")
+    List<Reservation> getReservation(@Param("userIdx")final String underUserIdx);
+
+    //예약 목록 삭제
+    @Delete("DELETE FROM reservation WHERE underUserIdx = #{underUserIdx}")
+    void deleteReservation(@Param("userIdx") final String underUserIdx);
 }

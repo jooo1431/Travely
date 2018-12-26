@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.List;
 import java.util.UUID;
@@ -53,6 +54,26 @@ public class ReservationService {
         return new ReservationResponse(reservation, bagDtoList, store, 4000);
 
     }
+
+    @Transactional
+    public boolean deleteReservation(final String userIdx){
+        
+        List<Reservation> reservations = reservationMapper.getReservation(userIdx);
+
+        if(reservations==null)
+            return false;
+
+        try{
+            reservationMapper.deleteReservation(userIdx);
+            return true;
+        }catch (Exception e){
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            log.error(e.getMessage());
+            return false;
+        }
+
+    }
+
 
     private boolean timeCheck(ReservationRequest reservationRequest){
         long diffHour= (reservationRequest.getEndTime().getTime()-reservationRequest.getStartTime().getTime())/1000/60/60;

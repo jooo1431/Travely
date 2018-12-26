@@ -6,6 +6,7 @@ import com.travely.travely.service.ReservationService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,9 +42,14 @@ public class ReservationController {
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PostMapping("/")
-    public ResponseEntity<ReservationResponse> getReserVation(@RequestBody final ReservationRequest reservationRequest) {
-        ReservationResponse reservationResponse = reservationService.saveReservation(reservationRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(reservationResponse);
+    public ResponseEntity<Void> getReserVation(@Param("userIdx") final String userIdx) {
+
+        if(reservationService.deleteReservation(userIdx)){
+            return ResponseEntity.ok().build();
+        }else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
     }
 
 }
