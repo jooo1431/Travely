@@ -1,5 +1,6 @@
 package com.travely.travely.dto.reservation;
 
+import com.travely.travely.domain.Baggage;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,13 +24,17 @@ public class ReservationRequest {
     private Timestamp endTime;
 
     @ApiModelProperty(position = 5)
-    private List<BagDto> bagList;
+    private List<Baggage> baggages;
 
-    public ReservationRequest(final long userIdx, final long storeIdx, final Timestamp startTime, final Timestamp endTime, final List<BagDto> bagList) {
+    @ApiModelProperty(example = "0", position = 6)
+    private long payType;
+
+    public ReservationRequest(long userIdx, long storeIdx, Timestamp startTime, Timestamp endTime, List<Baggage> baggages, long payType) {
         this.userIdx = userIdx;
         this.storeIdx = storeIdx;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.bagList = bagList;
+        this.baggages = baggages;
+        this.payType = payType;
     }
 }

@@ -1,9 +1,8 @@
 package com.travely.travely.service;
 
-import com.travely.travely.domain.Baggages;
+
 import com.travely.travely.domain.Reservation;
 import com.travely.travely.domain.Store;
-import com.travely.travely.dto.reservation.BagDto;
 import com.travely.travely.dto.reservation.ReservationRequest;
 import com.travely.travely.dto.reservation.ReservationResponse;
 import com.travely.travely.mapper.ReservationMapper;
@@ -16,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -30,8 +28,10 @@ public class ReservationService {
     @Transactional
     public ReservationResponse saveReservation(final ReservationRequest reservationRequest) {
         final UUID uuid = UUID.randomUUID();
+        //결제 고유번호생성
         final String reserveIdx = uuid.toString();
-
+        //결제 코드 생성 = 고유번호 앞 8자리
+        final String reserveCode = reserveIdx.substring(0,7);
         //최소-최대 결제 시간에 따른 승인-불허 로직 들어가야함
         //현재 4시간 이상일시 가격책정
         if(timeCheck(reservationRequest)){
@@ -40,20 +40,7 @@ public class ReservationService {
 
         }
 
-        Reservation reservation = new Reservation(reserveIdx, reservationRequest, StateType.ReserveOk);
-        reservationMapper.saveReservation(reservation);
-
-        List<BagDto> bagDtoList = reservationRequest.getBagList();
-        for (int i = 0; i < bagDtoList.size(); i++) {
-            reservationMapper.saveBaggages(reserveIdx, bagDtoList.get(i));
-        }
-
-        //bagDtoList를 넘겨서 가격정보 넣어야함
-
-        final long storeIdx = reservationRequest.getStoreIdx();
-        Store store = storeMapper.getStoreFindByStoreIdx(storeIdx);
-
-        return new ReservationResponse(reservation, bagDtoList, store, 4000);
+        return null;
 
     }
 
