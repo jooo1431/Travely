@@ -27,7 +27,7 @@ public class StoreController {
             @ApiResponse(code = 500, message = "서버에러")
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @PostMapping
+    @PostMapping("list")
     public ResponseEntity<List<StoreListResponseDto>> getStoreList() {
         List<StoreListResponseDto> storeListResponseDtos = storeService.getEntireStoreList();
         if (storeListResponseDtos != null) return ResponseEntity.ok().body(storeListResponseDtos);
@@ -42,7 +42,7 @@ public class StoreController {
             @ApiResponse(code = 500, message = "서버에러")
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @PostMapping
+    @PostMapping("details")
     public ResponseEntity<List<StoreDetailsResponseDto>> getStoreDetails(){
         List<StoreDetailsResponseDto> storeDetailsResponseDtos = storeService.getStoreInfoDetails();
         if(storeDetailsResponseDtos != null) return ResponseEntity.ok().body(storeDetailsResponseDtos);

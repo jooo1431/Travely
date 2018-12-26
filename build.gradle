@@ -22,7 +22,7 @@ sourceCompatibility = 1.8
 repositories {
 	mavenCentral()
     maven { url 'https://repo.spring.io/libs-milestone'}
-	
+
 }
 
 
@@ -42,6 +42,7 @@ dependencies {
 	testImplementation('org.springframework.security:spring-security-test')
 	implementation('com.auth0:java-jwt:3.3.0')
 	
+
 }
 
 dependencyManagement {
