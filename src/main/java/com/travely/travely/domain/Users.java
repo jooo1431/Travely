@@ -17,7 +17,7 @@ public class Users {
     private String auth;
 
     public UserDetailsImpl createUserDetails() {
-        return new UserDetailsImpl(email, password, AuthorityUtils.createAuthorityList(auth));
+        return new UserDetailsImpl(userIdx.toString(), password, AuthorityUtils.createAuthorityList(auth));
     }
 
     @Builder

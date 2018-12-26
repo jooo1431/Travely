@@ -9,20 +9,20 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class StoreJoinLocal {
 
-    private long localIdx;
     private long storeIdx;
     private long userIdx;
     private String storeName;
+    private long localIdx;
     private String storeCall;
     private String storeUrl;
     private String duringTime;
     private String address;
     private String localName;
-    private long cnt;
+
 
     @Builder
     public StoreJoinLocal(long localIdx, long storeIdx, long userIdx, String storeName, String storeCall, String storeUrl,
-                          String duringTime, String address, String localName, long cnt) {
+                          String duringTime, String address, String localName) {
         this.localIdx = localIdx;
         this.storeIdx = storeIdx;
         this.userIdx = userIdx;
@@ -32,6 +32,6 @@ public class StoreJoinLocal {
         this.duringTime = duringTime;
         this.address = address;
         this.localName = localName;
-        this.cnt = cnt;
+
     }
 }
