@@ -1,20 +1,16 @@
 package com.travely.travely.web;
 
 import com.travely.travely.dto.reservation.ReservationRequest;
-import com.travely.travely.dto.reservation.ReservationResponse;
+import com.travely.travely.dto.reservation.ReservationQR;
 import com.travely.travely.service.ReservationService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 @Slf4j
 @RestController
@@ -33,19 +29,24 @@ public class ReservationController {
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PostMapping("/save")
-    public ResponseEntity<ReservationResponse> saveReservation(@ApiIgnore Authentication authentication, @RequestBody final ReservationRequest reservationRequest) {
+    public ResponseEntity<ReservationQR> saveReservation(@ApiIgnore Authentication authentication, @RequestBody final ReservationRequest reservationRequest) {
 
         long userIdx = Long.parseLong((String) authentication.getPrincipal());
 
-        //limit갯수 작업
+        //짐수용한도 체크하기
+        final long limit = reservationService.checkLimit(reservationRequest.getStoreIdx());
+        if (limit >= 0)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        //맡기고자 하는 짐의 양이 limit보다 많으면
+        if (!(reservationService.isFull(reservationRequest.getBagDtos(), limit)))
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
-
-        ReservationResponse reservationResponse = reservationService.saveReservation(userIdx, reservationRequest);
+        ReservationQR reservationQR = reservationService.saveReservation(userIdx, reservationRequest);
         //예약작업
-        if (reservationResponse == null)
+        if (reservationQR == null)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         else
-            return ResponseEntity.status(HttpStatus.CREATED).body(reservationResponse);
+            return ResponseEntity.status(HttpStatus.CREATED).body(reservationQR);
     }
 
     @ApiOperation(value = "예약 취소", notes = "예약상태 조회 후 삭제")
@@ -62,7 +63,7 @@ public class ReservationController {
 
         //비밀번호 체크하는부분추가해야함
 
-        if(msg == null )
+        if (msg == null)
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         return ResponseEntity.ok().body(msg);
     }
@@ -70,21 +71,47 @@ public class ReservationController {
     @ApiOperation(value = "예약 조회", notes = "예약상태 조회 후 결과 반환")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "예약 조회 성공"),
-            @ApiResponse(code = 204, message = "예약 내역 없음") ,
+            @ApiResponse(code = 204, message = "예약 내역 없음"),
             @ApiResponse(code = 500, message = "서버에러")
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PostMapping("/info")
-    public ResponseEntity<ReservationResponse> getReservation(@ApiIgnore Authentication authentication) {
+    public ResponseEntity<ReservationQR> getReservation(@ApiIgnore Authentication authentication) {
 
         long userIdx = Long.parseLong((String) authentication.getPrincipal());
 
-        ReservationResponse reservationResponse = reservationService.getReservation(userIdx);
+        ReservationQR reservationQR = reservationService.getReservation(userIdx);
 
-        if(reservationResponse==null){
+        if (reservationQR == null) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
-        return ResponseEntity.ok().body(reservationResponse);
+        return ResponseEntity.ok().body(reservationQR);
     }
 
+    @ApiOperation(value = "QR코드 리드", notes = "QR코드 리드후 상태변경")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "보관시작"),
+            @ApiResponse(code = 400, message = "잘못 된 접근"),
+            @ApiResponse(code = 500, message = "서버에러")
+    })
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @PostMapping("/read")
+    public ResponseEntity<Void> readQrCode(@RequestBody final String reserveCode, @ApiIgnore Authentication authentication) {
+
+        final long ownerIdx = (long) authentication.getPrincipal();
+
+        //사장님의 토큰을 받아서 store의 owner와 비교 후 아니면 리젝
+        if (reservationService.areYouOwner(reserveCode, ownerIdx)) {
+            //예약정보 정상적인지 체크
+
+            //정상적이면
+            reservationService.changeReserveStateAndProgressUsingQR(reserveCode);
+
+
+            return ResponseEntity.ok().build();
+        } else
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+
+    
 }

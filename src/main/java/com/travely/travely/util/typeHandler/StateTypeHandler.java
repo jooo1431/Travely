@@ -3,7 +3,7 @@ package com.travely.travely.util.typeHandler;
 import org.apache.ibatis.type.MappedTypes;
 
 @MappedTypes(StateType.class)
-public class    StateTypeHandler extends CommonEnumTypeHandler {
+public class StateTypeHandler extends CommonEnumTypeHandler {
 
     @Override
     CommonEnum getTypeByValue(int value) throws Exception {

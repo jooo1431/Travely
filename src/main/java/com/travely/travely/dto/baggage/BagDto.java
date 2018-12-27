@@ -18,8 +18,9 @@ public class BagDto {
         this.bagType = bagType;
         this.bagCount = bagCount;
     }
-    public BagDto(Baggage baggage){
-        this.bagType=baggage.getBagType();
-        this.bagCount=baggage.getBagCount();
+
+    public BagDto(Baggage baggage) {
+        this.bagType = baggage.getBagType();
+        this.bagCount = baggage.getBagCount();
     }
 }

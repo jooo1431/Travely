@@ -1,7 +1,6 @@
 package com.travely.travely.web;
 
 import com.travely.travely.dto.iAmPort.IAmPortRequest;
-import com.travely.travely.dto.reservation.ReservationResponse;
 import com.travely.travely.util.IAmPortTokenUtil;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;

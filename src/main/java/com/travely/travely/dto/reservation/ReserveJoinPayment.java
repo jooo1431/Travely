@@ -19,7 +19,6 @@ public class ReserveJoinPayment {
     private Timestamp endTime;
     private StateType stateType;
     private long price;
-    private long deleted;
     private String reserveCode;
     private Timestamp depositTime;
     private Timestamp takeTime;
@@ -29,7 +28,7 @@ public class ReserveJoinPayment {
     private ProgressType progressType;
 
     @Builder
-    public ReserveJoinPayment(long reserveIdx, long userIdx, long storeIdx, Timestamp startTime, Timestamp endTime, StateType stateType, long price, long deleted, String reserveCode, Timestamp depositTime, Timestamp takeTime, long payIdx, PayType payType, long totalPrice, ProgressType progressType) {
+    public ReserveJoinPayment(long reserveIdx, long userIdx, long storeIdx, Timestamp startTime, Timestamp endTime, StateType stateType, long price, String reserveCode, Timestamp depositTime, Timestamp takeTime, long payIdx, PayType payType, long totalPrice, ProgressType progressType) {
         this.reserveIdx = reserveIdx;
         this.userIdx = userIdx;
         this.storeIdx = storeIdx;
@@ -37,7 +36,6 @@ public class ReserveJoinPayment {
         this.endTime = endTime;
         this.stateType = stateType;
         this.price = price;
-        this.deleted = deleted;
         this.reserveCode = reserveCode;
         this.depositTime = depositTime;
         this.takeTime = takeTime;

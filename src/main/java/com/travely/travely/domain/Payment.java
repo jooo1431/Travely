@@ -17,11 +17,11 @@ public class Payment {
     private ProgressType progressType;
 
     @Builder
-    public Payment(long payIdx, PayType payType,long totalPrice, long reserveIdx, ProgressType progressType) {
+    public Payment(long payIdx, PayType payType, long totalPrice, long reserveIdx, ProgressType progressType) {
         this.payIdx = payIdx;
         this.payType = payType;
         this.totalPrice = totalPrice;
         this.reserveIdx = reserveIdx;
-        this.progressType=progressType;
+        this.progressType = progressType;
     }
 }

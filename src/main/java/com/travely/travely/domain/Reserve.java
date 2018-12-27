@@ -19,20 +19,18 @@ public class Reserve {
     private Timestamp endTime;
     private StateType state;
     private long price;
-    private long deleted;
     private String reserveCode;
     private Timestamp depositTime;
     private Timestamp takeTime;
 
     @Builder
-    public Reserve(long userIdx, long storeIdx, Timestamp startTime, Timestamp endTime, StateType state, long price, long deleted, String reserveCode, Timestamp depositTime, Timestamp takeTime) {
+    public Reserve(long userIdx, long storeIdx, Timestamp startTime, Timestamp endTime, StateType state, long price, String reserveCode, Timestamp depositTime, Timestamp takeTime) {
         this.userIdx = userIdx;
         this.storeIdx = storeIdx;
         this.startTime = startTime;
         this.endTime = endTime;
         this.state = state;
         this.price = price;
-        this.deleted = deleted;
         this.reserveCode = reserveCode;
         this.depositTime = depositTime;
         this.takeTime = takeTime;

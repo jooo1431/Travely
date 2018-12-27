@@ -6,14 +6,13 @@ import com.travely.travely.domain.Store;
 import com.travely.travely.dto.baggage.BagDto;
 import com.travely.travely.dto.price.PriceDto;
 import com.travely.travely.dto.reservation.ReservationRequest;
-import com.travely.travely.dto.reservation.ReservationResponse;
+import com.travely.travely.dto.reservation.ReservationQR;
 import com.travely.travely.dto.reservation.ReserveJoinPayment;
-import com.travely.travely.dto.reservation.ReserveJoinPaymentJoinStore;
+import com.travely.travely.dto.reservation.ReserveJoinStore;
 import com.travely.travely.dto.store.StoreDto;
 import com.travely.travely.mapper.PriceMapper;
 import com.travely.travely.mapper.ReservationMapper;
 import com.travely.travely.mapper.StoreMapper;
-import com.travely.travely.util.typeHandler.PayType;
 import com.travely.travely.util.typeHandler.ProgressType;
 import com.travely.travely.util.typeHandler.StateType;
 import lombok.RequiredArgsConstructor;
@@ -35,17 +34,19 @@ public class ReservationService {
     private final StoreMapper storeMapper;
     private final PriceMapper priceMapper;
 
+
     @Transactional
-    public ReservationResponse saveReservation(final long userIdx, final ReservationRequest reservationRequest) {
+    public ReservationQR saveReservation(final long userIdx, final ReservationRequest reservationRequest) {
 
         // 영업시간 외 예약하려는 경우
-        //if (isBetweenOpenAndClose(reservationRequest)) return null;
+        if (isBetweenOpenAndClose(reservationRequest)) return null;
 
         // 이미예약되있는경우
         if (isReservation(userIdx)) return null;
 
         // 기본사용시간 4시간미만
-        // if (timeCheck(reservationRequest)) return null;
+        if (timeCheck(reservationRequest)) return null;
+
         // 짐갯수 0개인경우
         for (int i = 0; i < reservationRequest.getBagDtos().size(); i++) {
             if (reservationRequest.getBagDtos().get(i).getBagCount() <= 0) return null;
@@ -58,12 +59,8 @@ public class ReservationService {
         final String reserveCode = uuid.toString().substring(0, 7);
         log.info("reserve Code : " + reserveCode);
 
-        //결제 타입에 따라 state값 골라서 넣어주기 CASH, CARD
-        StateType stateType;
-        if (reservationRequest.getPayType().getValue() == PayType.CASH.getValue())
-            stateType = StateType.ReserveOk;
-        else
-            stateType = StateType.PayOk;
+        //결제타입과 무관하게 일단 예약 완료 상태로 만든다.
+        StateType stateType = StateType.ReserveOk;
 
         //가게 평점
         double like = storeMapper.getAvgLikeGetByStoreIdx(reservationRequest.getStoreIdx());
@@ -73,8 +70,7 @@ public class ReservationService {
 
 
         StoreDto storeDto = new StoreDto(storeMapper.getStoreJoinUsersFindByStoreIdx(reservationRequest.getStoreIdx()), like);
-        ReservationResponse reservationResponse = new ReservationResponse(reservationRequest, reserveCode, storeDto, price, stateType);
-
+        ReservationQR reservationQR = new ReservationQR(reservationRequest, reserveCode, storeDto, price, stateType);
 
 
         //예약목록 저장 결제목록에 저장 진행중으로, 짐목록 저장
@@ -85,7 +81,6 @@ public class ReservationService {
                 .endTime(reservationRequest.getEndTime())
                 .state(stateType)
                 .price(price)
-                .deleted(0)
                 .reserveCode(reserveCode)
                 .depositTime(null)
                 .takeTime(null)
@@ -94,6 +89,7 @@ public class ReservationService {
         //여기서 예약목록에 저장
         reservationMapper.saveReservation(reserve);
 
+        //일단 결제 진행중인 상태로 결제테이블에 저장할거임
         Payment payment = Payment.builder()
                 .payType(reservationRequest.getPayType())
                 .totalPrice(price)
@@ -109,20 +105,34 @@ public class ReservationService {
             reservationMapper.saveBaggages(reserve.getReserveIdx(), reservationRequest.getBagDtos().get(i));
         }
 
-        return reservationResponse;
+        return reservationQR;
 
     }
 
     @Transactional
     public String cancelReservation(final long userIdx) {
+
+        //예약 취소하면 결제테이블에 있는 것도 결제 취소로 전부 바꿔버린다.
+
         String msg;
+        StateType cancel = StateType.Cancel;
+        StateType takeOff = StateType.TakeOff;
+        ProgressType CANCEL = ProgressType.CANCEL;
+
+        //취소, 수거를 제외한 reserve join payment 테이블 정도 가져오기
+        ReserveJoinPayment reserveJoinPayment = reservationMapper.getReservePaymentFindByUserIdxExceptCancelTakeOff(userIdx, takeOff, cancel);
+        //수정할 payment의 reserveIdx 추출
+        final long reserveIdx = reserveJoinPayment.getReserveIdx();
+
         try {
             //예약이 있는지?
-            long is = reservationMapper.getReservationCountFindByUserIdx(userIdx);
-            if (is == 0) {
+            long isReserve = reservationMapper.getReservationCountFindByUserIdx(userIdx, takeOff, cancel);
+
+            if (isReserve == 0) {
                 msg = "예약 내역 없음";
             } else {
-                reservationMapper.deleteReservation(userIdx);
+                reservationMapper.deleteReservation(userIdx, cancel);
+                reservationMapper.deletePayment(userIdx, CANCEL);
                 msg = "예약 취소 성공";
             }
 
@@ -133,29 +143,28 @@ public class ReservationService {
         return msg;
     }
 
-    public ReservationResponse getReservation(final long userIdx) {
-        //예약현황에서 deleted컬럼이 0이고, 짐수거 상태가 아닌 컬럼을 셀렉해오자
+    public ReservationQR getReservation(final long userIdx) {
+        //예약현황에서 짐수거, 취소 상태가 아닌 컬럼을 셀렉해오자
 
-        //보관 현황에서 봐야할것들
-        //예약상태정보
-        //맡기는 시간, 찾은 시간
-        // 짐정보, 가격
-        // 결제상태 , 결제타입
-        // 짐사진
-        // 가게 위치정보 (위치,주소,영업시간
-        //가게 평점
+        StateType takeOff = StateType.TakeOff;
+        StateType cancel = StateType.Cancel;
 
-        ReserveJoinPayment reserveJoinPayment = reservationMapper.getReservePaymentFindByUserIdx(userIdx);
+        //취소한것만 제외한 reserve Join payment 테이블의 결과를 받아오자. --> 예약내역이겠지
+        ReserveJoinPayment reserveJoinPayment = reservationMapper.getReservePaymentFindByUserIdxExceptCancelTakeOff(userIdx, takeOff, cancel);
+
         //예약 내역이 없다면?
-        if(reserveJoinPayment==null)
+        if (reserveJoinPayment == null)
             return null;
 
-        double like = storeMapper.getAvgLikeGetByStoreIdx(reserveJoinPayment.getStoreIdx());
-        StoreDto storeDto = new StoreDto(storeMapper.getStoreJoinUsersFindByStoreIdx(reserveJoinPayment.getStoreIdx()),like);
-        List <BagDto> bagDtos = reservationMapper.getBagDto(reserveJoinPayment.getReserveIdx());
-        List <String> bagImgs = reservationMapper.getBaggagesImgs(reserveJoinPayment.getReserveIdx());
 
-        ReservationResponse reservationResponse = ReservationResponse.builder()
+        //예약 내역을 클라에게 반환시켜줄 준비를하고
+        double like = storeMapper.getAvgLikeGetByStoreIdx(reserveJoinPayment.getStoreIdx());
+        StoreDto storeDto = new StoreDto(storeMapper.getStoreJoinUsersFindByStoreIdx(reserveJoinPayment.getStoreIdx()), like);
+        List<BagDto> bagDtos = reservationMapper.getBagDto(reserveJoinPayment.getReserveIdx());
+        List<String> bagImgs = reservationMapper.getBaggagesImgs(reserveJoinPayment.getReserveIdx());
+
+        //반환 객체를 생성
+        ReservationQR reservationQR = ReservationQR.builder()
                 .startTime(reserveJoinPayment.getStartTime())
                 .endTime(reserveJoinPayment.getEndTime())
                 .payType(reserveJoinPayment.getPayType())
@@ -167,9 +176,77 @@ public class ReservationService {
                 .storeDto(storeDto)
                 .build();
 
-        return reservationResponse;
+        //반환하자.
+        return reservationQR;
     }
 
+    //짐의 수용가능한량을 비교하여 불린값으로 반환하자
+    public boolean isFull(final List<BagDto> bagDtos, final long limit) {
+
+        long userBagCount = 0;
+        for (int i = 0; i < bagDtos.size(); i++) {
+            userBagCount += bagDtos.get(i).getBagCount();
+        }
+
+        //수용가능하면 트루
+        if (userBagCount >= limit)
+            return true;
+
+        return false;
+    }
+
+    //수용가능한 짐의 수를 반환한다.
+    public long checkLimit(final long storeIdx) {
+
+        StateType cancel = StateType.Cancel;
+        StateType takeOff = StateType.TakeOff;
+
+        //먼저 총 보관 한도를 구한다.
+        Store store = storeMapper.getStoreFindByStoreIdx(storeIdx);
+        long limit = store.getLimit();
+        //현재 보관중인 짐의 총 갯수를 가져오자
+        long currentBagCount = reservationMapper.getTotalBagCountFindByStoreIdx(storeIdx);
+
+        //보관할수 있는 갯수를 구하자 0보다 작으면 그냥 리젝시키자.
+        long canTakeCount = limit - currentBagCount;
+
+        if (canTakeCount <= 0)
+            return 0;
+        else
+            return canTakeCount;
+    }
+
+
+    //업주가 QR코드 리드시 상태변경해주기
+    //QR을 리드 하는 상황은
+    //현금은 현물 거래를 하고 업주가 QR리드를 한다.
+    //카드는 이미 PG를 통해 결제가 완료되어 있는 상태이다.
+    @Transactional
+    public void changeReserveStateAndProgressUsingQR(final String reserveCode) {
+
+        final ReserveJoinPayment reserveJoinPayment = reservationMapper.getReserveJoinPaymentFindByReserveCode(reserveCode);
+
+        //현금결제
+        //reserve테이블의 예약완료 -> 보관중으로
+        final long reserveIdx = reserveJoinPayment.getReserveIdx();
+        final Timestamp depositTime = new Timestamp(System.currentTimeMillis());
+        final StateType stateType = StateType.Archiving;
+        reservationMapper.setStateToArchiveOnReserve(reserveIdx, depositTime, stateType);
+
+        //payment테이블의 결제진행중 -> 결제완료로
+        final long payIdx = reserveJoinPayment.getPayIdx();
+        final ProgressType progressType = ProgressType.DONE;
+        reservationMapper.setProgressToDoneOnPayment(payIdx, progressType);
+
+    }
+
+    //큐알코드 리드할때 업주인지 아닌지 체크
+    //업주면 true 아니면 false
+    public boolean areYouOwner(final String reserveCode, final long ownerIdx) {
+        final ReserveJoinStore reserveJoinStore = reservationMapper.getReserveJoinStoreFindByReserveCode(reserveCode);
+        if (reserveJoinStore.getOwnerIdx() == ownerIdx) return true;
+        else return false;
+    }
 
     // 영업시간 외 체크
     private boolean isBetweenOpenAndClose(final ReservationRequest reservationRequest) {
@@ -239,7 +316,11 @@ public class ReservationService {
     // 이미예약되있는경우
     private boolean isReservation(final long userIdx) {
         long cnt;
-        if ((cnt = reservationMapper.getReservationCountFindByUserIdx(userIdx)) != 0) {
+
+        StateType takeOff = StateType.TakeOff;
+        StateType cancel = StateType.Cancel;
+
+        if ((cnt = reservationMapper.getReservationCountFindByUserIdx(userIdx, takeOff, cancel)) != 0) {
             log.info("cnt : " + cnt);
             return true;
         } else {
@@ -249,7 +330,7 @@ public class ReservationService {
 
     }
 
-    //가격계산
+    //가격계산 --> 가격반환
     private long priceTag(final ReservationRequest reservationRequest) {
 
         //예약 총 시간(ms)을 구하자
