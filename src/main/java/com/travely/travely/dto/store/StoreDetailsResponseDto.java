@@ -1,29 +1,22 @@
 package com.travely.travely.dto.store;
 
-import com.travely.travely.domain.StoreJoinLocal;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
-import org.apache.catalina.Store;
+import lombok.NoArgsConstructor;
+import java.util.List;
 
+
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class StoreDetailsResponseDto {
 
-    private long storeIdx;
-    private String storeName;
-    private String storeCall;
-    private String storeUrl;
-    private String duringTime;
-    private String address;
-    private String localName;
+    private List<StoreImgDto> storeImgs;
+    private StoreDetailsInfoDto storeDetails;
 
-
-    public StoreDetailsResponseDto(final StoreJoinLocal storeJoinLocal) {
-
-        this.storeIdx = storeJoinLocal.getStoreIdx();
-        this.storeName = storeJoinLocal.getStoreName();
-        this.storeCall =storeJoinLocal.getStoreCall();
-        this.storeUrl = storeJoinLocal.getStoreUrl();
-        this.duringTime = storeJoinLocal.getDuringTime();
-        this.address = storeJoinLocal.getAddress();
-        this.localName = storeJoinLocal.getLocalName();
+    @Builder
+    public StoreDetailsResponseDto(List<StoreImgDto> storeImgs, StoreDetailsInfoDto storeDetails) {
+        this.storeImgs = storeImgs;
+        this.storeDetails = storeDetails;
     }
 }

@@ -1,4 +1,4 @@
-package com.travely.travely.domain;
+package com.travely.travely.dto.store;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -9,15 +9,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class StoreCount {
 
-    private long localName;
+    private String regionName;
     private long cnt;
-    private long localIdx;
+    private long regionIdx;
 
 
     @Builder
-    public StoreCount(long localName, long cnt, long localIdx) {
-        this.localName = localName;
+    public StoreCount(String regionName, long cnt, long regionIdx) {
+        this.regionName = regionName;
         this.cnt = cnt;
-        this.localIdx = localIdx;
+        this.regionIdx = regionIdx;
     }
 }
