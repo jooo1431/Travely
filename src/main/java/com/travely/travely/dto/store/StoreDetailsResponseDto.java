@@ -20,7 +20,7 @@ public class StoreDetailsResponseDto {
 
         this.storeIdx = storeJoinLocal.getStoreIdx();
         this.storeName = storeJoinLocal.getStoreName();
-        this.storeCall =storeJoinLocal.getStoreCall();
+        this.storeCall = storeJoinLocal.getStoreCall();
         this.storeUrl = storeJoinLocal.getStoreUrl();
         this.duringTime = storeJoinLocal.getDuringTime();
         this.address = storeJoinLocal.getAddress();

@@ -35,17 +35,16 @@ public class StoreController {
     }
 
 
-
-    @ApiOperation(value="지역별 상가 세부정보 조회",notes="상가명, 전화번호, 홈페이지, 영업시간, 주소를 반환합니다")
+    @ApiOperation(value = "지역별 상가 세부정보 조회", notes = "상가명, 전화번호, 홈페이지, 영업시간, 주소를 반환합니다")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "세부정보 조회 성공"),
             @ApiResponse(code = 500, message = "서버에러")
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PostMapping("details")
-    public ResponseEntity<List<StoreDetailsResponseDto>> getStoreDetails(){
+    public ResponseEntity<List<StoreDetailsResponseDto>> getStoreDetails() {
         List<StoreDetailsResponseDto> storeDetailsResponseDtos = storeService.getStoreInfoDetails();
-        if(storeDetailsResponseDtos != null) return ResponseEntity.ok().body(storeDetailsResponseDtos);
+        if (storeDetailsResponseDtos != null) return ResponseEntity.ok().body(storeDetailsResponseDtos);
         else return ResponseEntity.ok().build();
 
     }

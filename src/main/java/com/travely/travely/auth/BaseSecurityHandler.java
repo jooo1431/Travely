@@ -37,7 +37,7 @@ public class BaseSecurityHandler implements AuthenticationSuccessHandler, Authen
         UserDetailsImpl userDetailsImpl = new UserDetailsImpl(authentication.getName(), new ArrayList<>(authentication.getAuthorities()));
         response.setContentType(MediaType.APPLICATION_JSON.toString());
         response.setHeader(JwtInfo.HEADER_NAME, JwtUtil.createToken(userDetailsImpl));
-        log.info("[request end] -> {}",request.getRequestURI());
+        log.info("[request end] -> {}", request.getRequestURI());
     }
 
     @Override
@@ -49,12 +49,12 @@ public class BaseSecurityHandler implements AuthenticationSuccessHandler, Authen
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        if(exception.getMessage().equals(LoginContentTypeException.MESSAGE)){
+        if (exception.getMessage().equals(LoginContentTypeException.MESSAGE)) {
             response.setStatus(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
             response.getWriter().print(gson.toJson(ExceptionResponseDto.builder()
                     .field(ValidationExceptionControllerAdvice.FIELD)
                     .message(exception.getMessage())));
-        }else {
+        } else {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             response.getWriter().print(gson.toJson(ExceptionResponseDto.builder()
                     .field(FIELD)

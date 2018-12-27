@@ -33,7 +33,7 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
         if (StringUtils.isEmpty(token)) {
             throw new BadCredentialsException("잘못된 토큰입니다.");
         } else {
-            log.info("[request start] -> {}",request.getRequestURI());
+            log.info("[request start] -> {}", request.getRequestURI());
             return getAuthenticationManager().authenticate(new JwtAuthenticationToken(token));
         }
     }
@@ -47,7 +47,7 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
         context.setAuthentication(authResult);
         SecurityContextHolder.setContext(context);
         chain.doFilter(request, response);
-        log.info("[request end] -> {}",request.getRequestURI());
+        log.info("[request end] -> {}", request.getRequestURI());
     }
 
     @Override
