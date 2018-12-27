@@ -39,7 +39,7 @@ public class ReservationService {
 
         // 영업시간 외 예약하려는 경우
         if (isBetweenOpenAndClose(reservationRequest)) return null;
-log.info("@");
+        log.info("@");
         // 이미예약되있는경우
         if (isReservation(userIdx)) return null;
         log.info("@");
@@ -224,7 +224,7 @@ log.info("@");
         //업체 오픈 시간 및 종료시간
         final String sOpenTime = store.getOpenTime();
         final String sCloseTime = store.getCloseTime();
-        
+
 
         // 사용자가 입력한 예약 및 종료 시간
         final Timestamp startTime = reservationRequest.getStartTime();
@@ -237,26 +237,26 @@ log.info("@");
         String eYmdhhmm = simpleDateFormat.format(endTime.getTime());
 
         //예약날 오픈 시간
-        String soYmdhm = sYmdhhmm + " " + sOpenTime + ":00:000";
+        String soYmdhm = sYmdhhmm + " " + sOpenTime + ":00.0";
         //예약날 클로즈 시간
-        String scYmdhm = sYmdhhmm + " " + sCloseTime + ":00:000";
+        String scYmdhm = sYmdhhmm + " " + sCloseTime + ":00.0";
 
         //예약 종료날 오픈 시간
-        String eoYmdhm = eYmdhhmm + " " + sOpenTime + ":00:000";
+        String eoYmdhm = eYmdhhmm + " " + sOpenTime + ":00.0";
         //예약 종료날 클로즈 시간
-        String ecYmdhm = eYmdhhmm + " " + sCloseTime + ":00:000";
+        String ecYmdhm = eYmdhhmm + " " + sCloseTime + ":00.0";
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.S");
 
         try {
             //예약시작날 오픈시간 long값으로
-            long soTime = sdf.parse(soYmdhm).getTime()/100;
+            long soTime = sdf.parse(soYmdhm).getTime();
             //예약시작날 종료시간 long값으로
-            long scTime = sdf.parse(scYmdhm).getTime()/100;
+            long scTime = sdf.parse(scYmdhm).getTime();
             //예약종료날 오픈시간 long값으로
-            long eoTime = sdf.parse(eoYmdhm).getTime()/100;
+            long eoTime = sdf.parse(eoYmdhm).getTime();
             //예약종료날 종료시간 long값으로
-            long ecTime = sdf.parse(ecYmdhm).getTime()/100;
+            long ecTime = sdf.parse(ecYmdhm).getTime();
 
             //예약 시작 및 종료 시간 long값으로
             long reservedStartTime = startTime.getTime();
@@ -268,10 +268,10 @@ log.info("@");
             }
             log.info("영업시간 외");
             log.info(soYmdhm+" "+soTime);
-            log.info(" "+reservedStartTime);
+            log.info(startTime+" "+reservedStartTime);
             log.info(scYmdhm+" "+scTime);
             log.info(eoYmdhm+" "+eoTime);
-            log.info(" "+reservedEndTime);
+            log.info(endTime+" "+reservedEndTime);
             log.info(ecYmdhm+" "+ecTime);
 
         } catch (Exception e) {
