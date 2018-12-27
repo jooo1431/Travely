@@ -19,20 +19,20 @@ import java.net.URL;
 
 @Component
 @Slf4j
-public class IAmPortTokenUtil{
+public class IAmPortTokenUtil {
 
     @Value("${iamport.key}")
-    public  String impKey;
+    public String impKey;
 
     @Value("${iamport.secret}")
-    public  String impSecret;
+    public String impSecret;
 
     public String createToken() {
 
         String token = "nothing";
 
         try {
-            log.info(impKey+" "+impSecret);
+            log.info(impKey + " " + impSecret);
             //HTTP 접속
             URL url = new URL("https://api.iamport.kr/users/getToken");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();

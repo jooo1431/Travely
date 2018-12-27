@@ -10,6 +10,7 @@ import com.travely.travely.dto.store.StoreDto;
 import com.travely.travely.mapper.PriceMapper;
 import com.travely.travely.mapper.ReservationMapper;
 import com.travely.travely.mapper.StoreMapper;
+import com.travely.travely.util.typeHandler.PayType;
 import com.travely.travely.util.typeHandler.StateType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +32,7 @@ public class ReservationService {
     private final PriceMapper priceMapper;
 
     @Transactional
-    public ReservationResponse saveReservation(final long userIdx,final ReservationRequest reservationRequest) {
+    public ReservationResponse saveReservation(final long userIdx, final ReservationRequest reservationRequest) {
 
         final long TEMP_KEY = -1;
 
@@ -55,7 +56,7 @@ public class ReservationService {
 
         //결제 타입에 따라 state값 골라서 넣어주기 CASH, CARD
         StateType stateType;
-        if (reservationRequest.getPayType().getValue() == 0)
+        if (reservationRequest.getPayType().getValue() == PayType.CASH.getValue())
             stateType = StateType.ReserveOk;
         else
             stateType = StateType.PayOk;
@@ -68,27 +69,67 @@ public class ReservationService {
 
 
         StoreDto storeDto = new StoreDto(storeMapper.getStoreJoinUsersFindByStoreIdx(reservationRequest.getStoreIdx()), like);
-        ReservationResponse reservationResponse = new ReservationResponse(userIdx,reservationRequest, reserveCode, storeDto, price, stateType);
+        ReservationResponse reservationResponse = new ReservationResponse(reservationRequest, reserveCode, storeDto, price, stateType);
 
-        try{
-            //예약목록 저장, 짐목록 저장
-            Reserve reserve = new Reserve(userIdx,reservationRequest.getStoreIdx(),reservationRequest.getStartTime(),reservationRequest.getEndTime(),stateType,price,0,reserveCode,null,null);
-            int reserveIdx = reservationMapper.saveReservation(reserve);
+        //예약목록 저장, 짐목록 저장
+        Reserve reserve = new Reserve(userIdx, reservationRequest.getStoreIdx(), reservationRequest.getStartTime(), reservationRequest.getEndTime(), stateType, price, 0, reserveCode, null, null, reservationRequest.getPayType());
+        reservationMapper.saveReservation(reserve);
 
-            log.info("@"+reserveIdx);
-
-            for(int i=0;i<reservationRequest.getBagDtos().size();i++){
-                reservationMapper.saveBaggages(reserveIdx,reservationRequest.getBagDtos().get(i));
-            }
-
-        }catch (Exception e){
-            log.error(e.getMessage());
-            return null;
+        for (int i = 0; i < reservationRequest.getBagDtos().size(); i++) {
+            reservationMapper.saveBaggages(reserve.getReserveIdx(), reservationRequest.getBagDtos().get(i));
         }
+
+        //현금결제 아니면 결제완료후 결제테이블로 올려야함
 
         return reservationResponse;
 
     }
+
+    @Transactional
+    public String cancelReservation(final long userIdx) {
+        String msg;
+        try {
+            //예약이 있는지?
+            long is = reservationMapper.getReservationCountFindByUserIdx(userIdx);
+            if (is == 0) {
+                msg = "예약 내역 없음";
+            } else {
+                reservationMapper.deleteReservation(userIdx);
+                msg = "예약 취소 성공";
+            }
+
+        } catch (Exception e) {
+            msg = null;
+            log.error(e.getMessage());
+        }
+        return msg;
+    }
+
+    public ReservationResponse getReservation(final long userIdx) {
+        //예약현황에서 deleted컬럼이 0이고, 짐수거 상태가 아닌 컬럼을 셀렉해오자
+
+        //보관 현황에서 봐야할것들
+        //예약상태정보
+        //맡기는 시간, 찾은 시간
+        // 짐정보, 가격
+        // 결제상태 , 결제타입
+        // 짐사진
+        // 가게 위치정보 (위치,주소,영업시간
+        //가게 평점
+        Reserve reserve = reservationMapper.getReserve(userIdx);
+        //예약 내역이 없다면?
+        if(reserve==null)
+            return null;
+
+        double like = storeMapper.getAvgLikeGetByStoreIdx(reserve.getStoreIdx());
+        StoreDto storeDto = new StoreDto(storeMapper.getStoreJoinUsersFindByStoreIdx(userIdx), like);
+        List <BagDto> bagDtos = reservationMapper.getBagDto(reserve.getReserveIdx());
+        List <String> bagImgs = reservationMapper.getBaggagesImgs(reserve.getReserveIdx());
+        ReservationResponse reservationResponse = new ReservationResponse(reserve,bagDtos, reserve.getReserveCode(), storeDto, reserve.getPrice(), reserve.getState(),bagImgs);
+
+        return reservationResponse;
+    }
+
 
     // 영업시간 외 체크
     private boolean isBetweenOpenAndClose(final ReservationRequest reservationRequest) {

@@ -22,7 +22,7 @@ public class StoreJoinUsersDto {
     @Builder
     public StoreJoinUsersDto(String name, String storeName, String address, String storeCall, double latitude, double longitude, String openTime, String closeTime, long storeIdx) {
         this.name = name;
-        this.storeName=storeName;
+        this.storeName = storeName;
         this.address = address;
         this.storeCall = storeCall;
         this.latitude = latitude;

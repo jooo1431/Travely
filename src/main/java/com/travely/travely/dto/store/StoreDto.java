@@ -2,7 +2,7 @@ package com.travely.travely.dto.store;
 
 import lombok.Getter;
 
-import java.sql.Timestamp;
+import java.util.List;
 
 @Getter
 public class StoreDto {
@@ -29,7 +29,7 @@ public class StoreDto {
     //상가id
     private long storeIdx;
 
-    public StoreDto(StoreJoinUsersDto storeJoinUsersDto,final double avgLike) {
+    public StoreDto(StoreJoinUsersDto storeJoinUsersDto, final double avgLike) {
         this.ownerName = storeJoinUsersDto.getName();
         this.storeName = storeJoinUsersDto.getStoreName();
         this.storeCall = storeJoinUsersDto.getStoreCall();

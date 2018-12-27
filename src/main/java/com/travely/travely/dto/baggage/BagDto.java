@@ -1,5 +1,6 @@
 package com.travely.travely.dto.baggage;
 
+import com.travely.travely.domain.Baggage;
 import com.travely.travely.util.typeHandler.BagType;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -16,5 +17,9 @@ public class BagDto {
     public BagDto(BagType bagType, long bagCount) {
         this.bagType = bagType;
         this.bagCount = bagCount;
+    }
+    public BagDto(Baggage baggage){
+        this.bagType=baggage.getBagType();
+        this.bagCount=baggage.getBagCount();
     }
 }
