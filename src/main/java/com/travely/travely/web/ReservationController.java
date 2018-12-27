@@ -37,8 +37,11 @@ public class ReservationController {
 
         long userIdx = Long.parseLong((String) authentication.getPrincipal());
 
-        ReservationResponse reservationResponse = reservationService.saveReservation(userIdx, reservationRequest);
+        //limit갯수 작업
 
+
+        ReservationResponse reservationResponse = reservationService.saveReservation(userIdx, reservationRequest);
+        //예약작업
         if (reservationResponse == null)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         else

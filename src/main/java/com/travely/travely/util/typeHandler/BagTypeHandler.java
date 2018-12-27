@@ -7,9 +7,9 @@ public class BagTypeHandler extends CommonEnumTypeHandler {
 
     @Override
     CommonEnum getTypeByValue(int value) throws Exception {
-        for (StateType stateType : StateType.values()) {
-            if (stateType.getValue() == value)
-                return stateType;
+        for (BagType bagType : BagType.values()) {
+            if (bagType.getValue() == value)
+                return bagType;
         }
         //잘못된 value 들어온 경우
         throw new Exception("Wrong value.");

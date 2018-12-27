@@ -1,8 +1,8 @@
-package com.travely.travely.domain;
+package com.travely.travely.dto.reservation;
 
 import com.travely.travely.util.typeHandler.PayType;
+import com.travely.travely.util.typeHandler.ProgressType;
 import com.travely.travely.util.typeHandler.StateType;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,31 +10,40 @@ import lombok.NoArgsConstructor;
 import java.sql.Timestamp;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Reserve {
+@NoArgsConstructor
+public class ReserveJoinPayment {
     private long reserveIdx;
     private long userIdx;
     private long storeIdx;
     private Timestamp startTime;
     private Timestamp endTime;
-    private StateType state;
+    private StateType stateType;
     private long price;
     private long deleted;
     private String reserveCode;
     private Timestamp depositTime;
     private Timestamp takeTime;
+    private long payIdx;
+    private PayType payType;
+    private long totalPrice;
+    private ProgressType progressType;
 
     @Builder
-    public Reserve(long userIdx, long storeIdx, Timestamp startTime, Timestamp endTime, StateType state, long price, long deleted, String reserveCode, Timestamp depositTime, Timestamp takeTime) {
+    public ReserveJoinPayment(long reserveIdx, long userIdx, long storeIdx, Timestamp startTime, Timestamp endTime, StateType stateType, long price, long deleted, String reserveCode, Timestamp depositTime, Timestamp takeTime, long payIdx, PayType payType, long totalPrice, ProgressType progressType) {
+        this.reserveIdx = reserveIdx;
         this.userIdx = userIdx;
         this.storeIdx = storeIdx;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.state = state;
+        this.stateType = stateType;
         this.price = price;
         this.deleted = deleted;
         this.reserveCode = reserveCode;
         this.depositTime = depositTime;
         this.takeTime = takeTime;
+        this.payIdx = payIdx;
+        this.payType = payType;
+        this.totalPrice = totalPrice;
+        this.progressType = progressType;
     }
 }

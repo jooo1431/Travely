@@ -1,16 +1,20 @@
 package com.travely.travely.service;
 
+import com.travely.travely.domain.Payment;
 import com.travely.travely.domain.Reserve;
 import com.travely.travely.domain.Store;
 import com.travely.travely.dto.baggage.BagDto;
 import com.travely.travely.dto.price.PriceDto;
 import com.travely.travely.dto.reservation.ReservationRequest;
 import com.travely.travely.dto.reservation.ReservationResponse;
+import com.travely.travely.dto.reservation.ReserveJoinPayment;
+import com.travely.travely.dto.reservation.ReserveJoinPaymentJoinStore;
 import com.travely.travely.dto.store.StoreDto;
 import com.travely.travely.mapper.PriceMapper;
 import com.travely.travely.mapper.ReservationMapper;
 import com.travely.travely.mapper.StoreMapper;
 import com.travely.travely.util.typeHandler.PayType;
+import com.travely.travely.util.typeHandler.ProgressType;
 import com.travely.travely.util.typeHandler.StateType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,8 +38,6 @@ public class ReservationService {
     @Transactional
     public ReservationResponse saveReservation(final long userIdx, final ReservationRequest reservationRequest) {
 
-        final long TEMP_KEY = -1;
-
         // 영업시간 외 예약하려는 경우
         //if (isBetweenOpenAndClose(reservationRequest)) return null;
 
@@ -48,6 +50,8 @@ public class ReservationService {
         for (int i = 0; i < reservationRequest.getBagDtos().size(); i++) {
             if (reservationRequest.getBagDtos().get(i).getBagCount() <= 0) return null;
         }
+
+        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
         final UUID uuid = UUID.randomUUID();
         //결제 코드 생성 = 고유번호 앞 8자리
@@ -71,15 +75,39 @@ public class ReservationService {
         StoreDto storeDto = new StoreDto(storeMapper.getStoreJoinUsersFindByStoreIdx(reservationRequest.getStoreIdx()), like);
         ReservationResponse reservationResponse = new ReservationResponse(reservationRequest, reserveCode, storeDto, price, stateType);
 
-        //예약목록 저장, 짐목록 저장
-        Reserve reserve = new Reserve(userIdx, reservationRequest.getStoreIdx(), reservationRequest.getStartTime(), reservationRequest.getEndTime(), stateType, price, 0, reserveCode, null, null, reservationRequest.getPayType());
+
+
+        //예약목록 저장 결제목록에 저장 진행중으로, 짐목록 저장
+        Reserve reserve = Reserve.builder()
+                .userIdx(userIdx)
+                .storeIdx(reservationRequest.getStoreIdx())
+                .startTime(reservationRequest.getStartTime())
+                .endTime(reservationRequest.getEndTime())
+                .state(stateType)
+                .price(price)
+                .deleted(0)
+                .reserveCode(reserveCode)
+                .depositTime(null)
+                .takeTime(null)
+                .build();
+
+        //여기서 예약목록에 저장
         reservationMapper.saveReservation(reserve);
 
+        Payment payment = Payment.builder()
+                .payType(reservationRequest.getPayType())
+                .totalPrice(price)
+                .reserveIdx(reserve.getReserveIdx())
+                .progressType(ProgressType.ING)
+                .build();
+
+        //여기서 결제목록에 저장
+        reservationMapper.savePayment(payment);
+
+        //여기서 짐목록 저장
         for (int i = 0; i < reservationRequest.getBagDtos().size(); i++) {
             reservationMapper.saveBaggages(reserve.getReserveIdx(), reservationRequest.getBagDtos().get(i));
         }
-
-        //현금결제 아니면 결제완료후 결제테이블로 올려야함
 
         return reservationResponse;
 
@@ -116,16 +144,28 @@ public class ReservationService {
         // 짐사진
         // 가게 위치정보 (위치,주소,영업시간
         //가게 평점
-        Reserve reserve = reservationMapper.getReserve(userIdx);
+
+        ReserveJoinPayment reserveJoinPayment = reservationMapper.getReservePaymentFindByUserIdx(userIdx);
         //예약 내역이 없다면?
-        if(reserve==null)
+        if(reserveJoinPayment==null)
             return null;
 
-        double like = storeMapper.getAvgLikeGetByStoreIdx(reserve.getStoreIdx());
-        StoreDto storeDto = new StoreDto(storeMapper.getStoreJoinUsersFindByStoreIdx(userIdx), like);
-        List <BagDto> bagDtos = reservationMapper.getBagDto(reserve.getReserveIdx());
-        List <String> bagImgs = reservationMapper.getBaggagesImgs(reserve.getReserveIdx());
-        ReservationResponse reservationResponse = new ReservationResponse(reserve,bagDtos, reserve.getReserveCode(), storeDto, reserve.getPrice(), reserve.getState(),bagImgs);
+        double like = storeMapper.getAvgLikeGetByStoreIdx(reserveJoinPayment.getStoreIdx());
+        StoreDto storeDto = new StoreDto(storeMapper.getStoreJoinUsersFindByStoreIdx(reserveJoinPayment.getStoreIdx()),like);
+        List <BagDto> bagDtos = reservationMapper.getBagDto(reserveJoinPayment.getReserveIdx());
+        List <String> bagImgs = reservationMapper.getBaggagesImgs(reserveJoinPayment.getReserveIdx());
+
+        ReservationResponse reservationResponse = ReservationResponse.builder()
+                .startTime(reserveJoinPayment.getStartTime())
+                .endTime(reserveJoinPayment.getEndTime())
+                .payType(reserveJoinPayment.getPayType())
+                .stateType(reserveJoinPayment.getStateType())
+                .price(reserveJoinPayment.getPrice())
+                .reserveCode(reserveJoinPayment.getReserveCode())
+                .bagDtos(bagDtos)
+                .bagImgs(bagImgs)
+                .storeDto(storeDto)
+                .build();
 
         return reservationResponse;
     }

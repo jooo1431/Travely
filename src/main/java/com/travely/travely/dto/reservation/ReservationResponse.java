@@ -5,6 +5,7 @@ import com.travely.travely.dto.baggage.BagDto;
 import com.travely.travely.dto.store.StoreDto;
 import com.travely.travely.util.typeHandler.PayType;
 import com.travely.travely.util.typeHandler.StateType;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -32,7 +33,6 @@ public class ReservationResponse {
     //상가정보 및 평점
     private StoreDto storeDto;
 
-
     public ReservationResponse(final ReservationRequest reservationRequest, final String reserveCode, final StoreDto storeDto, final long price, final StateType stateType) {
         this.startTime = reservationRequest.getStartTime();
         this.endTime = reservationRequest.getEndTime();
@@ -44,15 +44,17 @@ public class ReservationResponse {
         this.storeDto = storeDto;
         this.bagImgs=null;
     }
-    public ReservationResponse(final Reserve reserve,final List<BagDto> bagDtos, final String reserveCode, final StoreDto storeDto, final long price, final StateType stateType, final List<String> bagImgs) {
-        this.startTime = reserve.getStartTime();
-        this.endTime = reserve.getEndTime();
-        this.payType = reserve.getPayType();
+
+    @Builder
+    public ReservationResponse(Timestamp startTime, Timestamp endTime, PayType payType, StateType stateType, long price, String reserveCode, List<BagDto> bagDtos, List<String> bagImgs, StoreDto storeDto) {
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.payType = payType;
         this.stateType = stateType;
         this.price = price;
         this.reserveCode = reserveCode;
         this.bagDtos = bagDtos;
+        this.bagImgs = bagImgs;
         this.storeDto = storeDto;
-        this.bagImgs=bagImgs;
     }
 }
