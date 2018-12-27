@@ -9,7 +9,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 @Slf4j
 @RestController
@@ -24,47 +29,22 @@ public class ReservationController {
     @ApiOperation(value = "예약상태 저장", notes = "예약상태 저장 후 예약 정보 반환")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "예약 성공"),
+            @ApiResponse(code = 400, message = "잘못 된 접근"),
             @ApiResponse(code = 500, message = "서버에러")
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PostMapping("/save")
-    public ResponseEntity<ReservationResponse> saveReservation(@RequestBody final ReservationRequest reservationRequest) {
-        ReservationResponse reservationResponse = reservationService.saveReservation(reservationRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(reservationResponse);
-    }
+    public ResponseEntity<ReservationResponse> saveReservation(@ApiIgnore Authentication authentication, @RequestBody final ReservationRequest reservationRequest) {
 
-    @ApiOperation(value = "예약 취소", notes = "예약 취소")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "예약 취소 성공"),
-            @ApiResponse(code = 500, message = "서버에러")
-    })
-    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @PostMapping("/delete")
-    public ResponseEntity<Void> deleteReservation(@Param("userIdx") final String userIdx) {
+        long userIdx = Long.parseLong((String)authentication.getPrincipal());
 
-        if(reservationService.deleteReservation(userIdx)){
-            return ResponseEntity.ok().build();
-        }else{
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+        ReservationResponse reservationResponse = reservationService.saveReservation(userIdx,reservationRequest);
 
-    }
-
-    @ApiOperation(value = "예약 조회", notes = "예약 조회")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "예약 조회 성공"),
-            @ApiResponse(code = 500, message = "서버에러")
-    })
-    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @PostMapping("/info")
-    public ResponseEntity<ReservationResponse> getReservationInfo(@Param("userIdx") final String userIdx) {
-
-        ReservationResponse reservationResponse = reservationService.getReservation(userIdx);
         if(reservationResponse==null)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-
-        return ResponseEntity.ok().body(reservationResponse);
-
+        else
+            return ResponseEntity.status(HttpStatus.CREATED).body(reservationResponse);
     }
+
 
 }

@@ -1,11 +1,9 @@
 package com.travely.travely.dto.reservation;
 
-import com.travely.travely.domain.Reservation;
-import com.travely.travely.domain.Store;
 import com.travely.travely.dto.baggage.BagDto;
 import com.travely.travely.dto.store.StoreDto;
+import com.travely.travely.util.typeHandler.PayType;
 import com.travely.travely.util.typeHandler.StateType;
-import lombok.Builder;
 import lombok.Getter;
 
 import java.sql.Timestamp;
@@ -19,6 +17,8 @@ public class ReservationResponse {
     //맡고 찾는 시간
     private Timestamp startTime;
     private Timestamp endTime;
+    //결제 종류
+    private PayType payType;
     //상태정보
     private StateType stateType;
     private long price;
@@ -29,14 +29,15 @@ public class ReservationResponse {
     //상가정보 및 평점
     private StoreDto storeDto;
 
-    public ReservationResponse(long userIdx, Timestamp startTime, Timestamp endTime, StateType stateType, long price, String reserveCode, List<BagDto> bagDtos, StoreDto storeDto) {
+    public ReservationResponse(final long userIdx,final ReservationRequest reservationRequest, final String reserveCode, final StoreDto storeDto, final long price, final StateType stateType) {
         this.userIdx = userIdx;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.startTime = reservationRequest.getStartTime();
+        this.endTime = reservationRequest.getEndTime();
+        this.payType=reservationRequest.getPayType();
         this.stateType = stateType;
         this.price = price;
         this.reserveCode = reserveCode;
-        this.bagDtos = bagDtos;
+        this.bagDtos = reservationRequest.getBagDtos();
         this.storeDto = storeDto;
     }
 }

@@ -1,6 +1,8 @@
 package com.travely.travely.dto.reservation;
 
 import com.travely.travely.domain.Baggage;
+import com.travely.travely.dto.baggage.BagDto;
+import com.travely.travely.util.typeHandler.PayType;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,30 +13,27 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class ReservationRequest {
-    @ApiModelProperty(example = "1", position = 1)
-    private long userIdx;
 
-    @ApiModelProperty(example = "2", position = 2)
+    @ApiModelProperty(example = "1", position = 2)
     private long storeIdx;
 
-    @ApiModelProperty(position = 3)
+    @ApiModelProperty(example = "1545659383000", position = 3)
     private Timestamp startTime;
 
-    @ApiModelProperty(position = 4)
+    @ApiModelProperty(example = "1545688183000", position = 4)
     private Timestamp endTime;
 
     @ApiModelProperty(position = 5)
-    private List<Baggage> baggages;
+    private List<BagDto> bagDtos;
 
-    @ApiModelProperty(example = "0", position = 6)
-    private long payType;
+    @ApiModelProperty(example = "CARD", position = 6)
+    private PayType payType;
 
-    public ReservationRequest(long userIdx, long storeIdx, Timestamp startTime, Timestamp endTime, List<Baggage> baggages, long payType) {
-        this.userIdx = userIdx;
+    public ReservationRequest(long storeIdx, Timestamp startTime, Timestamp endTime, List<BagDto> bagDtos, PayType payType) {
         this.storeIdx = storeIdx;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.baggages = baggages;
+        this.bagDtos = bagDtos;
         this.payType = payType;
     }
 }

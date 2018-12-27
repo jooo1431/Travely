@@ -1,5 +1,6 @@
 package com.travely.travely.domain;
 
+import com.travely.travely.util.typeHandler.StateType;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,16 +16,15 @@ public class Reserve {
     private long storeIdx;
     private Timestamp startTime;
     private Timestamp endTime;
-    private long state;
+    private StateType state;
     private long price;
     private long deleted;
     private String reserveCode;
-    private Timestamp dipositTime;
+    private Timestamp depositTime;
     private Timestamp takeTime;
 
     @Builder
-    public Reserve(long reserveIdx, long userIdx, long storeIdx, Timestamp startTime, Timestamp endTime, long state, long price, long deleted, String reserveCode, Timestamp dipositTime, Timestamp takeTime) {
-        this.reserveIdx = reserveIdx;
+    public Reserve(long userIdx, long storeIdx, Timestamp startTime, Timestamp endTime, StateType state, long price, long deleted, String reserveCode, Timestamp depositTime, Timestamp takeTime) {
         this.userIdx = userIdx;
         this.storeIdx = storeIdx;
         this.startTime = startTime;
@@ -33,7 +33,7 @@ public class Reserve {
         this.price = price;
         this.deleted = deleted;
         this.reserveCode = reserveCode;
-        this.dipositTime = dipositTime;
+        this.depositTime = depositTime;
         this.takeTime = takeTime;
     }
 }

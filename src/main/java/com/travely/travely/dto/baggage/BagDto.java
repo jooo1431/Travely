@@ -1,17 +1,20 @@
 package com.travely.travely.dto.baggage;
 
+import com.travely.travely.util.typeHandler.BagType;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class BagDto {
     @ApiModelProperty(example = "CARRIER", position = 1)
-    private long bagType;
+    private BagType bagType;
     @ApiModelProperty(example = "2", position = 2)
-    private long bagcount;
+    private long bagCount;
 
-    public BagDto(long bagType, long bagcount) {
+    public BagDto(BagType bagType, long bagCount) {
         this.bagType = bagType;
-        this.bagcount = bagcount;
+        this.bagCount = bagCount;
     }
 }

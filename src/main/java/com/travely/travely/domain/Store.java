@@ -16,14 +16,14 @@ public class Store {
     private String storeCall;
     private String storeUrl;
     private String adress;
-    private Timestamp openTime;
-    private Timestamp closeTime;
+    private String openTime;
+    private String closeTime;
     private double latitude;
     private double longitude;
     private long limit;
 
     @Builder
-    public Store(long storeIdx, long ownerIdx, String storeName, long regionIdx, String storeCall, String storeUrl, String adress, Timestamp openTime, Timestamp closeTime, double latitude, double longitude, long limit) {
+    public Store(long storeIdx, long ownerIdx, String storeName, long regionIdx, String storeCall, String storeUrl, String adress, String openTime, String closeTime, double latitude, double longitude, long limit) {
         this.storeIdx = storeIdx;
         this.ownerIdx = ownerIdx;
         this.storeName = storeName;

@@ -1,10 +1,13 @@
 package com.travely.travely.mapper;
 
 
+import com.travely.travely.domain.Store;
 import com.travely.travely.domain.StoreCount;
 
 import com.travely.travely.domain.StoreJoinLocal;
+import com.travely.travely.dto.store.StoreJoinUsersDto;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -18,6 +21,12 @@ public interface StoreMapper {
     @Select("SELECT localName, COUNT(localIdx) as cnt, localIdx FROM store NATURAL JOIN local GROUP BY localName ORDER BY localName")
     List<StoreCount> getStoreCount();
 
-    @Select("SELECT u.name, s.address, s.storeCall, s.latitude, s.longitude, s.openTime, s.closeTime, s.storeIdx FROM store AS s JOIN users AS u ON s.ownerIdx = u.userIdx WHERE s.storeIdx = #{storeIdx}")
-    Store
+    @Select("SELECT u.name, s.storeName, s.address, s.storeCall, s.latitude, s.longitude, s.openTime, s.closeTime, s.storeIdx FROM store AS s JOIN users AS u ON s.ownerIdx = u.userIdx WHERE s.storeIdx = #{storeIdx}")
+    StoreJoinUsersDto getStoreJoinUsersFindByStoreIdx(@Param("storeIdx")final long storeIdx);
+
+    @Select("SELECT IFNULL(AVG(r.like),0) FROM store as s INNER JOIN review as r ON s.storeIdx=r.storeIdx WHERE s.storeIdx = #{storeIdx}")
+    double getAvgLikeGetByStoreIdx(@Param("storeIdx")final long storeIdx);
+
+    @Select("SELECT * FROM store WHERE storeIdx = #{storeIdx}")
+    Store getStoreFindByStoreIdx(@Param("storeIdx")final long storeIdx);
 }
