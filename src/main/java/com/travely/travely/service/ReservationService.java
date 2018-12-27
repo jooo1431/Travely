@@ -39,18 +39,18 @@ public class ReservationService {
 
         // 영업시간 외 예약하려는 경우
         if (isBetweenOpenAndClose(reservationRequest)) return null;
-
+log.info("@");
         // 이미예약되있는경우
         if (isReservation(userIdx)) return null;
-
+        log.info("@");
         // 기본사용시간 4시간미만
         if (timeCheck(reservationRequest)) return null;
-
+        log.info("@");
         // 짐갯수 0개인경우
         for (int i = 0; i < reservationRequest.getBagDtos().size(); i++) {
             if (reservationRequest.getBagDtos().get(i).getBagCount() <= 0) return null;
         }
-
+        log.info("@");
         //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
         final UUID uuid = UUID.randomUUID();
@@ -118,11 +118,6 @@ public class ReservationService {
         StateType takeOff = StateType.TakeOff;
         ProgressType CANCEL = ProgressType.CANCEL;
 
-        //취소, 수거를 제외한 reserve join payment 테이블 정도 가져오기
-        ReserveJoinPayment reserveJoinPayment = reservationMapper.getReservePaymentFindByUserIdxExceptCancelTakeOff(userIdx, takeOff, cancel);
-        //수정할 payment의 reserveIdx 추출
-        final long reserveIdx = reserveJoinPayment.getReserveIdx();
-
         try {
             //예약이 있는지?
             long isReserve = reservationMapper.getReservationCountFindByUserIdx(userIdx, takeOff, cancel);
@@ -130,8 +125,13 @@ public class ReservationService {
             if (isReserve == 0) {
                 msg = "예약 내역 없음";
             } else {
-                reservationMapper.deleteReservation(userIdx, cancel);
-                reservationMapper.deletePayment(userIdx, CANCEL);
+                //취소, 수거를 제외한 reserve join payment 테이블 정보 가져오기
+                ReserveJoinPayment reserveJoinPayment = reservationMapper.getReservePaymentFindByUserIdxExceptCancelTakeOff(userIdx, takeOff, cancel);
+                //수정할 payment의 reserveIdx 추출
+                final long reserveIdx = reserveJoinPayment.getReserveIdx();
+
+                reservationMapper.deleteReservation(reserveIdx, cancel);
+                reservationMapper.deletePayment(reserveIdx, CANCEL);
                 msg = "예약 취소 성공";
             }
 
@@ -188,7 +188,7 @@ public class ReservationService {
         }
 
         //수용가능하면 트루
-        if (userBagCount >= limit)
+        if (userBagCount <= limit)
             return true;
 
         return false;
@@ -206,6 +206,7 @@ public class ReservationService {
         //현재 보관중인 짐의 총 갯수를 가져오자
         long currentBagCount = reservationMapper.getTotalBagCountFindByStoreIdx(storeIdx);
 
+
         //보관할수 있는 갯수를 구하자 0보다 작으면 그냥 리젝시키자.
         long canTakeCount = limit - currentBagCount;
 
@@ -215,7 +216,6 @@ public class ReservationService {
             return canTakeCount;
     }
 
-
     // 영업시간 외 체크
     private boolean isBetweenOpenAndClose(final ReservationRequest reservationRequest) {
 
@@ -224,6 +224,7 @@ public class ReservationService {
         //업체 오픈 시간 및 종료시간
         final String sOpenTime = store.getOpenTime();
         final String sCloseTime = store.getCloseTime();
+        
 
         // 사용자가 입력한 예약 및 종료 시간
         final Timestamp startTime = reservationRequest.getStartTime();
@@ -245,17 +246,17 @@ public class ReservationService {
         //예약 종료날 클로즈 시간
         String ecYmdhm = eYmdhhmm + " " + sCloseTime + ":00:000";
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss:SSS");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.S");
 
         try {
             //예약시작날 오픈시간 long값으로
-            long soTime = sdf.parse(soYmdhm).getTime();
+            long soTime = sdf.parse(soYmdhm).getTime()/100;
             //예약시작날 종료시간 long값으로
-            long scTime = sdf.parse(scYmdhm).getTime();
+            long scTime = sdf.parse(scYmdhm).getTime()/100;
             //예약종료날 오픈시간 long값으로
-            long eoTime = sdf.parse(eoYmdhm).getTime();
+            long eoTime = sdf.parse(eoYmdhm).getTime()/100;
             //예약종료날 종료시간 long값으로
-            long ecTime = sdf.parse(ecYmdhm).getTime();
+            long ecTime = sdf.parse(ecYmdhm).getTime()/100;
 
             //예약 시작 및 종료 시간 long값으로
             long reservedStartTime = startTime.getTime();
@@ -265,6 +266,13 @@ public class ReservationService {
             if ((soTime <= reservedStartTime) && (scTime >= reservedStartTime) && (eoTime <= reservedEndTime) && (ecTime >= reservedEndTime)) {
                 return false;
             }
+            log.info("영업시간 외");
+            log.info(soYmdhm+" "+soTime);
+            log.info(" "+reservedStartTime);
+            log.info(scYmdhm+" "+scTime);
+            log.info(eoYmdhm+" "+eoTime);
+            log.info(" "+reservedEndTime);
+            log.info(ecYmdhm+" "+ecTime);
 
         } catch (Exception e) {
             log.error(e.getMessage());

@@ -35,12 +35,14 @@ public class ReservationController {
 
         //짐수용한도 체크하기
         final long limit = reservationService.checkLimit(reservationRequest.getStoreIdx());
-        if (limit >= 0)
+
+        if (limit <= 0)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        log.info("@");
         //맡기고자 하는 짐의 양이 limit보다 많으면
         if (!(reservationService.isFull(reservationRequest.getBagDtos(), limit)))
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-
+        log.info("@");
         ReservationQR reservationQR = reservationService.saveReservation(userIdx, reservationRequest);
         //예약작업
         if (reservationQR == null)

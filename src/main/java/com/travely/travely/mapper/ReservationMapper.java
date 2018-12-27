@@ -29,12 +29,12 @@ public interface ReservationMapper {
     List<BagDto> getBagDto(@Param("reserveIdx") final long reserveIdx);
 
     //예약 여부 검색
-    @Select("SELECT COUNT(reserveIdx) FROM reserve WHERE userIdx = #{userIdx} AND NOT state = #{takeOff} AND NOT state = #{cancel}")
+    @Select("SELECT IFNULL(COUNT(reserveIdx),0) FROM reserve WHERE userIdx = #{userIdx} AND NOT state = #{takeOff} AND NOT state = #{cancel}")
     long getReservationCountFindByUserIdx(@Param("userIdx") final long userIdx, @Param("takeOff") final StateType takeOff, @Param("cancel") final StateType cancel);
 
     //예약 목록 삭제처리
-    @Update("UPDATE reserve SET state = #{cancel} WHERE userIdx = #{userIdx}")
-    void deleteReservation(@Param("userIdx") final long userIdx, @Param("cancel") final StateType cancel);
+    @Update("UPDATE reserve SET state = #{cancel} WHERE userIdx = #{reserveIdx}")
+    void deleteReservation(@Param("reserveIdx") final long reserveIdx, @Param("cancel") final StateType cancel);
 
     //결제 목록 취소 처리
     @Update("UPDATE payment SET progressType = #{progressType} WHERE reserveIdx = #{reserveIdx}")
@@ -54,7 +54,7 @@ public interface ReservationMapper {
     ReserveJoinPayment getReservePaymentFindByUserIdxExceptCancelTakeOff(@Param("userIdx") final long userIdx, @Param("takeOff") final StateType takeOff, @Param("cancel") final StateType cancel);
 
     //매장에서 보관중인 짐 갯수 가져오기
-    @Select("SELECT SUM(bagCount) as total FROM reserve NATURAL JOIN baggage WHERE state = 0 OR state = 1 OR state = 2 AND storeIdx = #{storeIdx}")
+    @Select("SELECT IFNULL(SUM(bagCount),0) as total FROM reserve NATURAL JOIN baggage WHERE state = 0 OR state = 1 OR state = 2 AND storeIdx = #{storeIdx}")
     long getTotalBagCountFindByStoreIdx(@Param("storeIdx") final long storeIdx);
 
 }
