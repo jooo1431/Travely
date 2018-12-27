@@ -8,7 +8,6 @@ import com.travely.travely.dto.price.PriceDto;
 import com.travely.travely.dto.reservation.ReservationRequest;
 import com.travely.travely.dto.reservation.ReservationQR;
 import com.travely.travely.dto.reservation.ReserveJoinPayment;
-import com.travely.travely.dto.reservation.ReserveJoinStore;
 import com.travely.travely.dto.store.StoreDto;
 import com.travely.travely.mapper.PriceMapper;
 import com.travely.travely.mapper.ReservationMapper;
@@ -216,37 +215,6 @@ public class ReservationService {
             return canTakeCount;
     }
 
-
-    //업주가 QR코드 리드시 상태변경해주기
-    //QR을 리드 하는 상황은
-    //현금은 현물 거래를 하고 업주가 QR리드를 한다.
-    //카드는 이미 PG를 통해 결제가 완료되어 있는 상태이다.
-    @Transactional
-    public void changeReserveStateAndProgressUsingQR(final String reserveCode) {
-
-        final ReserveJoinPayment reserveJoinPayment = reservationMapper.getReserveJoinPaymentFindByReserveCode(reserveCode);
-
-        //현금결제
-        //reserve테이블의 예약완료 -> 보관중으로
-        final long reserveIdx = reserveJoinPayment.getReserveIdx();
-        final Timestamp depositTime = new Timestamp(System.currentTimeMillis());
-        final StateType stateType = StateType.Archiving;
-        reservationMapper.setStateToArchiveOnReserve(reserveIdx, depositTime, stateType);
-
-        //payment테이블의 결제진행중 -> 결제완료로
-        final long payIdx = reserveJoinPayment.getPayIdx();
-        final ProgressType progressType = ProgressType.DONE;
-        reservationMapper.setProgressToDoneOnPayment(payIdx, progressType);
-
-    }
-
-    //큐알코드 리드할때 업주인지 아닌지 체크
-    //업주면 true 아니면 false
-    public boolean areYouOwner(final String reserveCode, final long ownerIdx) {
-        final ReserveJoinStore reserveJoinStore = reservationMapper.getReserveJoinStoreFindByReserveCode(reserveCode);
-        if (reserveJoinStore.getOwnerIdx() == ownerIdx) return true;
-        else return false;
-    }
 
     // 영업시간 외 체크
     private boolean isBetweenOpenAndClose(final ReservationRequest reservationRequest) {

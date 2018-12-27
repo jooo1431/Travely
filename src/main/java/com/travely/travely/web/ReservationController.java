@@ -88,30 +88,4 @@ public class ReservationController {
         return ResponseEntity.ok().body(reservationQR);
     }
 
-    @ApiOperation(value = "QR코드 리드", notes = "QR코드 리드후 상태변경")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "보관시작"),
-            @ApiResponse(code = 400, message = "잘못 된 접근"),
-            @ApiResponse(code = 500, message = "서버에러")
-    })
-    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @PostMapping("/read")
-    public ResponseEntity<Void> readQrCode(@RequestBody final String reserveCode, @ApiIgnore Authentication authentication) {
-
-        final long ownerIdx = (long) authentication.getPrincipal();
-
-        //사장님의 토큰을 받아서 store의 owner와 비교 후 아니면 리젝
-        if (reservationService.areYouOwner(reserveCode, ownerIdx)) {
-            //예약정보 정상적인지 체크
-
-            //정상적이면
-            reservationService.changeReserveStateAndProgressUsingQR(reserveCode);
-
-
-            return ResponseEntity.ok().build();
-        } else
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-    }
-
-    
 }
