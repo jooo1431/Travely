@@ -39,18 +39,18 @@ public class ReservationService {
 
         // 영업시간 외 예약하려는 경우
         if (isBetweenOpenAndClose(reservationRequest)) return null;
-        log.info("@");
+
         // 이미예약되있는경우
         if (isReservation(userIdx)) return null;
-        log.info("@");
+
         // 기본사용시간 4시간미만
         if (timeCheck(reservationRequest)) return null;
-        log.info("@");
+
         // 짐갯수 0개인경우
         for (int i = 0; i < reservationRequest.getBagDtos().size(); i++) {
             if (reservationRequest.getBagDtos().get(i).getBagCount() <= 0) return null;
         }
-        log.info("@");
+
         //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
         final UUID uuid = UUID.randomUUID();
@@ -116,7 +116,7 @@ public class ReservationService {
         String msg;
         StateType cancel = StateType.Cancel;
         StateType takeOff = StateType.TakeOff;
-        ProgressType CANCEL = ProgressType.CANCEL;
+        ProgressType progressType = ProgressType.CANCEL;
 
         try {
             //예약이 있는지?
@@ -131,7 +131,7 @@ public class ReservationService {
                 final long reserveIdx = reserveJoinPayment.getReserveIdx();
 
                 reservationMapper.deleteReservation(reserveIdx, cancel);
-                reservationMapper.deletePayment(reserveIdx, CANCEL);
+                reservationMapper.deletePayment(reserveIdx, progressType);
                 msg = "예약 취소 성공";
             }
 

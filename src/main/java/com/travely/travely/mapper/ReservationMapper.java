@@ -33,12 +33,12 @@ public interface ReservationMapper {
     long getReservationCountFindByUserIdx(@Param("userIdx") final long userIdx, @Param("takeOff") final StateType takeOff, @Param("cancel") final StateType cancel);
 
     //예약 목록 삭제처리
-    @Update("UPDATE reserve SET state = #{cancel} WHERE userIdx = #{reserveIdx}")
+    @Update("UPDATE reserve SET state = #{cancel} WHERE reserveIdx = #{reserveIdx}")
     void deleteReservation(@Param("reserveIdx") final long reserveIdx, @Param("cancel") final StateType cancel);
 
     //결제 목록 취소 처리
     @Update("UPDATE payment SET progressType = #{progressType} WHERE reserveIdx = #{reserveIdx}")
-    void deletePayment(@Param("reserveIdx") final long reserveIdx, @Param("CANCEL") final ProgressType progressType);
+    void deletePayment(@Param("reserveIdx") final long reserveIdx, @Param("progressType") final ProgressType progressType);
 
     //짐 사진 목록 추출
     @Select("SELECT bagImg FROM baggageImg WHERE reserveIdx = #{reserveIdx}")

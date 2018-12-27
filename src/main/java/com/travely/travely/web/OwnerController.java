@@ -29,20 +29,21 @@ public class OwnerController {
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PostMapping("/qr/read")
-    public ResponseEntity<Void> readQrCode(@RequestBody final String reserveCode, @ApiIgnore Authentication authentication) {
+    public ResponseEntity<String> readQrCode(@RequestBody final String reserveCode, @ApiIgnore Authentication authentication) {
 
-        final long ownerIdx = (long) authentication.getPrincipal();
-
+        final long ownerIdx = Long.parseLong((String) authentication.getPrincipal());
+        final String msg;
         //사장님의 토큰을 받아서 store의 owner와 비교 후 아니면 리젝
         if (ownerService.areYouOwner(reserveCode, ownerIdx)) {
             //예약정보 정상적인지 체크
 
             //정상적이면
-            ownerService.changeReserveStateAndProgressUsingQR(reserveCode);
+            msg = ownerService.changeReserveStateAndProgressUsingQR(reserveCode);
 
-
-            return ResponseEntity.ok().build();
-        } else
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.ok().body(msg);
+        } else{
+            msg="NO DATA";
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(msg);
+        }
     }
 }
