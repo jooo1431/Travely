@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Review {
+public  class Review {
     private long reviewIdx;
     private long storeIdx;
     private long userIdx;
