@@ -53,7 +53,7 @@ public class OwnerService {
         List<BagDto> bagDtos = reservationMapper.getBagDto(reserveIdx);
         List<String> bagImgs = reservationMapper.getBaggagesImgs(reserveIdx);
 
-        return new ReserveInfoDto(reservePaymentUsersDto,bagDtos,bagImgs);
+        return new ReserveInfoDto(reservePaymentUsersDto, bagDtos, bagImgs);
     }
 
 
@@ -62,15 +62,34 @@ public class OwnerService {
     //현금은 현물 거래를 하고 업주가 QR리드를 한다.
     //카드는 이미 PG를 통해 결제가 완료되어 있는 상태이다.
     @Transactional
-    public String changeReserveStateAndProgressUsingQR(final String reserveCode) {
+    public boolean changeStateSavePhoto(final String reserveCode, final MultipartFile[] multipartFiles) {
 
-        String msg;
         final ReserveJoinPayment reserveJoinPayment = ownerMapper.getReserveJoinPaymentFindByReserveCode(reserveCode);
+        final long reserveIdx = reserveJoinPayment.getReserveIdx();
 
         if (reserveJoinPayment != null) {
+
+            //사진 저장 로직
+            List<BaggageImg> baggageImgs = new ArrayList<>();
+
+            try {
+                for (int i = 0; i < multipartFiles.length; i++) {
+                    String url = s3FileUploadService.upload(multipartFiles[i]);
+                    BaggageImg baggageImg = new BaggageImg(reserveIdx, url);
+                    baggageImgs.add(baggageImg);
+                }
+                for (int i = 0; i < baggageImgs.size(); i++) {
+                    ownerMapper.saveBaggagesImg(baggageImgs.get(i));
+                }
+            } catch (Exception e) {
+                log.error(e.getMessage());
+                return false;
+            }
+            //사진 저장 로직 끝
+
+
             //현금결제
             //reserve테이블의 예약완료 -> 보관중으로
-            final long reserveIdx = reserveJoinPayment.getReserveIdx();
             final Timestamp depositTime = new Timestamp(System.currentTimeMillis());
             final StateType stateType = StateType.Archiving;
             ownerMapper.setStateToArchiveOnReserve(reserveIdx, depositTime, stateType);
@@ -80,9 +99,9 @@ public class OwnerService {
             final ProgressType progressType = ProgressType.DONE;
             ownerMapper.setProgressToDoneOnPayment(payIdx, progressType);
 
-            return msg = "READ";
+            return true;
         } else {
-            return msg = "NO DATA";
+            return false;
         }
 
 
@@ -100,40 +119,15 @@ public class OwnerService {
     }
 
 
-    //업주가 짐 사진 찍을때
-    //
-    @Transactional
-    public boolean saveBaggagesPhotos(final String reserveCode, MultipartFile[] bagImgs) {
-        Reserve reserve = ownerMapper.getReserve(reserveCode);
-        final long reserveIdx = reserve.getReserveIdx();
-        List<BaggageImg> baggageImgs = new ArrayList<>();
-
-        try{
-            for(int i=0;i<bagImgs.length;i++){
-                String url = s3FileUploadService.upload(bagImgs[i]);
-                BaggageImg baggageImg = new BaggageImg(reserveIdx,url);
-                baggageImgs.add(baggageImg);
-            }
-            for(int i=0;i<baggageImgs.size();i++){
-                ownerMapper.saveBaggagesImg(baggageImgs.get(i));
-            }
-            return true;
-        }catch (Exception e){
-            log.error(e.getMessage());
-            return false;
-        }
-    }
-
-
     //픽업 (State.TakeOff)할 때
     //
 
 
     //예약이 있는지 확인하여 1이면 true 0, n 개이면 false 반환
-    public boolean isReserveByReserveCode(final String reserveCode){
+    public boolean isReserveByReserveCode(final String reserveCode) {
         long cnt = ownerMapper.getReserveCountByReserveCode(reserveCode);
-        if(cnt==1) return true;
-        else if(cnt==0) return false;
+        if (cnt == 1) return true;
+        else if (cnt == 0) return false;
         else return false;
     }
 }

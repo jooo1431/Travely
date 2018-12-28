@@ -27,64 +27,43 @@ public class OwnerController {
             @ApiResponse(code = 500, message = "서버에러")
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @PostMapping("/read/qr")
-    ResponseEntity<ReserveInfoDto> getReserveInfoByReserveCode(@RequestBody final String reserveCode){
+    @PostMapping("/read")
+    ResponseEntity<ReserveInfoDto> getReserveInfoByReserveCode(final String reserveCode) {
         //예약코드에 해당하는 예약이 있는지 검색
-        if(ownerService.isReserveByReserveCode(reserveCode)){
+        if (ownerService.isReserveByReserveCode(reserveCode)) {
             ReserveInfoDto reserveInfoDto = ownerService.readQRCode(reserveCode);
             return ResponseEntity.ok().body(reserveInfoDto);
-        }else
-        {
+        } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
     }
 
-    @ApiOperation(value = "짐 사진 저장", notes = "짐 사진 저장")
+
+    @ApiOperation(value = "보관 시작 및 사진저장", notes = "짐 사진이 저장되고 보관상태 및 결제 완료 상태가 된다.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "보관시작"),
             @ApiResponse(code = 400, message = "잘못 된 접근"),
+            @ApiResponse(code = 401, message = "인증 오류"),
+            @ApiResponse(code = 409, message = "저장 실패"),
             @ApiResponse(code = 500, message = "서버에러")
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @PostMapping("/reserve/bagImgs")
-    ResponseEntity<String> saveBaggagesImgs(@RequestBody final String reserveCode, @ApiIgnore Authentication authentication, @RequestPart(value = "bagImg")final MultipartFile[] bagImgs){
-        //업주만 저장할수 있게 한번거른다.
-        final long ownerIdx = Long.parseLong((String) authentication.getPrincipal());
-        if(ownerService.areYouOwner(reserveCode, ownerIdx)){
-            if(ownerService.saveBaggagesPhotos(reserveCode,bagImgs)){
-                return ResponseEntity.status(HttpStatus.CREATED).body("saved");
-            }
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("failed");
-        }else{
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("auth error");
-        }
-    }
-
-
-    @ApiOperation(value = "보관 시작", notes = "보관상태 및 결제 완료 상태가 된다.")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "보관시작"),
-            @ApiResponse(code = 400, message = "잘못 된 접근"),
-            @ApiResponse(code = 500, message = "서버에러")
-    })
-    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @PostMapping("/reserve/confirm")
-    public ResponseEntity<String> readQrCode(@RequestBody final String reserveCode, @ApiIgnore Authentication authentication) {
+    @PutMapping("/update/confirm")
+    public ResponseEntity<Void> readQrCode(final String reserveCode, @ApiIgnore Authentication authentication, @RequestPart(value = "bagImg") final MultipartFile[] bagImgs) {
 
         final long ownerIdx = Long.parseLong((String) authentication.getPrincipal());
-        final String msg;
+
         //사장님의 토큰을 받아서 store의 owner와 비교 후 아니면 리젝
         if (ownerService.areYouOwner(reserveCode, ownerIdx)) {
             //예약정보 정상적인지 체크
 
             //정상적이면
-            msg = ownerService.changeReserveStateAndProgressUsingQR(reserveCode);
+            ownerService.changeStateSavePhoto(reserveCode,bagImgs);
 
-            return ResponseEntity.ok().body(msg);
-        } else{
-            msg="NO DATA";
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(msg);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 }
