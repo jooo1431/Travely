@@ -48,16 +48,17 @@ public class OwnerController {
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PostMapping("/reserve/bagImgs")
-    ResponseEntity<Void> saveBaggagesImgs(@RequestBody final long reserveIdx, @ApiIgnore Authentication authentication, @RequestPart(value = "bagImg")final MultipartFile[] bagImgs){
+    ResponseEntity<String> saveBaggagesImgs(@RequestBody final String reserveCode, @ApiIgnore Authentication authentication, @RequestPart(value = "bagImg")final MultipartFile[] bagImgs){
         //업주만 저장할수 있게 한번거른다.
-        if(true){
-
-
+        final long ownerIdx = Long.parseLong((String) authentication.getPrincipal());
+        if(ownerService.areYouOwner(reserveCode, ownerIdx)){
+            if(ownerService.saveBaggagesPhotos(reserveCode,bagImgs)){
+                return ResponseEntity.status(HttpStatus.CREATED).body("saved");
+            }
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("failed");
         }else{
-
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("auth error");
         }
-
-        return null;
     }
 
 

@@ -1,6 +1,8 @@
 package com.travely.travely.mapper;
 
 
+import com.travely.travely.domain.BaggageImg;
+import com.travely.travely.domain.Reserve;
 import com.travely.travely.dto.reservation.ReserveJoinPayment;
 import com.travely.travely.dto.reservation.ReservePaymentUsersDto;
 import com.travely.travely.dto.reservation.ReserveJoinStore;
@@ -14,16 +16,20 @@ import java.sql.Timestamp;
 public interface OwnerMapper {
 
 
-    /*
-    reserveCode를 이용하여
-    현재 진행중인 예약 정보를 가져오기
-     */
+    //reserveCode로 reserve객체 가져오기
+    @Select("SELECT * FROM reserve WHERE reserveCode = #{reserveCode} AND NOT state = 3 AND NOT state = 4")
+    Reserve getReserve(@Param("reserveCode")final String reserveCode);
+
+    //짐 사진 저장하기
+    @Insert("INSERT INTO baggageImg (reserveIdx, bagImg) VALUE (#{baggageImg.reserveIdx}, #{baggageImg.bagImg})")
+    void saveBaggagesImg(@Param("baggaeImg")final BaggageImg baggageImg);
+
+    //reserveCode를 이용하여
+    //현재 진행중인 예약 정보를 가져오기
     @Select("SELECT r.*, p.payIdx, p.payType, p.progressType, u.name, u.phone, u.profileImg FROM payment as p JOIN reserve as r, users as u WHERE p.reserveIdx = r.reserveIdx AND r.userIdx = u.userIdx AND NOT state = 3 AND NOT state = 4 AND reserveCode = #{reserveCode}")
     ReservePaymentUsersDto getReserveInfoFindByRerserveCode(@Param("reserveCode") final String reserveCode);
 
-    /*
-    현재 진행형인 예약정보가 있는지 확인하기
-     */
+    //현재 진행형인 예약정보가 있는지 확인하기
     @Select("SELECT COUNT(*) FROM reserve WHERE reserveCode = #{reserveCode} AND NOT state = 3 AND NOT state = 4")
     long getReserveCountByReserveCode(@Param("reserveCode") final String reserveCode);
 

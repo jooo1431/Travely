@@ -1,5 +1,9 @@
 package com.travely.travely.service;
 
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
+import com.travely.travely.domain.BaggageImg;
+import com.travely.travely.domain.Reserve;
 import com.travely.travely.dto.baggage.BagDto;
 import com.travely.travely.dto.reservation.ReserveInfoDto;
 import com.travely.travely.dto.reservation.ReserveJoinPayment;
@@ -13,8 +17,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -24,6 +30,7 @@ public class OwnerService {
 
     private final OwnerMapper ownerMapper;
     private final ReservationMapper reservationMapper;
+    private final S3FileUploadService s3FileUploadService;
 
     /**
      * QR 코드 읽고 예약정보 보여주기
@@ -96,11 +103,25 @@ public class OwnerService {
     //업주가 짐 사진 찍을때
     //
     @Transactional
-    public void saveBaggagesPhotos() {
-        //사진을 찍어
-        //사진을 보여줘
-        //맘에들면 저장
-        //아니면 지우고 다시 찍어
+    public boolean saveBaggagesPhotos(final String reserveCode, MultipartFile[] bagImgs) {
+        Reserve reserve = ownerMapper.getReserve(reserveCode);
+        final long reserveIdx = reserve.getReserveIdx();
+        List<BaggageImg> baggageImgs = new ArrayList<>();
+
+        try{
+            for(int i=0;i<bagImgs.length;i++){
+                String url = s3FileUploadService.upload(bagImgs[i]);
+                BaggageImg baggageImg = new BaggageImg(reserveIdx,url);
+                baggageImgs.add(baggageImg);
+            }
+            for(int i=0;i<baggageImgs.size();i++){
+                ownerMapper.saveBaggagesImg(baggageImgs.get(i));
+            }
+            return true;
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return false;
+        }
     }
 
 
