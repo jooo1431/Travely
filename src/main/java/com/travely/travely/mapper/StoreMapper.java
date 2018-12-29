@@ -22,7 +22,7 @@ public interface StoreMapper {
     Store findStoreByStoreIdx(@Param("storeIdx") final long storeIdx);
 
     @Select("SELECT storeName, storeIdx, regionName, regionIdx FROM store NATURAL JOIN region WHERE regionIdx = #{regionIdx} ORDER BY regionName")
-    List<StoreListResponseDto> getStoreList(@Param("regionIdx") final long regionIdx);
+    List<StoreListResponseDto> findStoreListDto(@Param("regionIdx") final long regionIdx);
 
     @Select("SELECT storeImg,storeImgIdx FROM storeImg WHERE storeIdx = #{storeIdx}")
     List<StoreImageResponseDto> findStoreImageByStoreIdx(Long storeIdx);

@@ -16,11 +16,9 @@ public class StoreService {
 
     private final StoreMapper storeMapper;
 
-    public List<StoreListResponseDto> getStoreList(final long regionIdx) {
-        final List<StoreListResponseDto> storeListResponseDtos = storeMapper.getStoreList(regionIdx); //전체 테이블정보를 받음
 
-        if (storeListResponseDtos.get(0) == null) return storeListResponseDtos; //테이블정보 못받아오면 빈리스트 반환
-        return storeListResponseDtos; //테이블정보 받았으면 리스트 제대로 반환
+    public List<StoreListResponseDto> getStoreList(final long regionIdx) {
+        return storeMapper.findStoreListDto(regionIdx);
     }
 
     public StoreDetailsInfoResonseDto getStoreDetails(final Long storeIdx) {
@@ -30,7 +28,7 @@ public class StoreService {
                 .build();
     }
 
-    public List<StoreImageResponseDto> getStoreImage(final Long storeIdx){
+    public List<StoreImageResponseDto> getStoreImage(final Long storeIdx) {
         return storeMapper.findStoreImageByStoreIdx(storeIdx);
     }
 }
