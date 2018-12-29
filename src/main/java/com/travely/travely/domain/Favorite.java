@@ -7,15 +7,17 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class favorite {
+public class Favorite {
     private long favoriteIdx;
     private long useIdx;
     private long storeIdx;
+    private long isFavorite;
 
     @Builder
-    public favorite(long favoriteIdx, long useIdx, long storeIdx) {
+    public Favorite(long favoriteIdx, long useIdx, long storeIdx,long isFavorite) {
         this.favoriteIdx = favoriteIdx;
         this.useIdx = useIdx;
         this.storeIdx = storeIdx;
+        this.isFavorite = isFavorite;
     }
 }

@@ -7,18 +7,17 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class StoreListResponseDto {
+public class RegionResponseDto {
 
-    private String storeName;
-    private long storeIdx;
     private String regionName;
+    private long cnt;
     private long regionIdx;
 
+
     @Builder
-    public StoreListResponseDto(String storeName, long storeIdx, String regionName, long regionIdx) {
-        this.storeName = storeName;
-        this.storeIdx = storeIdx;
+    public RegionResponseDto(String regionName, long cnt, long regionIdx) {
         this.regionName = regionName;
+        this.cnt = cnt;
         this.regionIdx = regionIdx;
     }
 }

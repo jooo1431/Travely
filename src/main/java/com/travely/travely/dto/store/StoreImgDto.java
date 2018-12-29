@@ -1,4 +1,4 @@
-package com.travely.travely.domain;
+package com.travely.travely.dto.store;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -7,15 +7,15 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class StoreImg {
-    private Long storeIdx;
-    private Long storeImgIdx;
+public class StoreImgDto {
+    private long storeIdx;
+    private String storeName;
     private String storeImg;
 
     @Builder
-    public StoreImg(Long storeIdx, Long storeImgIdx, String storeImg) {
+    public StoreImgDto(long storeIdx, String storeName, String storeImg) {
         this.storeIdx = storeIdx;
-        this.storeImgIdx = storeImgIdx;
+        this.storeName = storeName;
         this.storeImg = storeImg;
     }
 }

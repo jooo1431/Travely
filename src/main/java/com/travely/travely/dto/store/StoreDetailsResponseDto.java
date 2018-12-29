@@ -1,29 +1,25 @@
 package com.travely.travely.dto.store;
 
-import com.travely.travely.domain.StoreJoinLocal;
+import com.travely.travely.dto.review.ReviewResponseDto;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
-import org.apache.catalina.Store;
+import lombok.NoArgsConstructor;
+import java.util.List;
+
 
 @Getter
 public class StoreDetailsResponseDto {
 
-    private long storeIdx;
-    private String storeName;
-    private String storeCall;
-    private String storeUrl;
-    private String duringTime;
-    private String address;
-    private String localName;
+    private StoreDetailsInfoResonseDto storeDetailsInfoResonseDto;
 
+    private List<ReviewResponseDto> reviewResponseDto;
 
-    public StoreDetailsResponseDto(final StoreJoinLocal storeJoinLocal) {
+    private Double grade;
 
-        this.storeIdx = storeJoinLocal.getStoreIdx();
-        this.storeName = storeJoinLocal.getStoreName();
-        this.storeCall = storeJoinLocal.getStoreCall();
-        this.storeUrl = storeJoinLocal.getStoreUrl();
-        this.duringTime = storeJoinLocal.getDuringTime();
-        this.address = storeJoinLocal.getAddress();
-        this.localName = storeJoinLocal.getLocalName();
+    public StoreDetailsResponseDto(StoreDetailsInfoResonseDto storeDetailsInfoResonseDto, List<ReviewResponseDto> reviewResponseDto) {
+        this.reviewResponseDto = reviewResponseDto;
+        this.storeDetailsInfoResonseDto = storeDetailsInfoResonseDto;
+        this.grade = reviewResponseDto.stream().mapToDouble(ReviewResponseDto::getLike).average().getAsDouble();
     }
 }
