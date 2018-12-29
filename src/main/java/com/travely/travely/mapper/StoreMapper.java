@@ -19,22 +19,15 @@ public interface StoreMapper {
     double getAvgLikeGetByStoreIdx(@Param("storeIdx") final long storeIdx);
 
     @Select("SELECT * FROM store WHERE storeIdx = #{storeIdx}")
-    Store getStoreFindByStoreIdx(@Param("storeIdx") final long storeIdx);
-
-    @Select("SELECT storeImg FROM storeImg WHERE storeIdx = #{storeIdx}")
-    List<String> getStoreImgFindByStoreIdx(@Param("storeIdx") final long storeIdx);
+    Store findStoreByStoreIdx(@Param("storeIdx") final long storeIdx);
 
     @Select("SELECT storeName, storeIdx, regionName, regionIdx FROM store NATURAL JOIN region WHERE regionIdx = #{regionIdx} ORDER BY regionName")
     List<StoreListResponseDto> getStoreList(@Param("regionIdx") final long regionIdx);
 
-    @Select("SELECT * FROM store NATURAL JOIN region WHERE storeIdx = #{storeIdx}")
-    StoreDetailsInfoDto getStoreInfo(@Param("storeIdx") final long storeIdx);
+    @Select("SELECT storeImg,storeImgIdx FROM storeImg WHERE storeIdx = #{storeIdx}")
+    List<StoreImageResponseDto> findStoreImageByStoreIdx(Long storeIdx);
 
-    @Select("SELECT storeIdx, storeName, storeImg FROM storeImg NATURAL JOIN store WHERE storeIdx = #{storeIdx}")
-    List<StoreImgDto> getStoreDetailsImg(@Param("storeIdx") final long storeIdx);
-
-    @Select("SELECT * FROM store NATURAL JOIN region WHERE storeIdx = #{storeIdx}")
-    StoreDetailsResponseDto getStoreDetails(@Param("storeIdx") final long storeIdx);
-
+    @Select("SELECT * FROM store WHERE storeIdx = #{storeIdx}")
+    Store getStoreFindByStoreIdx(@Param("storeIdx") final long storeIdx);
 }
 

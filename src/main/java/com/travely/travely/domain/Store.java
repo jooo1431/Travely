@@ -16,7 +16,7 @@ public class Store {
     private long regionIdx;
     private String storeCall;
     private String storeUrl;
-    private String adress;
+    private String address;
     private String openTime;
     private String closeTime;
     private double latitude;
@@ -24,14 +24,15 @@ public class Store {
     private long limit;
 
     @Builder
-    public Store(long storeIdx, long ownerIdx, String storeName, long regionIdx, String storeCall, String storeUrl, String adress, String openTime, String closeTime, double latitude, double longitude, long limit) {
+    public Store(long storeIdx, long ownerIdx, String storeName, long regionIdx, String storeCall, String storeUrl, String address,
+                 String openTime, String closeTime, double latitude, double longitude, long limit) {
         this.storeIdx = storeIdx;
         this.ownerIdx = ownerIdx;
         this.storeName = storeName;
         this.regionIdx = regionIdx;
         this.storeCall = storeCall;
         this.storeUrl = storeUrl;
-        this.adress = adress;
+        this.address = address;
         this.openTime = openTime;
         this.closeTime = closeTime;
         this.latitude = latitude;
