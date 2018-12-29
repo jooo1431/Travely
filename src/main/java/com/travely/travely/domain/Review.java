@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
+import java.util.Date;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -16,10 +17,10 @@ public  class Review {
     private long userIdx;
     private String content;
     private long like;
-    private long createAt;
+    private Date createAt;
 
     @Builder
-    public Review(long reviewIdx, long storeIdx, long userIdx, String content, long like, Long createAt) {
+    public Review(long reviewIdx, long storeIdx, long userIdx, String content, long like, Date createAt) {
         this.reviewIdx = reviewIdx;
         this.storeIdx = storeIdx;
         this.userIdx = userIdx;
