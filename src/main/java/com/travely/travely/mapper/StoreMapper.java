@@ -2,27 +2,15 @@ package com.travely.travely.mapper;
 
 
 import com.travely.travely.domain.Store;
-import com.travely.travely.domain.StoreCount;
-
-import com.travely.travely.domain.StoreImg;
-import com.travely.travely.domain.StoreJoinLocal;
-import com.travely.travely.dto.store.StoreJoinUsersDto;
+import com.travely.travely.dto.store.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 
 @Mapper
 public interface StoreMapper {
-
-    @Select("SELECT * FROM store NATURAL JOIN local ORDER BY localName")
-        //가나다 순으로 리스트에 들어감
-    List<StoreJoinLocal> getEntireStoreInfo();
-
-    @Select("SELECT localName, COUNT(localIdx) as cnt, localIdx FROM store NATURAL JOIN local GROUP BY localName ORDER BY localName")
-    List<StoreCount> getStoreCount();
 
     @Select("SELECT u.name, s.storeName, s.address, s.storeCall, s.latitude, s.longitude, s.openTime, s.closeTime, s.storeIdx FROM store AS s JOIN users AS u ON s.ownerIdx = u.userIdx WHERE s.storeIdx = #{storeIdx}")
     StoreJoinUsersDto getStoreJoinUsersFindByStoreIdx(@Param("storeIdx") final long storeIdx);
@@ -35,4 +23,18 @@ public interface StoreMapper {
 
     @Select("SELECT storeImg FROM storeImg WHERE storeIdx = #{storeIdx}")
     List<String> getStoreImgFindByStoreIdx(@Param("storeIdx") final long storeIdx);
+
+    @Select("SELECT storeName, storeIdx, regionName, regionIdx FROM store NATURAL JOIN region WHERE regionIdx = #{regionIdx} ORDER BY regionName")
+    List<StoreListResponseDto> getStoreList(@Param("regionIdx") final long regionIdx);
+
+    @Select("SELECT * FROM store NATURAL JOIN region WHERE storeIdx = #{storeIdx}")
+    StoreDetailsInfoDto getStoreInfo(@Param("storeIdx") final long storeIdx);
+
+    @Select("SELECT storeIdx, storeName, storeImg FROM storeImg NATURAL JOIN store WHERE storeIdx = #{storeIdx}")
+    List<StoreImgDto> getStoreDetailsImg(@Param("storeIdx") final long storeIdx);
+
+    @Select("SELECT * FROM store NATURAL JOIN region WHERE storeIdx = #{storeIdx}")
+    StoreDetailsResponseDto getStoreDetails(@Param("storeIdx") final long storeIdx);
+
 }
+
