@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
 @Getter
@@ -15,10 +16,10 @@ public  class Review {
     private long userIdx;
     private String content;
     private long like;
-    private Timestamp createAt;
+    private long createAt;
 
     @Builder
-    public Review(long reviewIdx, long storeIdx, long userIdx, String content, long like, Timestamp createAt) {
+    public Review(long reviewIdx, long storeIdx, long userIdx, String content, long like, Long createAt) {
         this.reviewIdx = reviewIdx;
         this.storeIdx = storeIdx;
         this.userIdx = userIdx;
