@@ -31,7 +31,7 @@ public class OwnerController {
     ResponseEntity<ReserveInfoDto> getReserveInfoByReserveCode(final String reserveCode) {
         //예약코드에 해당하는 예약이 있는지 검색
         if (ownerService.isReserveByReserveCode(reserveCode)) {
-            ReserveInfoDto reserveInfoDto = ownerService.readQRCode(reserveCode);
+            ReserveInfoDto reserveInfoDto = ownerService.readReserveCode(reserveCode);
             return ResponseEntity.ok().body(reserveInfoDto);
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -44,8 +44,6 @@ public class OwnerController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "보관시작"),
             @ApiResponse(code = 400, message = "잘못 된 접근"),
-            @ApiResponse(code = 401, message = "인증 오류"),
-            @ApiResponse(code = 409, message = "저장 실패"),
             @ApiResponse(code = 500, message = "서버에러")
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
@@ -59,11 +57,29 @@ public class OwnerController {
             //예약정보 정상적인지 체크
 
             //정상적이면
-            ownerService.changeStateSavePhoto(reserveCode,bagImgs);
+            ownerService.changeStateSavePhoto(reserveCode, bagImgs);
 
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
+
+    @ApiOperation(value = "보관 중인 짐 내역 보기", notes = "업주의 ownerIdx를 이용하여 보관중임 짐 내역을 본다.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "조회 성공"),
+            @ApiResponse(code = 400, message = "잘못 된 접근"),
+            @ApiResponse(code = 500, message = "서버에러")
+    })
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @PostMapping("/read/list")
+    public ResponseEntity<Void> readList(@ApiIgnore Authentication authentication){
+
+        final long ownerIdx = Long.parseLong((String) authentication.getPrincipal());
+
+
+
+        return null;
+    }
+
 }

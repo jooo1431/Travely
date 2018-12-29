@@ -267,12 +267,12 @@ public class ReservationService {
                 return false;
             }
             log.info("영업시간 외");
-            log.info(soYmdhm+" "+soTime);
-            log.info(startTime+" "+reservedStartTime);
-            log.info(scYmdhm+" "+scTime);
-            log.info(eoYmdhm+" "+eoTime);
-            log.info(endTime+" "+reservedEndTime);
-            log.info(ecYmdhm+" "+ecTime);
+            log.info(soYmdhm + " " + soTime);
+            log.info(startTime + " " + reservedStartTime);
+            log.info(scYmdhm + " " + scTime);
+            log.info(eoYmdhm + " " + eoTime);
+            log.info(endTime + " " + reservedEndTime);
+            log.info(ecYmdhm + " " + ecTime);
 
         } catch (Exception e) {
             log.error(e.getMessage());

@@ -18,11 +18,11 @@ public interface OwnerMapper {
 
     //reserveCode로 reserve객체 가져오기
     @Select("SELECT * FROM reserve WHERE reserveCode = #{reserveCode} AND NOT state = 3 AND NOT state = 4")
-    Reserve getReserve(@Param("reserveCode")final String reserveCode);
+    Reserve getReserve(@Param("reserveCode") final String reserveCode);
 
     //짐 사진 저장하기
     @Insert("INSERT INTO baggageImg (reserveIdx, bagImg) VALUE (#{baggageImg.reserveIdx}, #{baggageImg.bagImg})")
-    void saveBaggagesImg(@Param("baggaeImg")final BaggageImg baggageImg);
+    void saveBaggagesImg(@Param("baggaeImg") final BaggageImg baggageImg);
 
     //reserveCode를 이용하여
     //현재 진행중인 예약 정보를 가져오기

@@ -1,9 +1,6 @@
 package com.travely.travely.service;
 
-import com.amazonaws.AmazonServiceException;
-import com.amazonaws.SdkClientException;
 import com.travely.travely.domain.BaggageImg;
-import com.travely.travely.domain.Reserve;
 import com.travely.travely.dto.baggage.BagDto;
 import com.travely.travely.dto.reservation.ReserveInfoDto;
 import com.travely.travely.dto.reservation.ReserveJoinPayment;
@@ -43,7 +40,7 @@ public class OwnerService {
      * 짐 타입
      * 가격 불러오기
      **/
-    public ReserveInfoDto readQRCode(final String reserveCode) {
+    public ReserveInfoDto readReserveCode(final String reserveCode) {
 
         //예약코드로 사용자 정보 불러옴
         ReservePaymentUsersDto reservePaymentUsersDto = ownerMapper.getReserveInfoFindByRerserveCode(reserveCode);
@@ -115,6 +112,11 @@ public class OwnerService {
             if (reserveJoinStore.getOwnerIdx() == ownerIdx) return true;
             else return false;
         } else return false;
+
+    }
+
+    //해당 업주에게 보관중인 짐 리스트를 보여줄때
+    public void readList(final long ownerIdx){
 
     }
 

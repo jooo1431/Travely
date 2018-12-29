@@ -1,6 +1,5 @@
 package com.travely.travely.domain;
 
-import com.travely.travely.util.typeHandler.PayType;
 import com.travely.travely.util.typeHandler.StateType;
 import lombok.AccessLevel;
 import lombok.Builder;
