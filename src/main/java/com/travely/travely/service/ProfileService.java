@@ -47,6 +47,7 @@ public class ProfileService {
         else return HttpStatus.BAD_REQUEST;
     }
 
+
     /**
      * 프로필 사진 조회
      * @param userIdx
