@@ -1,6 +1,6 @@
 package com.travely.travely.service;
 
-import com.travely.travely.dto.store.RegionResponseDto;
+import com.travely.travely.dto.region.RegionResponseDto;
 import com.travely.travely.mapper.RegionMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

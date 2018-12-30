@@ -1,4 +1,4 @@
-package com.travely.travely.dto.store;
+package com.travely.travely.dto.region;
 
 import com.travely.travely.domain.Store;
 

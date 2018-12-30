@@ -1,6 +1,6 @@
 package com.travely.travely.web;
 
-import com.travely.travely.dto.store.RegionResponseDto;
+import com.travely.travely.dto.region.RegionResponseDto;
 import com.travely.travely.service.RegionService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
