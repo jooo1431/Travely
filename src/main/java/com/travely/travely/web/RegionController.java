@@ -1,6 +1,7 @@
 package com.travely.travely.web;
 
 import com.travely.travely.dto.store.RegionResponseDto;
+import com.travely.travely.mapper.RegionMapper;
 import com.travely.travely.service.RegionService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,8 @@ import java.util.List;
 public class RegionController {
 
     private final RegionService regionService;
+
+    private final RegionMapper regionMapper;
 
     @ApiOperation(value = "제휴상가 지역별 목록 조회", notes = "지역명과 상가수를 반환합니다.")
     @ApiResponses(value = {

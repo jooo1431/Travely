@@ -11,4 +11,5 @@ public interface RegionMapper {
 
     @Select("SELECT regionName, COUNT(regionIdx) as cnt, regionIdx FROM store NATURAL JOIN region GROUP BY regionName ORDER BY regionName")
     List<RegionResponseDto> findRegionDto();
+
 }
