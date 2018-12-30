@@ -23,25 +23,15 @@ public interface StoreMapper {
 
     @Select("SELECT * FROM store WHERE storeIdx = #{storeIdx}")
     @Results(value = {
-            @Result(property = "reviews", javaType = List.class, column = "storeIdx", many = @Many(select = "findReviewByStoreIdx", fetchType = FetchType.LAZY)),
-            @Result(property = "storeImgs", javaType = List.class, column = "storeIdx", many = @Many(select = "findStoreImgByStoreIdx", fetchType = FetchType.LAZY))
+            @Result(property = "reviews", javaType = List.class, column = "storeIdx",
+                    many = @Many(select = "com.travely.travely.mapper.ReviewMapper.findReviewsByStoreIdx", fetchType = FetchType.LAZY)),
+            @Result(property = "storeImgs", javaType = List.class, column = "storeIdx",
+                    many = @Many(select = "com.travely.travely.mapper.StoreImgMapper.findStoreImgsByStoreIdx", fetchType = FetchType.LAZY))
     })
     Store findStoreByStoreIdx(@Param("storeIdx") final long storeIdx);
-
-    @Select("SELECT storeName, storeIdx, regionName, regionIdx FROM store NATURAL JOIN region WHERE regionIdx = #{regionIdx} ORDER BY regionName")
-    List<StoreListResponseDto> findStoreListDto(@Param("regionIdx") final long regionIdx);
-
-    @Select("SELECT storeImg,storeImgIdx FROM storeImg WHERE storeIdx = #{storeIdx}")
-    List<StoreImageResponseDto> findStoreImageByStoreIdx(Long storeIdx);
-
+    
     @Select("SELECT * FROM store WHERE storeIdx = #{storeIdx}")
     Store getStoreFindByStoreIdx(@Param("storeIdx") final long storeIdx);
-
-    @Select("SELECT * from review where storeIdx =#{storeIdx}")
-    List<Review> findReviewByStoreIdx();
-
-    @Select("SELECT * from storeImg where storeIdx =#{storeIdx}")
-    List<StoreImg> findStoreImgByStoreIdx();
 
 }
 

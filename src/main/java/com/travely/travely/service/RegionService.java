@@ -2,6 +2,7 @@ package com.travely.travely.service;
 
 import com.travely.travely.config.CommonConfig;
 import com.travely.travely.dto.store.RegionResponseDto;
+import com.travely.travely.dto.store.StoreListResponseDto;
 import com.travely.travely.mapper.RegionMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,4 +19,7 @@ public class RegionService {
         return CommonConfig.getCheckedList(regionMapper.findRegionDto());
     }
 
+    public List<StoreListResponseDto> getStoreList(final long regionIdx) {
+        return CommonConfig.getCheckedList(regionMapper.findStoreListDtoByRegionIdx(regionIdx));
+    }
 }
