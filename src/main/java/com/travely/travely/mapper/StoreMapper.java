@@ -1,12 +1,8 @@
 package com.travely.travely.mapper;
 
 
-import com.travely.travely.domain.Review;
 import com.travely.travely.domain.Store;
-import com.travely.travely.domain.StoreImg;
-import com.travely.travely.dto.store.StoreImageResponseDto;
 import com.travely.travely.dto.store.StoreJoinUsersDto;
-import com.travely.travely.dto.store.StoreListResponseDto;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.FetchType;
 
@@ -26,12 +22,17 @@ public interface StoreMapper {
             @Result(property = "reviews", javaType = List.class, column = "storeIdx",
                     many = @Many(select = "com.travely.travely.mapper.ReviewMapper.findReviewsByStoreIdx", fetchType = FetchType.LAZY)),
             @Result(property = "storeImgs", javaType = List.class, column = "storeIdx",
-                    many = @Many(select = "com.travely.travely.mapper.StoreImgMapper.findStoreImgsByStoreIdx", fetchType = FetchType.LAZY))
+                    many = @Many(select = "com.travely.travely.mapper.StoreImgMapper.findStoreImgsByStoreIdx", fetchType = FetchType.LAZY)),
+            @Result(property = "restWeeks", javaType = List.class, column = "storeIdx",
+                    many = @Many(select = "com.travely.travely.mapper.RestWeekMapper.findRestWeeksByStoreIdx", fetchType = FetchType.LAZY))
     })
     Store findStoreByStoreIdx(@Param("storeIdx") final long storeIdx);
     
     @Select("SELECT * FROM store WHERE storeIdx = #{storeIdx}")
     Store getStoreFindByStoreIdx(@Param("storeIdx") final long storeIdx);
+
+    @Select("select * from store where regionIdx = #{regionIdx}")
+    List<Store> findStoresByRegionIdx(@Param("regionIdx") final long regionIdx);
 
 }
 

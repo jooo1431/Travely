@@ -1,6 +1,5 @@
 package com.travely.travely.domain;
 
-import com.travely.travely.util.typeHandler.PayType;
 import com.travely.travely.util.typeHandler.StateType;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -8,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -22,6 +22,10 @@ public class Reserve {
     private String reserveCode;
     private Timestamp depositTime;
     private Timestamp takeTime;
+
+    private List<Baggage> baggages;
+    private List<BaggageImg> baggageImgs;
+    private Payment payment;
 
     @Builder
     public Reserve(long userIdx, long storeIdx, Timestamp startTime, Timestamp endTime, StateType state, long price, String reserveCode, Timestamp depositTime, Timestamp takeTime) {

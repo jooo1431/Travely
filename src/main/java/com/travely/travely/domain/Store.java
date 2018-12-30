@@ -27,12 +27,17 @@ public class Store {
 
     private List<Review> reviews;
     private List<StoreImg> storeImgs;
+    private List<RestWeek> restWeeks;
 
-    public List<Review> getReviews(){
+    public List<Review> getReviews() {
         return CommonConfig.getCheckedList(reviews);
     }
 
-    public List<StoreImg> getStoreImgs(){
+    public List<StoreImg> getStoreImgs() {
         return CommonConfig.getCheckedList(storeImgs);
+    }
+
+    public List<RestWeek> getRestWeeks() {
+        return CommonConfig.getCheckedList(restWeeks);
     }
 }

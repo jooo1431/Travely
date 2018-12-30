@@ -1,19 +1,19 @@
 package com.travely.travely.mapper;
 
-import com.travely.travely.dto.store.RegionResponseDto;
-import com.travely.travely.dto.store.StoreListResponseDto;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import com.travely.travely.domain.Region;
+import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.mapping.FetchType;
 
 import java.util.List;
 
 @Mapper
 public interface RegionMapper {
 
-    @Select("SELECT regionName, COUNT(regionIdx) as cnt, regionIdx FROM store NATURAL JOIN region GROUP BY regionName ORDER BY regionName")
-    List<RegionResponseDto> findRegionDto();
-
-    @Select("SELECT storeName, storeIdx, regionName, regionIdx FROM region NATURAL JOIN store WHERE regionIdx = #{regionIdx} ORDER BY regionName")
-    List<StoreListResponseDto> findStoreListDtoByRegionIdx(@Param("regionIdx") final long regionIdx);
+    @Select("select * from region")
+    @Results(value = {
+            @Result(property = "regionIdx", column = "regionIdx"),
+            @Result(property = "stores", javaType = List.class, column = "regionIdx",
+                    many = @Many(select = "com.travely.travely.mapper.StoreMapper.findStoresByRegionIdx", fetchType = FetchType.LAZY))
+    })
+    List<Region> findAllRegion();
 }

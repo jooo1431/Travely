@@ -1,23 +1,24 @@
 package com.travely.travely.dto.store;
 
-import lombok.AccessLevel;
-import lombok.Builder;
+import com.travely.travely.domain.Region;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Slf4j
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RegionResponseDto {
 
     private String regionName;
-    private long cnt;
-    private long regionIdx;
+    private Long regionIdx;
+    private List<SimpleStoreResponseDto> simpleStoreResponseDtos;
 
-
-    @Builder
-    public RegionResponseDto(String regionName, long cnt, long regionIdx) {
-        this.regionName = regionName;
-        this.cnt = cnt;
-        this.regionIdx = regionIdx;
+    public RegionResponseDto(Region region) {
+        this.regionName = region.getRegionName();
+        this.regionIdx = region.getRegionIdx();
+        this.simpleStoreResponseDtos = region.getStores().stream()
+                .map(store -> new SimpleStoreResponseDto(store)).collect(Collectors.toList());
     }
 }

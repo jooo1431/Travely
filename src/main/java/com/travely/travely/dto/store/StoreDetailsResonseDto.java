@@ -30,6 +30,7 @@ public class StoreDetailsResonseDto {
 
     private List<ReviewResponseDto> reviewResponseDtos;
     private List<StoreImageResponseDto> storeImageResponseDtos;
+    private List<RestWeekResponseDto> restWeekResponseDtos;
 
     public StoreDetailsResonseDto(Store store, Long currentBag) {
         this.storeIdx = store.getStoreIdx();
@@ -48,6 +49,8 @@ public class StoreDetailsResonseDto {
                 .map(review -> new ReviewResponseDto(review)).collect(Collectors.toList());
         this.storeImageResponseDtos = store.getStoreImgs().stream()
                 .map(storeImg -> new StoreImageResponseDto(storeImg)).collect(Collectors.toList());
+        this.restWeekResponseDtos = store.getRestWeeks().stream()
+                .map(restWeek -> new RestWeekResponseDto(restWeek)).collect(Collectors.toList());
         this.grade = store.getReviews().stream()
                 .mapToDouble(Review::getLike).average().orElse(0);
     }
