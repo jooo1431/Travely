@@ -6,10 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @Slf4j
@@ -28,8 +25,9 @@ public class FavoriteController {
             @ApiResponse(code = 500, message = "서버에러")
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @PostMapping("favorite")
-    public ResponseEntity<Void> getStoreCount(@RequestParam("userIdx") final long userIdx,@RequestParam("storeIdx") final long storeIdx) {
+    @PutMapping
+    public ResponseEntity<Void> addOrDeleteFavorite(@RequestParam("userIdx") final long userIdx,
+                                              @RequestParam("storeIdx") final long storeIdx) {
         if(favoriteService.GetStateFavorite(userIdx,storeIdx) == 1)
             return ResponseEntity.status(HttpStatus.OK).build();
         else if(favoriteService.GetStateFavorite(userIdx, storeIdx) == 2)

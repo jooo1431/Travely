@@ -12,26 +12,22 @@ public class FavoriteService {
 
     private final FavoriteMapper favoriteMapper;
 
-    public int GetStateFavorite(final long userIdx, final long storeIdx){
+    public int GetStateFavorite(final long userIdx, final long storeIdx) {
 
-        final Favorite favorite =  favoriteMapper.getStateFavorite(userIdx,storeIdx);
-        int isfavorite;
+        final Favorite favorite = favoriteMapper.getStateFavorite(userIdx, storeIdx); //즐찾목록에 그 상가가 있는지 업는지 검사
+        int isFavorite;
 
-        if(favorite != null) { //한번이상 좋아요의 상태를 바꾼경우
-            if (favorite.getIsFavorite() == 1) { //좋아요인 경우
-                isfavorite = 0;
-                favoriteMapper.updateStateFavorite(userIdx, storeIdx,isfavorite); //좋아요를 취소해준다(false로 변경)
-            }
-            else{ //좋아요가 아닌경우
-                isfavorite = 1;
-                favoriteMapper.updateStateFavorite(userIdx, storeIdx,isfavorite); //좋아요로 바꿔준다(true로 변경)
-            }
-            return 1; // 즐겨찾기 상태 변경 성공
+        if (favorite == null || favorite.getIsFavorite() == 0) { //한번도 등록안했거나 한번등록햇다 삭제하고 다시 등록할때
+            isFavorite = 1;
+            favoriteMapper.insertFavorite(userIdx, storeIdx, isFavorite);
+            return 2;
         }
-        else{ //좋아요를 한번도 안누른 상태
-            isfavorite = 1;
-            favoriteMapper.insertStateFavorite(userIdx, storeIdx,isfavorite);
+        else{
+            isFavorite = 0;
+            favoriteMapper.deleteFavorite(userIdx, storeIdx, isFavorite); //한번등록해서 삭제하는경우
+            return 1;
         }
-        return 2;// 즐겨찾기에 추가 성공
+
+
     }
 }

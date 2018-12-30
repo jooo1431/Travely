@@ -11,10 +11,10 @@ public class Favorite {
     private long favoriteIdx;
     private long useIdx;
     private long storeIdx;
-    private long isFavorite;
+    private int isFavorite;
 
     @Builder
-    public Favorite(long favoriteIdx, long useIdx, long storeIdx,long isFavorite) {
+    public Favorite(long favoriteIdx, long useIdx, long storeIdx,int isFavorite) {
         this.favoriteIdx = favoriteIdx;
         this.useIdx = useIdx;
         this.storeIdx = storeIdx;
