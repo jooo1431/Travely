@@ -31,7 +31,7 @@ public class ReservationController {
     @PostMapping("/save")
     public ResponseEntity<ReservationQR> saveReservation(@ApiIgnore Authentication authentication, @RequestBody final ReservationRequest reservationRequest) {
 
-        long userIdx = Long.parseLong((String) authentication.getPrincipal());
+        Long userIdx = (Long) authentication.getPrincipal();
 
         //짐수용한도 체크하기
         final long limit = reservationService.checkLimit(reservationRequest.getStoreIdx());

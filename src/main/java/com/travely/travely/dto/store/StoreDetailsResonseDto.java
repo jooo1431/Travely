@@ -1,16 +1,18 @@
 package com.travely.travely.dto.store;
 
+import com.travely.travely.domain.Review;
 import com.travely.travely.domain.Store;
+import com.travely.travely.dto.review.ReviewResponseDto;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class StoreDetailsInfoResonseDto {
+public class StoreDetailsResonseDto {
 
     private Long storeIdx;
     private Long ownerIdx;
@@ -23,10 +25,13 @@ public class StoreDetailsInfoResonseDto {
     private Double latitude;
     private Double longitude;
     private Long limit;
+    private Long currentBag;
+    private Double grade;
+
+    private List<ReviewResponseDto> reviewResponseDtos;
     private List<StoreImageResponseDto> storeImageResponseDtos;
 
-    @Builder
-    public StoreDetailsInfoResonseDto(Store store, List<StoreImageResponseDto> storeImageResponseDtos) {
+    public StoreDetailsResonseDto(Store store, Long currentBag) {
         this.storeIdx = store.getStoreIdx();
         this.ownerIdx = store.getOwnerIdx();
         this.storeName = store.getStoreName();
@@ -35,10 +40,16 @@ public class StoreDetailsInfoResonseDto {
         this.address = store.getAddress();
         this.openTime = store.getOpenTime();
         this.closeTime = store.getCloseTime();
-        this.latitude = store.getLongitude();
-        this.longitude = store.getLatitude();
+        this.latitude = store.getLatitude();
+        this.longitude = store.getLongitude();
         this.limit = store.getLimit();
-        this.storeImageResponseDtos = storeImageResponseDtos;
+        this.currentBag = currentBag;
+        this.reviewResponseDtos = store.getReviews().stream()
+                .map(review -> new ReviewResponseDto(review)).collect(Collectors.toList());
+        this.storeImageResponseDtos = store.getStoreImgs().stream()
+                .map(storeImg -> new StoreImageResponseDto(storeImg)).collect(Collectors.toList());
+        this.grade = store.getReviews().stream()
+                .mapToDouble(Review::getLike).average().orElse(0);
     }
 }
 
