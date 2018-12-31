@@ -1,13 +1,16 @@
 package com.travely.travely.web;
 
+import com.travely.travely.dto.favorite.FavoriteResponseDto;
 import com.travely.travely.service.FavoriteService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 
@@ -28,14 +31,8 @@ public class FavoriteController {
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PutMapping("/{storeIdx}")
-    public ResponseEntity<Void> addOrDeleteFavorite(@PathVariable Long storeIdx,@ApiIgnore Authentication authentication) {
-        Long userIdx = (Long) authentication.getPrincipal();
-        if(favoriteService.GetStateFavorite(userIdx,storeIdx) == 1)
-            return ResponseEntity.status(HttpStatus.OK).build();
-        else if(favoriteService.GetStateFavorite(userIdx, storeIdx) == 2)
-                return ResponseEntity.status(HttpStatus.CREATED).build();
-        else
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-
+    public ResponseEntity<FavoriteResponseDto> addOrDeleteFavorite(@PathVariable Long storeIdx, @ApiIgnore Authentication authentication) {
+        Long userIdx = Long.parseLong((String) authentication.getPrincipal());
+        return ResponseEntity.ok(favoriteService.updateFavorite(userIdx, storeIdx));
     }
 }
