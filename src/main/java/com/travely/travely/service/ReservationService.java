@@ -169,10 +169,10 @@ public class ReservationService {
 
         //가격단위와 단위에 해당하는 시간
         List<Price> prices = priceMapper.getAllPrice();
-        final Long hour = prices.get(0).getMillsecToHour(reserve.getStartTime().getTime(),reserve.getEndTime().getTime());
-        log.info("@"+hour);
-        final Long priceUnit = prices.get(0).getPriceUnit(prices,hour);
-        final Long priceIdx = prices.get(0).findPriceIdxByUnit(prices,priceUnit);
+        final Long hour = prices.get(0).getMillsecToHour(reserve.getStartTime().getTime(), reserve.getEndTime().getTime());
+        log.info("@" + hour);
+        final Long priceUnit = prices.get(0).getPriceUnit(prices, hour);
+        final Long priceIdx = prices.get(0).findPriceIdxByUnit(prices, priceUnit);
 
         ReserveViewDto reserveViewDto = ReserveViewDto.builder()
                 .stateType(reserve.getState())
@@ -201,9 +201,9 @@ public class ReservationService {
 
         List<Price> prices = priceMapper.getAllPrice();
 
-        final Long hour=prices.get(0).getMillsecToHour(reserveRequestDto.getStartTime(),reserveRequestDto.getEndTime());
+        final Long hour = prices.get(0).getMillsecToHour(reserveRequestDto.getStartTime(), reserveRequestDto.getEndTime());
 
-        final Long unit = prices.get(0).getPriceUnit(prices,hour);
+        final Long unit = prices.get(0).getPriceUnit(prices, hour);
         //계산을 위해 가방의 갯수를 구해야함.
         final Long count = reserveRequestDto.gainBagsCount();
 

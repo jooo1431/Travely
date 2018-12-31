@@ -44,7 +44,7 @@ public class ReserveViewDto {
     }
 
     @Builder
-    public ReserveViewDto(StateType stateType, String reserveCode, Timestamp startTime, Timestamp endTime, Timestamp depositTime, Timestamp takeTime, List<Baggage> baggages, Long price, PayType payType, ProgressType progressType, List<BaggageImg> baggageImgs, StoreDto storeDto,  Long priceIdx,  Long priceUnit) {
+    public ReserveViewDto(StateType stateType, String reserveCode, Timestamp startTime, Timestamp endTime, Timestamp depositTime, Timestamp takeTime, List<Baggage> baggages, Long price, PayType payType, ProgressType progressType, List<BaggageImg> baggageImgs, StoreDto storeDto, Long priceIdx, Long priceUnit) {
         this.stateType = stateType;
         this.reserveCode = reserveCode;
         this.startTime = startTime;
@@ -59,7 +59,7 @@ public class ReserveViewDto {
         this.bagImgDtos = baggageImgs.stream()
                 .map(baggageImg -> new BagImgDto(baggageImg)).collect(Collectors.toList());
         this.store = storeDto;
-        this.priceIdx=priceIdx;
-        this.priceUnit=priceUnit;
+        this.priceIdx = priceIdx;
+        this.priceUnit = priceUnit;
     }
 }
