@@ -1,5 +1,6 @@
 package com.travely.travely.web;
 
+import com.travely.travely.domain.Store;
 import com.travely.travely.dto.store.StoreDetailsResonseDto;
 import com.travely.travely.dto.store.StoreListResponseDto;
 import com.travely.travely.service.StoreService;
@@ -32,5 +33,4 @@ public class StoreController {
     public ResponseEntity<StoreDetailsResonseDto> getStoreDetails(@PathVariable Long storeIdx) {
         return ResponseEntity.ok(storeService.getStoreDetails(storeIdx));
     }
-
 }

@@ -24,6 +24,6 @@ public class StoreService {
         Store store = storeMapper.findStoreByStoreIdx(storeIdx);
         Long currentBag = baggageMapper.findSumCurrentBagByStoreIdx(storeIdx);
         if (store == null) throw new NotFoundStoreException();
-        return new StoreDetailsResonseDto(store,currentBag);
+        return new StoreDetailsResonseDto(store, currentBag);
     }
 }

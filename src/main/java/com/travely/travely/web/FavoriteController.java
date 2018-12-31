@@ -6,7 +6,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 
 @Slf4j
@@ -25,9 +27,9 @@ public class FavoriteController {
             @ApiResponse(code = 500, message = "서버에러")
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @PutMapping
-    public ResponseEntity<Void> addOrDeleteFavorite(@RequestParam("userIdx") final long userIdx,
-                                              @RequestParam("storeIdx") final long storeIdx) {
+    @PutMapping("/{storeIdx}")
+    public ResponseEntity<Void> addOrDeleteFavorite(@PathVariable Long storeIdx,@ApiIgnore Authentication authentication) {
+        Long userIdx = (Long) authentication.getPrincipal();
         if(favoriteService.GetStateFavorite(userIdx,storeIdx) == 1)
             return ResponseEntity.status(HttpStatus.OK).build();
         else if(favoriteService.GetStateFavorite(userIdx, storeIdx) == 2)
