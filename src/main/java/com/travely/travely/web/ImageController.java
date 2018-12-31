@@ -22,21 +22,20 @@ public class ImageController {
 
     @ApiOperation(value = "사진 조회", notes = "사진을 조회한다")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "문의사항 조회 성공"),
+            @ApiResponse(code = 200, message = "사진 조회 성공"),
             @ApiResponse(code = 500, message = "서버에러")})
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @GetMapping("/{classify}")
     public ResponseEntity findImage(@ApiIgnore Authentication authentication,
                                     @PathVariable() final String classify) {
         Long userIdx = Long.parseLong((String) authentication.getPrincipal());
-//        String classify = "profile";
         String profileImg = imageService.findImg(userIdx, classify);
         return new ResponseEntity<>(profileImg, HttpStatus.OK);
     }
 
     @ApiOperation(value = "사진 수정", notes = "사진을 수정합니다")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "프로필 사진 수정 성공"),
+            @ApiResponse(code = 200, message = "사진 수정 성공"),
             @ApiResponse(code = 500, message = "서버 내부 에러")
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})

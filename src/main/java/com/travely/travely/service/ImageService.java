@@ -36,21 +36,12 @@ public class ImageService {
     @Transactional
     public HttpStatus updateImg(final Long userIdx, final ImageDto imageDto){
         try{
-            if( imageDto.getClassify().equals("profile")) {
-                final String profileImgUrl = s3FileUploadService.upload(imageDto.getClassify(), imageDto.getPhoto());
-                imageMapper.updateProfileImg(userIdx, profileImgUrl);
+                final String ImageUrl = s3FileUploadService.upload(imageDto.getClassify(), imageDto.getPhoto());
+
+            if( imageDto.checkClassify() ) {
+                imageMapper.updateImg(userIdx, ImageUrl);
                 return HttpStatus.OK;
             }
-//            else if(imageDto.getClassify().equals("baggage")){
-//                final String baggageImgUrl = s3FileUploadService.upload(imageDto.getClassify(), imageDto.getPhoto());
-//                imageMapper.updateBaggageImg(userIdx, baggageImgUrl);
-//                return HttpStatus.OK;
-//            }
-//            else if(imageDto.getClassify().equals("inquiry")){
-//                final String inquiryImgUrl = s3FileUploadService.upload(imageDto.getClassify(), imageDto.getPhoto());
-//                imageMapper.updateInquiryImg(userIdx, inquiryImgUrl);
-//                return HttpStatus.OK;
-//            }
             else {
                 return HttpStatus.BAD_REQUEST;
             }
