@@ -16,24 +16,6 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//예약상태 state
-//예약코드 reserveCode
-//맡길시간+찾을시간 start end time
-//맡긴시간+찾은시간 deposit take time
-//List 짐종류 개수 가격 List<bagggage> price
-//총 이용시간 : 요금정보
-//최종결제금액 결제타입 결제상태 payment.payType payment.progressType
-//
-////보관중인상태면
-//짐 사진 List<baggageImg>
-//
-////가게정보
-//위치정보(위도+경도)
-//가게 idx
-//가게이름
-//가게영업시간
-//가게영업중인지
-//가게주소이름
 @Getter
 public class ReserveViewDto {
     private StateType stateType;
