@@ -2,6 +2,7 @@ package com.travely.travely.mapper;
 
 
 import com.travely.travely.domain.Store;
+import com.travely.travely.domain.Users;
 import com.travely.travely.dto.store.StoreJoinUsersDto;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.FetchType;
@@ -25,8 +26,8 @@ public interface StoreMapper {
                     many = @Many(select = "com.travely.travely.mapper.StoreImgMapper.findStoreImgsByStoreIdx", fetchType = FetchType.LAZY)),
             @Result(property = "restWeeks", javaType = List.class, column = "storeIdx",
                     many = @Many(select = "com.travely.travely.mapper.RestWeekMapper.findRestWeeksByStoreIdx", fetchType = FetchType.LAZY)),
-            @Result(property = "users", javaType = List.class, column = "userIdx",
-                    many = @Many(select = "com.travely.travely.mapper.UserMapper.findUserByUserIdx", fetchType = FetchType.LAZY))
+            @Result(property = "users", javaType = Users.class, column = "userIdx",
+                    one = @One(select = "com.travely.travely.mapper.UserMapper.findUserByUserIdx", fetchType = FetchType.LAZY))
     })
     Store findStoreByStoreIdx(@Param("storeIdx") final long storeIdx);
     
