@@ -29,6 +29,16 @@ public interface ReservationMapper {
     })
     List<Reserve> findReserveByStoreIdx(@Param("storeIdx") final Long storeIdx);
 
+    @Select("select * from reserve where useridx=#{userIdx} order by startTime desc;")
+    @Results(value = {
+            @Result(property = "reserveIdx",column = "reserveIdx"),
+            @Result(property = "baggages", javaType = List.class, column = "reserveIdx",
+                    many = @Many(select = "com.travely.travely.mapper.BaggageMapper.findBaggageByReserveIdx", fetchType = FetchType.EAGER)),
+            @Result(property = "store", javaType = Store.class, column = "storeIdx",
+                    one = @One(select = "com.travely.travely.mapper.StoreMapper.findStoreByStoreIdx", fetchType = FetchType.EAGER))
+    })
+    List<Reserve> findReserveByUserIdx(@Param("userIdx") final Long userIdx);
+
     //예약 내역이 있는지 검색하기
     @Select("SELECT COUNT(*) FROM reserve WHERE userIdx = #{userIdx} AND state < 3")
     Long findRerserveCountByUserIdx(@Param("userIdx") final Long userIdx);

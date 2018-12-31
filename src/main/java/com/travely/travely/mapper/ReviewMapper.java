@@ -12,4 +12,7 @@ public interface ReviewMapper {
     @Select("select * from review where storeIdx = #{storeIdx}")
     List<Review> findReviewsByStoreIdx(@Param("storeIdx") final Long storeIdx);
 
+    @Select("select * from review where userIdx = #{userIdx}")
+    List<Review> findReviewsByUserIdx(@Param("userIdx") final Long userIdx);
+
 }

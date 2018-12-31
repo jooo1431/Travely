@@ -3,6 +3,8 @@ package com.travely.travely.mapper;
 import com.travely.travely.domain.Favorite;
 import org.apache.ibatis.annotations.*;
 
+import java.util.List;
+
 @Mapper
 public interface FavoriteMapper {
 
@@ -12,4 +14,7 @@ public interface FavoriteMapper {
 
     @Select("select * from favorite where userIdx=#{favorite.userIdx} and storeIdx=#{favorite.storeIdx}")
     Favorite findByFavorite(@Param("favorite")Favorite favorite);
+
+    @Select("select * from favorite where userIdx=#{userIdx}")
+    List<Favorite> findFavoriteByUserIdx(@Param("userIdx") Long userIdx);
 }

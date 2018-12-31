@@ -3,22 +3,22 @@ package com.travely.travely.web;
 import com.travely.travely.auth.jwt.JwtInfo;
 import com.travely.travely.dto.exception.ExceptionResponseDto;
 import com.travely.travely.dto.user.LoginUsersRequestDto;
+import com.travely.travely.dto.user.UsersInfoResponseDto;
 import com.travely.travely.dto.user.UsersSaveRequestDto;
+import com.travely.travely.mapper.ReservationMapper;
+import com.travely.travely.mapper.UserMapper;
 import com.travely.travely.service.UserService;
 import com.travely.travely.util.JwtUtil;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 @Slf4j
 @RestController
@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserService userService;
+    private final ReservationMapper reservationMapper;
 
 
     @ApiOperation(value = "일반 유저 생성", notes = "일반 유저를 생성합니다. 성공시 jwt 토큰을 헤더에 넣어서 반환합니다.")
@@ -54,4 +55,16 @@ public class UserController {
     public void login(@RequestBody LoginUsersRequestDto loginUsersRequestDto) {
     }
 
+    @ApiOperation(value = "프로필 조회", notes = "프로필을 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "프로필 조회 성공"),
+            @ApiResponse(code = 500, message = "서버 내부 에러")
+    })
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @GetMapping("/profile")
+    public ResponseEntity<UsersInfoResponseDto> getMyProfile(@ApiIgnore Authentication authentication){
+        Long userIdx = Long.parseLong((String) authentication.getPrincipal());
+
+        return ResponseEntity.ok(userService.getMyProfile(userIdx));
+    }
 }

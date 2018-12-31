@@ -32,9 +32,7 @@ public class Store {
     private List<RestWeek> restWeeks;
     private Users users;
 
-    public List<Review> getReviews() {
-        return CommonConfig.getCheckedList(reviews);
-    }
+    public List<Review> getReviews() { return CommonConfig.getCheckedList(reviews); }
 
     public List<StoreImg> getStoreImgs() {
         return CommonConfig.getCheckedList(storeImgs);
@@ -45,12 +43,12 @@ public class Store {
     }
 
     public Users getUsers() {
-        if(this.users==null) throw new RuntimeException();
+        if (this.users == null) throw new RuntimeException();
         return this.users;
     }
 
-    public Double getGrade(){
-       return reviews.stream().mapToDouble(Review::getLike).average().orElse(0);
+    public Double getGrade() {
+        return reviews.stream().mapToDouble(Review::getLike).average().orElse(0);
 
     }
 
@@ -60,14 +58,12 @@ public class Store {
     }
 
     private Boolean checkHour(Timestamp timestamp) {
-        log.info("open : "+this.openTime.getHours());
-        log.info("mytime : "+timestamp.getHours());
-        log.info("close : "+this.closeTime.getHours());
+        log.info("open : " + this.openTime.getHours());
+        log.info("mytime : " + timestamp.getHours());
+        log.info("close : " + this.closeTime.getHours());
         if (this.openTime.getHours() < timestamp.getHours() &&
                 this.closeTime.getHours() > timestamp.getHours())
             return true;
         return false;
     }
-
-
 }

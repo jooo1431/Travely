@@ -1,7 +1,6 @@
 package com.travely.travely.domain;
 
 import com.travely.travely.config.CommonConfig;
-import com.travely.travely.dto.reservation.ReserveRequestDto;
 import com.travely.travely.util.typeHandler.StateType;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -33,6 +32,23 @@ public class Reserve {
     private Store store;
     private Users user;
 
+    @Builder
+    public Reserve(long reserveIdx, long userIdx, long storeIdx, Timestamp startTime, Timestamp endTime, StateType state, long price, String reserveCode, Timestamp depositTime, Timestamp takeTime, List<Baggage> baggages, List<BaggageImg> baggageImgs, Payment payment) {
+        this.reserveIdx = reserveIdx;
+        this.userIdx = userIdx;
+        this.storeIdx = storeIdx;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.state = state;
+        this.price = price;
+        this.reserveCode = reserveCode;
+        this.depositTime = depositTime;
+        this.takeTime = takeTime;
+        this.baggages = baggages;
+        this.baggageImgs = baggageImgs;
+        this.payment = payment;
+    }
+
     public List<Baggage> getBaggages() {
         return CommonConfig.getCheckedList(baggages);
     }
@@ -56,23 +72,12 @@ public class Reserve {
         return this.user;
     }
 
-
-    @Builder
-    public Reserve(long reserveIdx, long userIdx, long storeIdx, Timestamp startTime, Timestamp endTime, StateType state, long price, String reserveCode, Timestamp depositTime, Timestamp takeTime, List<Baggage> baggages, List<BaggageImg> baggageImgs, Payment payment) {
-        this.reserveIdx = reserveIdx;
-        this.userIdx = userIdx;
-        this.storeIdx = storeIdx;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.state = state;
-        this.price = price;
-        this.reserveCode = reserveCode;
-        this.depositTime = depositTime;
-        this.takeTime = takeTime;
-        this.baggages = baggages;
-        this.baggageImgs = baggageImgs;
-        this.payment = payment;
+    public Long getBagCount(){
+        if (state.checkReserve()){
+            List<Baggage> baggages = CommonConfig.getCheckedList(this.baggages);
+            return baggages.stream().map(Baggage::getBagCount).reduce((x,y)->x+y).orElse(0L);
+        }
+        return 0L;
     }
-
 
 }
