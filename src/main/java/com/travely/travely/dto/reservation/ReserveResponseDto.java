@@ -13,7 +13,7 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class ReservationQR {
+public class ReserveResponseDto {
 
     //맡고 찾는 시간
     private Timestamp startTime;
@@ -32,7 +32,7 @@ public class ReservationQR {
     //상가정보 및 평점
     private StoreDto storeDto;
 
-    public ReservationQR(final ReserveRequestDto reserveRequestDto, final String reserveCode, final StoreDto storeDto, final long price, final StateType stateType) {
+    public ReserveResponseDto(final ReserveRequestDto reserveRequestDto, final String reserveCode, final StoreDto storeDto, final long price, final StateType stateType) {
         this.startTime = new Timestamp(reserveRequestDto.getStartTime());
         this.endTime = new Timestamp(reserveRequestDto.getEndTime());
         this.payType = reserveRequestDto.getPayType();
@@ -45,7 +45,7 @@ public class ReservationQR {
     }
 
     @Builder
-    public ReservationQR(Timestamp startTime, Timestamp endTime, PayType payType, StateType stateType, long price, String reserveCode, List<BagDto> bagDtos, List<String> bagImgs, StoreDto storeDto) {
+    public ReserveResponseDto(Timestamp startTime, Timestamp endTime, PayType payType, StateType stateType, long price, String reserveCode, List<BagDto> bagDtos, List<String> bagImgs, StoreDto storeDto) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.payType = payType;

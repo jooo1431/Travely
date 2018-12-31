@@ -1,13 +1,11 @@
 package com.travely.travely.service;
 
 import com.travely.travely.domain.Payment;
+import com.travely.travely.domain.Price;
 import com.travely.travely.domain.Reserve;
 import com.travely.travely.domain.Store;
-import com.travely.travely.dto.baggage.BagDto;
-import com.travely.travely.domain.Price;
+import com.travely.travely.dto.reservation.ReserveResponseDto;
 import com.travely.travely.dto.reservation.ReserveRequestDto;
-import com.travely.travely.dto.reservation.ReservationQR;
-import com.travely.travely.dto.reservation.ReserveJoinPayment;
 import com.travely.travely.dto.store.StoreDto;
 import com.travely.travely.mapper.PriceMapper;
 import com.travely.travely.mapper.ReservationMapper;
@@ -32,28 +30,45 @@ public class ReservationService {
     private final StoreMapper storeMapper;
     private final PriceMapper priceMapper;
 
-
     @Transactional
-    public ReservationQR saveReservation(final long userIdx, final ReserveRequestDto reserveRequestDto) {
+    public ReserveResponseDto saveReservation(final long userIdx, final ReserveRequestDto reserveRequestDto) {
 
         List<Reserve> reserves = reservationMapper.findReserveByStoreIdx(reserveRequestDto.getStoreIdx());
         Store store = storeMapper.findStoreByStoreIdx(reserveRequestDto.getStoreIdx());
 
-        if (reserves.size()!=0) {
-            reserves.get(0).getStore().checkReserveTime(reserveRequestDto);
-            if (reservationMapper.findRerserveCountByUserIdx(userIdx) > 0) throw new RuntimeException();
-        }
-
-        //가게평점
-        final Double like = store.getGrade();
-
         // 짐갯수 0개인경우
         reserveRequestDto.checkCount();
 
-        //To-do
-        // 이미예약되있는경우
+        //가게의 보환할수 있는 리미트양 - 현재 맡긴양 - 내가 맡길양 >=0 이어야함
+        Long limit = store.getLimit();
 
-        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        //해당 업체에 진행중(예약+결제+보관)인 항목이 있다면
+        if (reserves.size() != 0) {
+
+            //user가 이미 예약 했는지 확인
+            for (Reserve reserve : reserves) {
+                reserve.checkReserved(userIdx);
+            }
+
+            //올바른 시간에 예약을 하려하는지
+            reserves.get(0).getStore().checkReserveTime(reserveRequestDto);
+
+            //해당 업체에서 보관할수 있는지 확인, 보관가능하면 보관 가능한 양을 반환, 보관 불가능하면 익셉션
+            Long totalBagCount = 0L;
+            for (Reserve reserve : reserves) {
+                totalBagCount += reserve.getTotalBag();
+            }
+            limit = reserves.get(0).getStore().getSpace(totalBagCount);
+        }
+
+        //휴무일에 예약이 시작되거나 끝나는지 확인
+        store.checkRestWeek(reserveRequestDto);
+
+        //내가 가지고온 짐의 양과 비교하여 보관할수 있는지 확인
+        reserveRequestDto.checkSpace(limit);
+
+        //가게평점
+        final Double like = store.getGrade();
 
         final UUID uuid = UUID.randomUUID();
         //결제 코드 생성 = 고유번호 앞 8자리
@@ -77,8 +92,7 @@ public class ReservationService {
                 .storeIdx(store.getStoreIdx())
                 .storeCall(store.getStoreCall())
                 .build();
-        ReservationQR reservationQR = new ReservationQR(reserveRequestDto, reserveCode, storeDto, price, stateType);
-
+        ReserveResponseDto reserveResponseDto = new ReserveResponseDto(reserveRequestDto, reserveCode, storeDto, price, stateType);
 
         //예약목록 저장 결제목록에 저장 진행중으로, 짐목록 저장
         Reserve saveReserve = Reserve.builder()
@@ -112,87 +126,22 @@ public class ReservationService {
             reservationMapper.saveBaggages(saveReserve.getReserveIdx(), reserveRequestDto.getBagDtos().get(i));
         }
 
-        return reservationQR;
+        return reserveResponseDto;
 
     }
 
     @Transactional
     public void cancelReservation(final long userIdx) {
-
+        StateType cancelState = StateType.Cancel;
+        ProgressType cancelProgress = ProgressType.CANCEL;
         //예약 취소하면 결제테이블에 있는 것도 결제 취소로 전부 바꿔버린다.
         //정상적으로 예약된게 있는지 확인
 
+        Reserve reserve = reservationMapper.findReserveByUserIdx(userIdx);
+        if (reserve == null) throw new RuntimeException();
 
-
-
-    }
-
-//    public ReservationQR getReservation(final long userIdx) {
-//        //예약현황에서 짐수거, 취소 상태가 아닌 컬럼을 셀렉해오자
-//
-//        StateType takeOff = StateType.TakeOff;
-//        StateType cancel = StateType.Cancel;
-//
-//        //취소한것만 제외한 reserve Join payment 테이블의 결과를 받아오자. --> 예약내역이겠지
-//
-//
-//        //예약 내역이 없다면?
-//
-//
-//        //예약 내역을 클라에게 반환시켜줄 준비를하고
-//
-//        //반환 객체를 생성
-//        ReservationQR reservationQR = ReservationQR.builder()
-//                .startTime(reserveJoinPayment.getStartTime())
-//                .endTime(reserveJoinPayment.getEndTime())
-//                .payType(reserveJoinPayment.getPayType())
-//                .stateType(reserveJoinPayment.getStateType())
-//                .price(reserveJoinPayment.getPrice())
-//                .reserveCode(reserveJoinPayment.getReserveCode())
-//                .bagDtos(bagDtos)
-//                .bagImgs(bagImgs)
-//                .storeDto(storeDto)
-//                .build();
-//
-//        //반환하자.
-//        return reservationQR;
-//    }
-
-    //짐의 수용가능한량을 비교하여 불린값으로 반환하자
-    public boolean isFull(final List<BagDto> bagDtos, final long limit) {
-
-        long userBagCount = 0;
-        for (int i = 0; i < bagDtos.size(); i++) {
-            userBagCount += bagDtos.get(i).getBagCount();
-        }
-
-        //수용가능하면 트루
-        if (userBagCount <= limit)
-            return true;
-
-        return false;
-    }
-
-    //수용가능한 짐의 수를 반환한다.
-    public long checkLimit(final long storeIdx) {
-
-        StateType cancel = StateType.Cancel;
-        StateType takeOff = StateType.TakeOff;
-
-        //먼저 총 보관 한도를 구한다.
-        Store store = storeMapper.findStoreByStoreIdx(storeIdx);
-        long limit = store.getLimit();
-        //현재 보관중인 짐의 총 갯수를 가져오자
-        long currentBagCount = reservationMapper.getTotalBagCountFindByStoreIdx(storeIdx);
-
-
-        //보관할수 있는 갯수를 구하자 0보다 작으면 그냥 리젝시키자.
-        long canTakeCount = limit - currentBagCount;
-
-        if (canTakeCount <= 0)
-            return 0;
-        else
-            return canTakeCount;
+        reservationMapper.deleteReservation(reserve.getReserveIdx(), cancelState);
+        reservationMapper.deletePayment(reserve.getReserveIdx(), cancelProgress);
     }
 
 
@@ -213,7 +162,7 @@ public class ReservationService {
             unit = prices.get(i).compareHour(hour, unit);
         }
         //계산을 위해 가방의 갯수를 구해야함.
-        final Long count = reserveRequestDto.getBagsCount();
+        final Long count = reserveRequestDto.gainBagsCount();
 
         //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
@@ -231,4 +180,7 @@ public class ReservationService {
 
         return temp;
     }
+
+    //reserveCode로 예약정보 + 보관정보를 보자
+
 }

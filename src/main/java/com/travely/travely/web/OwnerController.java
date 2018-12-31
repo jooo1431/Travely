@@ -41,8 +41,8 @@ public class OwnerController {
             msg = ownerService.changeReserveStateAndProgressUsingQR(reserveCode);
 
             return ResponseEntity.ok().body(msg);
-        } else{
-            msg="NO DATA";
+        } else {
+            msg = "NO DATA";
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(msg);
         }
     }

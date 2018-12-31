@@ -11,7 +11,7 @@ import java.util.List;
 public interface BaggageMapper {
 
     @Select("SELECT * FROM baggage WHERE reserveIdx = #{reserveIdx}")
-    List<Baggage> findBaggageByReserveIdx(@Param("reserveIdx")final Long reserveIdx);
+    List<Baggage> findBaggageByReserveIdx(@Param("reserveIdx") final Long reserveIdx);
 
 
     ///////////////////////////////

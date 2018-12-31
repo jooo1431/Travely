@@ -1,7 +1,6 @@
 package com.travely.travely.domain;
 
 import com.travely.travely.config.CommonConfig;
-import com.travely.travely.dto.reservation.ReserveRequestDto;
 import com.travely.travely.util.typeHandler.StateType;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -16,13 +15,13 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Reserve {
-    private long reserveIdx;
-    private long userIdx;
-    private long storeIdx;
+    private Long reserveIdx;
+    private Long userIdx;
+    private Long storeIdx;
     private Timestamp startTime;
     private Timestamp endTime;
     private StateType state;
-    private long price;
+    private Long price;
     private String reserveCode;
     private Timestamp depositTime;
     private Timestamp takeTime;
@@ -31,7 +30,7 @@ public class Reserve {
     private List<BaggageImg> baggageImgs;
     private Payment payment;
     private Store store;
-    private Users user;
+    private Users users;
 
     public List<Baggage> getBaggages() {
         return CommonConfig.getCheckedList(baggages);
@@ -52,14 +51,20 @@ public class Reserve {
     }
 
     public Users getUsers() {
-        if(this.user==null) throw new RuntimeException();
-        return this.user;
+        if (this.users == null) throw new RuntimeException();
+        return this.users;
     }
 
+    public Long getTotalBag() {
+        return baggages.stream().mapToLong(Baggage::getBagCount).sum();
+    }
+
+    public void checkReserved(final Long userIdx) {
+        if (this.userIdx == userIdx) throw new RuntimeException();
+    }
 
     @Builder
-    public Reserve(long reserveIdx, long userIdx, long storeIdx, Timestamp startTime, Timestamp endTime, StateType state, long price, String reserveCode, Timestamp depositTime, Timestamp takeTime, List<Baggage> baggages, List<BaggageImg> baggageImgs, Payment payment) {
-        this.reserveIdx = reserveIdx;
+    public Reserve(long userIdx, long storeIdx, Timestamp startTime, Timestamp endTime, StateType state, long price, String reserveCode, Timestamp depositTime, Timestamp takeTime, List<Baggage> baggages, List<BaggageImg> baggageImgs, Payment payment) {
         this.userIdx = userIdx;
         this.storeIdx = storeIdx;
         this.startTime = startTime;
