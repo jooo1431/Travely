@@ -9,15 +9,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Favorite {
     private long favoriteIdx;
-    private long useIdx;
+    private long userIdx;
     private long storeIdx;
     private int isFavorite;
 
-    @Builder
-    public Favorite(long favoriteIdx, long useIdx, long storeIdx,int isFavorite) {
-        this.favoriteIdx = favoriteIdx;
-        this.useIdx = useIdx;
+    public Favorite(Long userIdx, Long storeIdx) {
+        this.userIdx = userIdx;
         this.storeIdx = storeIdx;
-        this.isFavorite = isFavorite;
+        this.isFavorite = 1;
     }
 }

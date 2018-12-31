@@ -3,6 +3,7 @@ package com.travely.travely.web;
 import com.travely.travely.domain.Store;
 import com.travely.travely.dto.store.StoreDetailsResonseDto;
 import com.travely.travely.dto.store.StoreListResponseDto;
+import com.travely.travely.mapper.StoreMapper;
 import com.travely.travely.service.StoreService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 
 @Slf4j
 @RestController
