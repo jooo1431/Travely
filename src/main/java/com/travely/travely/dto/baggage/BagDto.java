@@ -23,4 +23,8 @@ public class BagDto {
         this.bagType = baggage.getBagType();
         this.bagCount = baggage.getBagCount();
     }
+
+    public Boolean checkCount() {
+        return this.bagCount <= 0;
+    }
 }

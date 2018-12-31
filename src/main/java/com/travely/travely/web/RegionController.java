@@ -1,6 +1,6 @@
 package com.travely.travely.web;
 
-import com.travely.travely.dto.store.RegionResponseDto;
+import com.travely.travely.dto.region.RegionResponseDto;
 import com.travely.travely.service.RegionService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +27,6 @@ public class RegionController {
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @GetMapping
     public ResponseEntity<List<RegionResponseDto>> getStoreCount() {
-        return ResponseEntity.ok().body(regionService.getStoreCount());
+        return ResponseEntity.ok().body(regionService.getAllRegion());
     }
 }

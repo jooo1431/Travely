@@ -11,4 +11,5 @@ import java.util.List;
 public interface ReviewMapper {
     @Select("select * from review where storeIdx = #{storeIdx}")
     List<Review> findReviewsByStoreIdx(@Param("storeIdx") final Long storeIdx);
+
 }

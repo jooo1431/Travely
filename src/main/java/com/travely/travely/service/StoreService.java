@@ -1,13 +1,14 @@
 package com.travely.travely.service;
 
-
-import com.travely.travely.dto.store.*;
+import com.travely.travely.domain.Store;
+import com.travely.travely.dto.store.StoreDetailsResonseDto;
+import com.travely.travely.exception.NotFoundStoreException;
+import com.travely.travely.mapper.BaggageMapper;
 import com.travely.travely.mapper.StoreMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -16,19 +17,13 @@ public class StoreService {
 
     private final StoreMapper storeMapper;
 
+    private final BaggageMapper baggageMapper;
 
-    public List<StoreListResponseDto> getStoreList(final long regionIdx) {
-        return storeMapper.findStoreListDto(regionIdx);
-    }
-
-    public StoreDetailsInfoResonseDto getStoreDetails(final Long storeIdx) {
-        return StoreDetailsInfoResonseDto.builder()
-                .store(storeMapper.findStoreByStoreIdx(storeIdx))
-                .storeImageResponseDtos(getStoreImage(storeIdx))
-                .build();
-    }
-
-    public List<StoreImageResponseDto> getStoreImage(final Long storeIdx) {
-        return storeMapper.findStoreImageByStoreIdx(storeIdx);
+    @Transactional
+    public StoreDetailsResonseDto getStoreDetails(final Long storeIdx) {
+        Store store = storeMapper.findStoreByStoreIdx(storeIdx);
+        Long currentBag = baggageMapper.findSumCurrentBagByStoreIdx(storeIdx);
+        if (store == null) throw new NotFoundStoreException();
+        return new StoreDetailsResonseDto(store,currentBag);
     }
 }

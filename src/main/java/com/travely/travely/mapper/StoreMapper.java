@@ -2,10 +2,9 @@ package com.travely.travely.mapper;
 
 
 import com.travely.travely.domain.Store;
-import com.travely.travely.dto.store.*;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import com.travely.travely.dto.store.StoreJoinUsersDto;
+import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.mapping.FetchType;
 
 import java.util.List;
 
@@ -19,15 +18,23 @@ public interface StoreMapper {
     double getAvgLikeGetByStoreIdx(@Param("storeIdx") final long storeIdx);
 
     @Select("SELECT * FROM store WHERE storeIdx = #{storeIdx}")
+    @Results(value = {
+            @Result(property = "reviews", javaType = List.class, column = "storeIdx",
+                    many = @Many(select = "com.travely.travely.mapper.ReviewMapper.findReviewsByStoreIdx", fetchType = FetchType.LAZY)),
+            @Result(property = "storeImgs", javaType = List.class, column = "storeIdx",
+                    many = @Many(select = "com.travely.travely.mapper.StoreImgMapper.findStoreImgsByStoreIdx", fetchType = FetchType.LAZY)),
+            @Result(property = "restWeeks", javaType = List.class, column = "storeIdx",
+                    many = @Many(select = "com.travely.travely.mapper.RestWeekMapper.findRestWeeksByStoreIdx", fetchType = FetchType.LAZY)),
+            @Result(property = "users", javaType = List.class, column = "userIdx",
+                    many = @Many(select = "com.travely.travely.mapper.UserMapper.findUserByUserIdx", fetchType = FetchType.LAZY))
+    })
     Store findStoreByStoreIdx(@Param("storeIdx") final long storeIdx);
-
-    @Select("SELECT storeName, storeIdx, regionName, regionIdx FROM store NATURAL JOIN region WHERE regionIdx = #{regionIdx} ORDER BY regionName")
-    List<StoreListResponseDto> findStoreListDto(@Param("regionIdx") final long regionIdx);
-
-    @Select("SELECT storeImg,storeImgIdx FROM storeImg WHERE storeIdx = #{storeIdx}")
-    List<StoreImageResponseDto> findStoreImageByStoreIdx(Long storeIdx);
-
+    
     @Select("SELECT * FROM store WHERE storeIdx = #{storeIdx}")
     Store getStoreFindByStoreIdx(@Param("storeIdx") final long storeIdx);
+
+    @Select("select * from store where regionIdx = #{regionIdx}")
+    List<Store> findStoresByRegionIdx(@Param("regionIdx") final long regionIdx);
+
 }
 

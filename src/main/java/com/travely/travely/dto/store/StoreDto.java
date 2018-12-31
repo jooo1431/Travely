@@ -1,7 +1,9 @@
 package com.travely.travely.dto.store;
 
+import lombok.Builder;
 import lombok.Getter;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Getter
@@ -19,9 +21,9 @@ public class StoreDto {
     //상가경도
     private double longitude;
     //상가영업시작시간
-    private String openTime;
+    private Timestamp openTime;
     //상가영업종료시간
-    private String closeTime;
+    private Timestamp closeTime;
     //상가주소
     private String address;
     //상가 평점
@@ -29,16 +31,17 @@ public class StoreDto {
     //상가id
     private long storeIdx;
 
-    public StoreDto(StoreJoinUsersDto storeJoinUsersDto, final double avgLike) {
-        this.ownerName = storeJoinUsersDto.getName();
-        this.storeName = storeJoinUsersDto.getStoreName();
-        this.storeCall = storeJoinUsersDto.getStoreCall();
-        this.latitude = storeJoinUsersDto.getLatitude();
-        this.longitude = storeJoinUsersDto.getLongitude();
-        this.openTime = storeJoinUsersDto.getOpenTime();
-        this.closeTime = storeJoinUsersDto.getCloseTime();
-        this.address = storeJoinUsersDto.getAddress();
+    @Builder
+    public StoreDto(String ownerName, String storeName, String storeCall, double latitude, double longitude, Timestamp openTime, Timestamp closeTime, String address, double avgLike, long storeIdx) {
+        this.ownerName = ownerName;
+        this.storeName = storeName;
+        this.storeCall = storeCall;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.openTime = openTime;
+        this.closeTime = closeTime;
+        this.address = address;
         this.avgLike = avgLike;
-        this.storeIdx = storeJoinUsersDto.getStoreIdx();
+        this.storeIdx = storeIdx;
     }
 }
