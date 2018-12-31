@@ -2,16 +2,38 @@ package com.travely.travely.mapper;
 
 import com.travely.travely.domain.Payment;
 import com.travely.travely.domain.Reserve;
+import com.travely.travely.domain.Store;
 import com.travely.travely.dto.baggage.BagDto;
 import com.travely.travely.dto.reservation.ReserveJoinPayment;
 import com.travely.travely.util.typeHandler.ProgressType;
 import com.travely.travely.util.typeHandler.StateType;
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.mapping.FetchType;
 
 import java.util.List;
 
 @Mapper
 public interface ReservationMapper {
+
+    //reserve와 연결된 테이블 정보 불러오기
+    @Select("SELECT * FROM reserve WHERE storeIdx = #{storeIdx} AND state < 3 ")
+    @Results(value = {
+            @Result(property = "baggages", javaType = List.class, column = "reserveIdx",
+                    many = @Many(select = "com.travely.travely.mapper.BaggageMapper.findBaggageByReserveIdx", fetchType = FetchType.LAZY)),
+            @Result(property = "baggageImgs", javaType = List.class, column = "reserveIdx",
+                    many = @Many(select = "com.travely.travely.mapper.BaggageImgMapper.findBaggageImgByReserveIdx", fetchType = FetchType.LAZY)),
+            @Result(property = "payment", javaType = Payment.class, column = "reserveIdx",
+                    one = @One(select = "com.travely.travely.mapper.PaymentMapper.findPaymentByReserveIdx", fetchType = FetchType.LAZY)),
+            @Result(property = "store", javaType = Store.class, column = "storeIdx",
+                    one = @One(select = "com.travely.travely.mapper.StoreMapper.findStoreByStoreIdx", fetchType = FetchType.LAZY))
+    })
+    List<Reserve> findReserveByStoreIdx(@Param("storeIdx") final Long storeIdx);
+
+    //예약 내역이 있는지 검색하기
+    @Select("SELECT COUNT(*) FROM reserve WHERE userIdx = #{userIdx} AND state < 3")
+    Long findRerserveCountByUserIdx(@Param("userIdx") final Long userIdx);
+
+    ///////////////////////////////////////////
 
     //예약 목록에 등록
     @Insert("INSERT INTO reserve (userIdx, storeIdx, startTime, endTime, state, price,reserveCode,depositTime,takeTime)" +

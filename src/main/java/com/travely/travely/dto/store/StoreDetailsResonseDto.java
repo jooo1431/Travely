@@ -20,8 +20,8 @@ public class StoreDetailsResonseDto {
     private String storeCall;
     private String storeUrl;
     private String address;
-    private String openTime;
-    private String closeTime;
+    private Long openTime;
+    private Long closeTime;
     private Double latitude;
     private Double longitude;
     private Long limit;
@@ -39,8 +39,8 @@ public class StoreDetailsResonseDto {
         this.storeCall = store.getStoreCall();
         this.storeUrl = store.getStoreUrl();
         this.address = store.getAddress();
-        this.openTime = store.getOpenTime();
-        this.closeTime = store.getCloseTime();
+        this.openTime = store.getOpenTime().getTime();
+        this.closeTime = store.getCloseTime().getTime();
         this.latitude = store.getLatitude();
         this.longitude = store.getLongitude();
         this.limit = store.getLimit();
@@ -51,8 +51,7 @@ public class StoreDetailsResonseDto {
                 .map(storeImg -> new StoreImageResponseDto(storeImg)).collect(Collectors.toList());
         this.restWeekResponseDtos = store.getRestWeeks().stream()
                 .map(restWeek -> new RestWeekResponseDto(restWeek)).collect(Collectors.toList());
-        this.grade = store.getReviews().stream()
-                .mapToDouble(Review::getLike).average().orElse(0);
+        this.grade = store.getGrade();
     }
 }
 

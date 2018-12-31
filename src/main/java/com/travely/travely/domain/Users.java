@@ -3,10 +3,12 @@ package com.travely.travely.domain;
 import com.travely.travely.auth.UserDetailsImpl;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.authority.AuthorityUtils;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Users {
     private Long userIdx;
     private String email;
