@@ -6,6 +6,7 @@ import com.travely.travely.domain.Reserve;
 import com.travely.travely.domain.Store;
 import com.travely.travely.dto.reservation.ReserveResponseDto;
 import com.travely.travely.dto.reservation.ReserveRequestDto;
+import com.travely.travely.dto.reservation.ReserveViewDto;
 import com.travely.travely.dto.store.StoreDto;
 import com.travely.travely.mapper.PriceMapper;
 import com.travely.travely.mapper.ReservationMapper;
@@ -145,6 +146,45 @@ public class ReservationService {
     }
 
 
+    //reserveCode로 예약정보 + 보관정보를 보자
+
+    public ReserveViewDto getReserveMyInfo(final String reserveCode) {
+        Reserve reserve = reservationMapper.findReserveByReserveCode(reserveCode);
+
+        //예약내역이 없으면?
+        if (reserve == null) throw new RuntimeException();
+
+        StoreDto storeDto = StoreDto.builder()
+                .openTime(reserve.getStore().getOpenTime())
+                .storeCall(reserve.getStore().getStoreCall())
+                .storeIdx(reserve.getStoreIdx())
+                .storeName(reserve.getStore().getStoreName())
+                .address(reserve.getStore().getAddress())
+                .avgLike(reserve.getStore().getGrade())
+                .latitude(reserve.getStore().getLatitude())
+                .longitude(reserve.getStore().getLongitude())
+                .ownerName(reserve.getStore().getUsers().getName())
+                .closeTime(reserve.getStore().getCloseTime())
+                .build();
+
+        ReserveViewDto reserveViewDto = ReserveViewDto.builder()
+                .stateType(reserve.getState())
+                .reserveCode(reserveCode)
+                .startTime(reserve.getStartTime())
+                .endTime(reserve.getEndTime())
+                .depositTime(reserve.getDepositTime())
+                .takeTime(reserve.getTakeTime())
+                .baggages(reserve.getBaggages())
+                .price(reserve.getPrice())
+                .payType(reserve.getPayment().getPayType())
+                .progressType(reserve.getPayment().getProgressType())
+                .baggageImgs(reserve.getBaggageImgs())
+                .storeDto(storeDto)
+                .build();
+
+        return reserveViewDto;
+    }
+
     //가격계산 --> 가격반환
     private long priceTag(final ReserveRequestDto reserveRequestDto) {
 
@@ -180,7 +220,5 @@ public class ReservationService {
 
         return temp;
     }
-
-    //reserveCode로 예약정보 + 보관정보를 보자
 
 }

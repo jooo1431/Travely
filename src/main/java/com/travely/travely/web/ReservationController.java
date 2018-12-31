@@ -2,6 +2,7 @@ package com.travely.travely.web;
 
 import com.travely.travely.dto.reservation.ReserveResponseDto;
 import com.travely.travely.dto.reservation.ReserveRequestDto;
+import com.travely.travely.dto.reservation.ReserveViewDto;
 import com.travely.travely.service.ReservationService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
@@ -59,6 +60,20 @@ public class ReservationController {
         reservationService.cancelReservation(userIdx);
 
         return ResponseEntity.ok().build();
+    }
+
+    @ApiOperation(value = "예약 세부정보 조회", notes = "예약 코드로 예약 내용 조회")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "예약 조회 성공"),
+            @ApiResponse(code = 500, message = "서버에러")
+    })
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @GetMapping("/{reserveCode}")
+    public ResponseEntity<ReserveViewDto> getReservation(@PathVariable("reserveCode") final String reserveCode) {
+
+        ReserveViewDto reserveViewDto = reservationService.getReserveMyInfo(reserveCode);
+
+        return ResponseEntity.ok().body(reserveViewDto);
     }
 }
 

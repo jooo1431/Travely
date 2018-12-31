@@ -85,7 +85,25 @@ public interface ReservationMapper {
     ///delete에 쓰이는 쿼리
     ///////////////////////////////////////////////
 
-
+    //예약 조회용 쿼리
     ///////////////////////////////////////////
+    @Select("SELECT * FROM reserve WHERE reserveCode = #{reserveCode} AND state < 3")
+    @Results(value = {
+            @Result(property = "reserveIdx", javaType = Long.class, column = "reserveIdx"),
+            @Result(property = "storeIdx", javaType = Long.class, column = "storeIdx"),
+            @Result(property = "userIdx", javaType = Long.class, column = "userIdx"),
+            @Result(property = "baggages", javaType = List.class, column = "reserveIdx",
+                    many = @Many(select = "com.travely.travely.mapper.BaggageMapper.findBaggageByReserveIdx", fetchType = FetchType.LAZY)),
+            @Result(property = "baggageImgs", javaType = List.class, column = "reserveIdx",
+                    many = @Many(select = "com.travely.travely.mapper.BaggageImgMapper.findBaggageImgByReserveIdx", fetchType = FetchType.LAZY)),
+            @Result(property = "payment", javaType = Payment.class, column = "reserveIdx",
+                    one = @One(select = "com.travely.travely.mapper.PaymentMapper.findPaymentByReserveIdx", fetchType = FetchType.LAZY)),
+            @Result(property = "store", javaType = Store.class, column = "storeIdx",
+                    one = @One(select = "com.travely.travely.mapper.StoreMapper.findStoreByStoreIdx", fetchType = FetchType.LAZY)),
+            @Result(property = "users", javaType = Store.class, column = "userIdx",
+                    one = @One(select = "com.travely.travely.mapper.UserMapper.findUserByUserIdx", fetchType = FetchType.LAZY))
+    })
+    Reserve findReserveByReserveCode(@Param("reserveCode") final String reserveCode);
+
 
 }
