@@ -27,7 +27,7 @@ public interface StoreMapper {
             @Result(property = "restWeeks", javaType = List.class, column = "storeIdx",
                     many = @Many(select = "com.travely.travely.mapper.RestWeekMapper.findRestWeeksByStoreIdx", fetchType = FetchType.LAZY)),
             @Result(property = "users", javaType = Users.class, column = "userIdx",
-                    one = @One(select = "com.travely.travely.mapper.UserMapper.findUserByUserIdx", fetchType = FetchType.LAZY))
+                    one = @One(select = "com.travely.travely.mapper.UserMapper.findUserByUserIdx", fetchType = FetchType.EAGER))
     })
     Store findStoreByStoreIdx(@Param("storeIdx") final long storeIdx);
 

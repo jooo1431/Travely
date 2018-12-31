@@ -4,8 +4,8 @@ import com.travely.travely.domain.Payment;
 import com.travely.travely.domain.Price;
 import com.travely.travely.domain.Reserve;
 import com.travely.travely.domain.Store;
-import com.travely.travely.dto.reservation.ReserveResponseDto;
 import com.travely.travely.dto.reservation.ReserveRequestDto;
+import com.travely.travely.dto.reservation.ReserveResponseDto;
 import com.travely.travely.dto.reservation.ReserveViewDto;
 import com.travely.travely.dto.store.StoreDto;
 import com.travely.travely.mapper.PriceMapper;
@@ -167,6 +167,13 @@ public class ReservationService {
                 .closeTime(reserve.getStore().getCloseTime())
                 .build();
 
+        //가격단위와 단위에 해당하는 시간
+        List<Price> prices = priceMapper.getAllPrice();
+        final Long hour = prices.get(0).getMillsecToHour(reserve.getStartTime().getTime(),reserve.getEndTime().getTime());
+        log.info("@"+hour);
+        final Long priceUnit = prices.get(0).getPriceUnit(prices,hour);
+        final Long priceIdx = prices.get(0).findPriceIdxByUnit(prices,priceUnit);
+
         ReserveViewDto reserveViewDto = ReserveViewDto.builder()
                 .stateType(reserve.getState())
                 .reserveCode(reserveCode)
@@ -180,6 +187,8 @@ public class ReservationService {
                 .progressType(reserve.getPayment().getProgressType())
                 .baggageImgs(reserve.getBaggageImgs())
                 .storeDto(storeDto)
+                .priceIdx(priceIdx)
+                .priceUnit(priceUnit)
                 .build();
 
         return reserveViewDto;
@@ -188,19 +197,13 @@ public class ReservationService {
     //가격계산 --> 가격반환
     private long priceTag(final ReserveRequestDto reserveRequestDto) {
 
-        //예약 총 시간(ms)을 구하자
-        final long mSec = reserveRequestDto.getEndTime() - reserveRequestDto.getStartTime();
-        //총 시간(h) 변환
-        Long hour = mSec / 1000 / 60 / 60;
-        //정시가 아니라 x시 y분 일경우 x+1시 로 계산
-        if (hour * 1000 * 60 * 60 != mSec)
-            hour++;
         //계산의 기본단위 변수
-        Long unit = 0L;
+
         List<Price> prices = priceMapper.getAllPrice();
-        for (int i = 0; i < prices.size() - 1; i++) {
-            unit = prices.get(i).compareHour(hour, unit);
-        }
+
+        final Long hour=prices.get(0).getMillsecToHour(reserveRequestDto.getStartTime(),reserveRequestDto.getEndTime());
+
+        final Long unit = prices.get(0).getPriceUnit(prices,hour);
         //계산을 위해 가방의 갯수를 구해야함.
         final Long count = reserveRequestDto.gainBagsCount();
 

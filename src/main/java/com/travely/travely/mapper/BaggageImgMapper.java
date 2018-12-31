@@ -1,6 +1,5 @@
 package com.travely.travely.mapper;
 
-import com.travely.travely.domain.Baggage;
 import com.travely.travely.domain.BaggageImg;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

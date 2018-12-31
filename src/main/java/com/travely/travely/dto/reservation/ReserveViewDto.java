@@ -25,13 +25,15 @@ public class ReserveViewDto {
     private Timestamp depositTime;
     private Timestamp takeTime;
     private List<BagDto> bagDtos;
+    private Long priceIdx;
+    private Long priceUnit;
     private Long price;
     private PayType payType;
     private ProgressType progressType;
 
     private List<BagImgDto> bagImgDtos;
 
-    private StoreDto storeDto;
+    private StoreDto store;
 
     public List<BagDto> getBagDtos() {
         return CommonConfig.getCheckedList(bagDtos);
@@ -42,7 +44,7 @@ public class ReserveViewDto {
     }
 
     @Builder
-    public ReserveViewDto(StateType stateType, String reserveCode, Timestamp startTime, Timestamp endTime, Timestamp depositTime, Timestamp takeTime, List<Baggage> baggages, Long price, PayType payType, ProgressType progressType, List<BaggageImg> baggageImgs, StoreDto storeDto) {
+    public ReserveViewDto(StateType stateType, String reserveCode, Timestamp startTime, Timestamp endTime, Timestamp depositTime, Timestamp takeTime, List<Baggage> baggages, Long price, PayType payType, ProgressType progressType, List<BaggageImg> baggageImgs, StoreDto storeDto,  Long priceIdx,  Long priceUnit) {
         this.stateType = stateType;
         this.reserveCode = reserveCode;
         this.startTime = startTime;
@@ -56,6 +58,8 @@ public class ReserveViewDto {
         this.progressType = progressType;
         this.bagImgDtos = baggageImgs.stream()
                 .map(baggageImg -> new BagImgDto(baggageImg)).collect(Collectors.toList());
-        this.storeDto = storeDto;
+        this.store = storeDto;
+        this.priceIdx=priceIdx;
+        this.priceUnit=priceUnit;
     }
 }

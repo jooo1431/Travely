@@ -30,7 +30,7 @@ public class ReserveResponseDto {
     //짐 사진
     private List<String> bagImgs;
     //상가정보 및 평점
-    private StoreDto storeDto;
+    private StoreDto store;
 
     public ReserveResponseDto(final ReserveRequestDto reserveRequestDto, final String reserveCode, final StoreDto storeDto, final long price, final StateType stateType) {
         this.startTime = new Timestamp(reserveRequestDto.getStartTime());
@@ -40,7 +40,7 @@ public class ReserveResponseDto {
         this.price = price;
         this.reserveCode = reserveCode;
         this.bagDtos = reserveRequestDto.getBagDtos();
-        this.storeDto = storeDto;
+        this.store = storeDto;
         this.bagImgs = null;
     }
 
@@ -54,6 +54,6 @@ public class ReserveResponseDto {
         this.reserveCode = reserveCode;
         this.bagDtos = bagDtos;
         this.bagImgs = bagImgs;
-        this.storeDto = storeDto;
+        this.store = storeDto;
     }
 }

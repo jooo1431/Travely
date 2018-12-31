@@ -1,9 +1,6 @@
 package com.travely.travely.web;
 
-import com.travely.travely.domain.Store;
 import com.travely.travely.dto.store.StoreDetailsResonseDto;
-import com.travely.travely.dto.store.StoreListResponseDto;
-import com.travely.travely.mapper.StoreMapper;
 import com.travely.travely.service.StoreService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;

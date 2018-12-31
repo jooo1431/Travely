@@ -1,6 +1,5 @@
 package com.travely.travely.dto.store;
 
-import com.travely.travely.domain.Review;
 import com.travely.travely.domain.Store;
 import com.travely.travely.dto.review.ReviewResponseDto;
 import lombok.AccessLevel;
