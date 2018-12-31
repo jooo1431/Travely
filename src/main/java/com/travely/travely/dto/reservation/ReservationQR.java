@@ -1,6 +1,5 @@
 package com.travely.travely.dto.reservation;
 
-import com.travely.travely.domain.Reserve;
 import com.travely.travely.dto.baggage.BagDto;
 import com.travely.travely.dto.store.StoreDto;
 import com.travely.travely.util.typeHandler.PayType;
@@ -33,14 +32,14 @@ public class ReservationQR {
     //상가정보 및 평점
     private StoreDto storeDto;
 
-    public ReservationQR(final ReservationRequest reservationRequest, final String reserveCode, final StoreDto storeDto, final long price, final StateType stateType) {
-        this.startTime = reservationRequest.getStartTime();
-        this.endTime = reservationRequest.getEndTime();
-        this.payType = reservationRequest.getPayType();
+    public ReservationQR(final ReserveRequestDto reserveRequestDto, final String reserveCode, final StoreDto storeDto, final long price, final StateType stateType) {
+        this.startTime = new Timestamp(reserveRequestDto.getStartTime());
+        this.endTime = new Timestamp(reserveRequestDto.getEndTime());
+        this.payType = reserveRequestDto.getPayType();
         this.stateType = stateType;
         this.price = price;
         this.reserveCode = reserveCode;
-        this.bagDtos = reservationRequest.getBagDtos();
+        this.bagDtos = reserveRequestDto.getBagDtos();
         this.storeDto = storeDto;
         this.bagImgs = null;
     }
