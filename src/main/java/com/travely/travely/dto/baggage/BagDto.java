@@ -25,6 +25,6 @@ public class BagDto {
     }
 
     public Boolean checkCount() {
-        return this.bagCount <= 0;
+        return this.bagCount > 0;
     }
 }

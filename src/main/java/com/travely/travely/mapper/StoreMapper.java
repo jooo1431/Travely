@@ -30,9 +30,6 @@ public interface StoreMapper {
                     one = @One(select = "com.travely.travely.mapper.UserMapper.findUserByUserIdx", fetchType = FetchType.LAZY))
     })
     Store findStoreByStoreIdx(@Param("storeIdx") final long storeIdx);
-    
-    @Select("SELECT * FROM store WHERE storeIdx = #{storeIdx}")
-    Store getStoreFindByStoreIdx(@Param("storeIdx") final long storeIdx);
 
     @Select("select * from store where regionIdx = #{regionIdx}")
     List<Store> findStoresByRegionIdx(@Param("regionIdx") final long regionIdx);

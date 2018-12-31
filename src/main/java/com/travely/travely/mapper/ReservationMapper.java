@@ -29,22 +29,34 @@ public interface ReservationMapper {
     })
     List<Reserve> findReserveByStoreIdx(@Param("storeIdx") final Long storeIdx);
 
-    //예약 내역이 있는지 검색하기
-    @Select("SELECT COUNT(*) FROM reserve WHERE userIdx = #{userIdx} AND state < 3")
-    Long findRerserveCountByUserIdx(@Param("userIdx") final Long userIdx);
-
-    ///////////////////////////////////////////
-
     //예약 목록에 등록
     @Insert("INSERT INTO reserve (userIdx, storeIdx, startTime, endTime, state, price,reserveCode,depositTime,takeTime)" +
             " VALUES (#{reserve.userIdx},#{reserve.storeIdx},#{reserve.startTime},#{reserve.endTime},#{reserve.state},#{reserve.price},#{reserve.reserveCode},#{reserve.depositTime},#{reserve.takeTime})")
     @Options(useGeneratedKeys = true, keyProperty = "reserve.reserveIdx", keyColumn = "reserve.reserveIdx")
     void saveReservation(@Param("reserve") final Reserve reserve);
 
+    //결제목록에 예약내역 토대로 저장
+    @Insert("INSERT INTO payment (payType, totalPrice, reserveIdx, progressType) VALUES(#{payment.payType},#{payment.totalPrice},#{payment.reserveIdx},#{payment.progressType})")
+    @Options(useGeneratedKeys = true, keyColumn = "payment.payIdx", keyProperty = "payment.payIdx")
+    void savePayment(@Param("payment") final Payment payment);
+
     //예약번호에 따른 짐 목록 등록
     @Insert("INSERT INTO baggage (reserveIdx,bagCount,bagType) VALUES (#{reserveIdx},#{bagDto.bagCount},#{bagDto.bagType})")
     @Options(useGeneratedKeys = true, keyColumn = "baggage.bagIdx")
     void saveBaggages(@Param("reserveIdx") final long reserveIdx, @Param("bagDto") BagDto bagDto);
+
+
+    //유저idx로 해당 스토어에 저장되어있는 예약중인내역을 확인해온다
+    @Select("SELECT * FROM reserve WHERE userIdx = #{userIdx} AND state < 3")
+    Reserve findReserveByUserIdx(@Param("userIdx") final Long userIdx);
+
+    ///////////////////////////////////////////////
+
+    //예약 내역이 있는지 검색하기
+    @Select("SELECT COUNT(*) FROM reserve WHERE userIdx = #{userIdx} AND state < 3")
+    Long findRerserveCountByUserIdx(@Param("userIdx") final Long userIdx);
+
+    ///////////////////////////////////////////
 
     //예약번호에 따른 짐 목록 추출
     @Select("SELECT * FROM baggage WHERE reserveIdx = #{reserveIdx}")
@@ -66,10 +78,7 @@ public interface ReservationMapper {
     @Select("SELECT bagImg FROM baggageImg WHERE reserveIdx = #{reserveIdx}")
     List<String> getBaggagesImgs(@Param("reserveIdx") final long reserveIdx);
 
-    //결제목록에 예약내역 토대로 저장
-    @Insert("INSERT INTO payment (payType, totalPrice, reserveIdx, progressType) VALUES(#{payment.payType},#{payment.totalPrice},#{payment.reserveIdx},#{payment.progressType})")
-    @Options(useGeneratedKeys = true, keyColumn = "payment.payIdx", keyProperty = "payment.payIdx")
-    void savePayment(@Param("payment") final Payment payment);
+
 
     //유저의 예약목록 JOIN 결제목록 정보 불러오기 예약취소, 수거를 제외한정보만
     @Select("SELECT * FROM reserve NATURAL JOIN payment WHERE NOT state = #{cancel} AND NOT state = #{takeOff} AND userIdx = #{userIdx}")

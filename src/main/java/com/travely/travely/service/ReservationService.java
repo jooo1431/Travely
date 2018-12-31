@@ -37,17 +37,15 @@ public class ReservationService {
     public ReservationQR saveReservation(final long userIdx, final ReserveRequestDto reserveRequestDto) {
 
         List<Reserve> reserves = reservationMapper.findReserveByStoreIdx(reserveRequestDto.getStoreIdx());
+        Store store = storeMapper.findStoreByStoreIdx(reserveRequestDto.getStoreIdx());
 
-        final Double like;
-        Store store = storeMapper.getStoreFindByStoreIdx(reserveRequestDto.getStoreIdx());
-        if (reserves != null) {
+        if (reserves.size()!=0) {
             reserves.get(0).getStore().checkReserveTime(reserveRequestDto);
-            //if (reservationMapper.findRerserveCountByUserIdx(userIdx) > 0) throw new RuntimeException();
+            if (reservationMapper.findRerserveCountByUserIdx(userIdx) > 0) throw new RuntimeException();
         }
 
-
         //가게평점
-        like = store.getGrade();
+        final Double like = store.getGrade();
 
         // 짐갯수 0개인경우
         reserveRequestDto.checkCount();
@@ -119,37 +117,14 @@ public class ReservationService {
     }
 
     @Transactional
-    public String cancelReservation(final long userIdx) {
+    public void cancelReservation(final long userIdx) {
 
         //예약 취소하면 결제테이블에 있는 것도 결제 취소로 전부 바꿔버린다.
+        //정상적으로 예약된게 있는지 확인
 
-        String msg;
-        StateType cancel = StateType.Cancel;
-        StateType takeOff = StateType.TakeOff;
-        ProgressType progressType = ProgressType.CANCEL;
 
-        try {
-            //예약이 있는지?
-            long isReserve = reservationMapper.getReservationCountFindByUserIdx(userIdx, takeOff, cancel);
 
-            if (isReserve == 0) {
-                msg = "예약 내역 없음";
-            } else {
-                //취소, 수거를 제외한 reserve join payment 테이블 정보 가져오기
-                ReserveJoinPayment reserveJoinPayment = reservationMapper.getReservePaymentFindByUserIdxExceptCancelTakeOff(userIdx, takeOff, cancel);
-                //수정할 payment의 reserveIdx 추출
-                final long reserveIdx = reserveJoinPayment.getReserveIdx();
 
-                reservationMapper.deleteReservation(reserveIdx, cancel);
-                reservationMapper.deletePayment(reserveIdx, progressType);
-                msg = "예약 취소 성공";
-            }
-
-        } catch (Exception e) {
-            msg = null;
-            log.error(e.getMessage());
-        }
-        return msg;
     }
 
 //    public ReservationQR getReservation(final long userIdx) {
@@ -205,7 +180,7 @@ public class ReservationService {
         StateType takeOff = StateType.TakeOff;
 
         //먼저 총 보관 한도를 구한다.
-        Store store = storeMapper.getStoreFindByStoreIdx(storeIdx);
+        Store store = storeMapper.findStoreByStoreIdx(storeIdx);
         long limit = store.getLimit();
         //현재 보관중인 짐의 총 갯수를 가져오자
         long currentBagCount = reservationMapper.getTotalBagCountFindByStoreIdx(storeIdx);

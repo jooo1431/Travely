@@ -50,8 +50,8 @@ public class Store {
     }
 
     public Double getGrade(){
+        if(reviews==null) return 0D;
        return reviews.stream().mapToDouble(Review::getLike).average().orElse(0);
-
     }
 
     public void checkReserveTime(ReserveRequestDto reserveRequestDto) {

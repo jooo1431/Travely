@@ -1,7 +1,9 @@
 package com.travely.travely.web;
 
+import com.travely.travely.domain.Store;
 import com.travely.travely.dto.reservation.ReserveRequestDto;
 import com.travely.travely.dto.reservation.ReservationQR;
+import com.travely.travely.mapper.StoreMapper;
 import com.travely.travely.service.ReservationService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ public class ReservationController {
     private final ReservationService reservationService;
 
 
+
     @ApiOperation(value = "예약상태 저장", notes = "예약상태 저장 후 예약 정보 반환")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "예약 성공"),
@@ -31,7 +34,7 @@ public class ReservationController {
     @PostMapping("/save")
     public ResponseEntity<ReservationQR> saveReservation(@ApiIgnore Authentication authentication, @RequestBody final ReserveRequestDto reserveRequestDto) {
 
-        Long userIdx = Long.parseLong((String)authentication.getPrincipal());
+        Long userIdx = Long.parseLong((String) authentication.getPrincipal());
 
         //짐수용한도 체크하기
         final long limit = reservationService.checkLimit(reserveRequestDto.getStoreIdx());
@@ -50,6 +53,10 @@ public class ReservationController {
         else
             return ResponseEntity.status(HttpStatus.CREATED).body(reservationQR);
     }
+
+
+
+}
 
 //    @ApiOperation(value = "예약 취소", notes = "예약상태 조회 후 삭제")
 //    @ApiResponses(value = {
@@ -90,4 +97,3 @@ public class ReservationController {
 //        return ResponseEntity.ok().body(reservationQR);
 //    }
 
-}
