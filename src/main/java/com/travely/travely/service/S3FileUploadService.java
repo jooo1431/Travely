@@ -39,19 +39,19 @@ public class S3FileUploadService {
     }
 
 
-    public String upload(MultipartFile uploadFile) throws IOException {
+    public String upload(String classify, MultipartFile uploadFile) throws IOException {
 
         String origName = uploadFile.getOriginalFilename();
         String url;
+        classify = classify + "/";
 
         try {
-
             final String ext = origName.substring(origName.lastIndexOf('.'));
             final String saveFileName = getUuid() + ext;
             File file = new File(System.getProperty("user.dir") + saveFileName);
             uploadFile.transferTo(file);
-            uploadOnS3(saveFileName, file);
-            url = defaultUrl + saveFileName;
+            uploadOnS3(classify + saveFileName, file);
+            url = defaultUrl +classify +  saveFileName;
             file.delete();
 
         } catch (StringIndexOutOfBoundsException e) {

@@ -1,20 +1,18 @@
 package com.travely.travely.dto.profile;
 
-import com.travely.travely.domain.ProfileImg;
+import com.travely.travely.domain.Image;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.web.multipart.MultipartFile;
 
 @AllArgsConstructor
 @Getter
-public class ProfileImgDto {
+public class ImageDto {
     private MultipartFile photo;
+    private String classify;
 
-    public ProfileImgDto(ProfileImg profileImg){
-        this.photo = profileImg.getPhoto();
-    }
 
     public boolean checkProperties(){
-        return this.photo != null;
+        return ( this.photo != null & this.classify != null);
     }
 }

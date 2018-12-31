@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ProfileImg {
+public class Image {
     private MultipartFile photo;
+    private String classify;
 }
