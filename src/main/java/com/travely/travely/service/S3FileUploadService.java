@@ -44,11 +44,15 @@ public class S3FileUploadService {
         String origName = uploadFile.getOriginalFilename();
         String url;
         classify = classify + "/";
+        long fileSize = 10 * 1024 * 1024;               // Set file size 5MB
 
         try {
             final String ext = origName.substring(origName.lastIndexOf('.'));
             final String saveFileName = getUuid() + ext;
             File file = new File(System.getProperty("user.dir") + saveFileName);
+            if( fileSize < file.length() ){
+                return "파일 사이즈를 초과했습";
+            }
             uploadFile.transferTo(file);
             uploadOnS3(classify + saveFileName, file);
             url = defaultUrl +classify +  saveFileName;
@@ -60,7 +64,6 @@ public class S3FileUploadService {
         }
         return url;
     }
-
 
     private static String getUuid() {
 
