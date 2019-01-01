@@ -1,5 +1,6 @@
 package com.travely.travely.dto.store;
 
+import com.travely.travely.domain.Store;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -31,16 +32,16 @@ public class StoreDto {
     private long storeIdx;
 
     @Builder
-    public StoreDto(String ownerName, String storeName, String storeCall, double latitude, double longitude, Timestamp openTime, Timestamp closeTime, String address, double avgLike, long storeIdx) {
-        this.ownerName = ownerName;
-        this.storeName = storeName;
-        this.storeCall = storeCall;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.openTime = openTime;
-        this.closeTime = closeTime;
-        this.address = address;
-        this.avgLike = avgLike;
-        this.storeIdx = storeIdx;
+    public StoreDto(final Store store) {
+        this.ownerName = store.getUsers().getName();
+        this.storeName = store.getStoreName();
+        this.storeCall = store.getStoreCall();
+        this.latitude = store.getLatitude();
+        this.longitude = store.getLongitude();
+        this.openTime = store.getOpenTime();
+        this.closeTime = store.getCloseTime();
+        this.address = store.getAddress();
+        this.avgLike = store.getGrade();
+        this.storeIdx = store.getStoreIdx();
     }
 }

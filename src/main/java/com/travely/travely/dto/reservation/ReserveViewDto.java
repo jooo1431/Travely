@@ -1,8 +1,7 @@
 package com.travely.travely.dto.reservation;
 
 import com.travely.travely.config.CommonConfig;
-import com.travely.travely.domain.Baggage;
-import com.travely.travely.domain.BaggageImg;
+import com.travely.travely.domain.Reserve;
 import com.travely.travely.dto.baggage.BagDto;
 import com.travely.travely.dto.baggage.BagImgDto;
 import com.travely.travely.dto.store.StoreDto;
@@ -46,19 +45,19 @@ public class ReserveViewDto {
     }
 
     @Builder
-    public ReserveViewDto(StateType stateType, String reserveCode, Timestamp startTime, Timestamp endTime, Timestamp depositTime, Timestamp takeTime, List<Baggage> baggages, Long price, PayType payType, ProgressType progressType, List<BaggageImg> baggageImgs, StoreDto storeDto, Long priceIdx, Long priceUnit, Long extraCharge, Long extraChargeCount) {
-        this.stateType = stateType;
-        this.reserveCode = reserveCode;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.depositTime = depositTime;
-        this.takeTime = takeTime;
-        this.bagDtos = baggages.stream()
+    public ReserveViewDto(final Reserve reserve, final StoreDto storeDto, final Long priceIdx, final Long priceUnit, final Long extraCharge, final Long extraChargeCount) {
+        this.stateType = reserve.getState();
+        this.reserveCode = reserve.getReserveCode();
+        this.startTime = reserve.getStartTime();
+        this.endTime = reserve.getEndTime();
+        this.depositTime = reserve.getDepositTime();
+        this.takeTime = reserve.getTakeTime();
+        this.bagDtos = reserve.getBaggages().stream()
                 .map(baggage -> new BagDto(baggage)).collect(Collectors.toList());
-        this.price = price;
-        this.payType = payType;
-        this.progressType = progressType;
-        this.bagImgDtos = baggageImgs.stream()
+        this.price = reserve.getPrice();
+        this.payType = reserve.getPayment().getPayType();
+        this.progressType = reserve.getPayment().getProgressType();
+        this.bagImgDtos = reserve.getBaggageImgs().stream()
                 .map(baggageImg -> new BagImgDto(baggageImg)).collect(Collectors.toList());
         this.store = storeDto;
         this.priceIdx = priceIdx;

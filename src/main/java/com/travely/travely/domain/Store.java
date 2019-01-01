@@ -51,7 +51,7 @@ public class Store {
 
     public Double getGrade() {
         if (reviews == null) return 0D;
-        return reviews.stream().mapToDouble(Review::getLike).average().orElse(0);
+        return reviews.stream().mapToDouble(Review::getLiked).average().orElse(0);
     }
 
     public Long getSpace(final Long totalBagCount) {
@@ -75,9 +75,6 @@ public class Store {
     }
 
     private Boolean checkHour(Timestamp timestamp) {
-        log.info("open : " + this.openTime.getHours());
-        log.info("mytime : " + timestamp.getHours());
-        log.info("close : " + this.closeTime.getHours());
         if (this.openTime.getHours() < timestamp.getHours() &&
                 this.closeTime.getHours() > timestamp.getHours())
             return true;

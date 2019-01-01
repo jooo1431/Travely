@@ -14,16 +14,14 @@ public class Review {
     private long storeIdx;
     private long userIdx;
     private String content;
-    private long like;
+    private long liked;
     private Timestamp createAt;
 
     @Builder
-    public Review(long reviewIdx, long storeIdx, long userIdx, String content, long like, Timestamp createAt) {
-        this.reviewIdx = reviewIdx;
+    public Review(long storeIdx, long userIdx, String content, long liked) {
         this.storeIdx = storeIdx;
         this.userIdx = userIdx;
         this.content = content;
-        this.like = like;
-        this.createAt = createAt;
+        this.liked = liked;
     }
 }

@@ -13,9 +13,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
-import java.sql.Date;
-import java.sql.Timestamp;
-
 @Slf4j
 @RestController
 @RequestMapping("/api/reservation")
@@ -34,9 +31,6 @@ public class ReservationController {
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PostMapping("/save")
     public ResponseEntity<ReserveResponseDto> saveReservation(@ApiIgnore Authentication authentication, @RequestBody final ReserveRequestDto reserveRequestDto) {
-
-        log.info("time" + new Timestamp(reserveRequestDto.getStartTime()));
-        log.info("time" + new Date(reserveRequestDto.getStartTime()));
 
         Long userIdx = Long.parseLong((String) authentication.getPrincipal());
 
@@ -76,19 +70,6 @@ public class ReservationController {
         return ResponseEntity.ok().body(reserveViewDto);
     }
 
-    @ApiOperation(value = "가격표 조회", notes = "가격표 조회")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "조회 성공"),
-            @ApiResponse(code = 500, message = "서버에러")
-    })
-    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @GetMapping("/price")
-    public ResponseEntity<Void> getAllPrice(){
-
-        //시간대별 + 가격
-
-        return null;
-    }
 }
 
 

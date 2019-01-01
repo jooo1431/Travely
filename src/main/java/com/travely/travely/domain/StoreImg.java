@@ -10,12 +10,12 @@ import lombok.NoArgsConstructor;
 public class StoreImg {
     private Long storeIdx;
     private Long storeImgIdx;
-    private String storeImg;
+    private String storeImgUrl;
 
     @Builder
-    public StoreImg(Long storeIdx, Long storeImgIdx, String storeImg) {
+    public StoreImg(Long storeIdx, Long storeImgIdx, String storeImgUrl) {
         this.storeIdx = storeIdx;
         this.storeImgIdx = storeImgIdx;
-        this.storeImg = storeImg;
+        this.storeImgUrl = storeImgUrl;
     }
 }
