@@ -46,11 +46,11 @@ public class ReviewController {
             @ApiResponse(code = 500, message = "서버에러")
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @GetMapping("/")
-    public ResponseEntity<List<ReviewStoreResponseDto>> getAllMyReview(@ApiIgnore final Authentication authentication) {
+    @GetMapping("/{offset}")
+    public ResponseEntity<List<ReviewStoreResponseDto>> getAllMyReview(@ApiIgnore final Authentication authentication, @PathVariable final Long offset) {
         Long userIdx = Long.parseLong((String) authentication.getPrincipal());
 
-        List<ReviewStoreResponseDto> reviewStoreResponseDtos = reviewService.getAllMyReviews(userIdx);
+        List<ReviewStoreResponseDto> reviewStoreResponseDtos = reviewService.getAllMyReviews(userIdx, offset);
 
         return ResponseEntity.ok().body(reviewStoreResponseDtos);
     }
@@ -63,9 +63,9 @@ public class ReviewController {
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @DeleteMapping("/delete/{reviewIdx}")
-    public ResponseEntity<Void> deleteReview(@ApiIgnore final Authentication authentication,@PathVariable final Long reviewIdx) {
+    public ResponseEntity<Void> deleteReview(@ApiIgnore final Authentication authentication, @PathVariable final Long reviewIdx) {
         Long userIdx = Long.parseLong((String) authentication.getPrincipal());
-        reviewService.deleteReview(userIdx,reviewIdx);
+        reviewService.deleteReview(userIdx, reviewIdx);
         return ResponseEntity.ok().build();
     }
 }

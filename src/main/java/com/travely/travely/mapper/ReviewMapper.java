@@ -22,9 +22,9 @@ public interface ReviewMapper {
     @Options(useGeneratedKeys = true, keyColumn = "review.reviewIdx", keyProperty = "review.reviewIdx")
     void saveReview(@Param("review") final Review review);
 
-    @Select("SELECT r.reviewIdx,r.content,r.liked,r.createAt,s.*,si.storeImgUrl FROM review as r JOIN store as s, (SELECT * FROM storeImg GROUP BY storeIdx) as si WHERE r.storeIdx = s.storeIdx AND s.storeIdx = si.storeIdx AND r.userIdx = #{userIdx} ORDER BY r.createAt DESC")
-    List<ReviewStoreResponseDto> findReviewsAndStoreByUserIdx(@Param("userIdx") final Long userIdx);
+    @Select("SELECT r.reviewIdx, r.content,r.liked,r.createAt, si.* FROM review as r LEFT JOIN (SELECT s.*,si.storeImgUrl FROM storeImg as si NATURAL JOIN store as s GROUP BY storeIdx) as si ON r.storeIdx = si.storeIdx WHERE r.userIdx = #{userIdx} ORDER BY r.createAt DESC LIMIT #{start}, #{end}")
+    List<ReviewStoreResponseDto> findReviewsAndStoreByUserIdx(@Param("userIdx") final Long userIdx, @Param("start") final Long start, @Param("end") final Long end);
 
     @Delete("DELETE FROM review WHERE userIdx = #{userIdx} AND reviewIdx = #{reviewIdx}")
-    void deleteReviewByUserIdxAndReviewIdx(@Param("userIdx") final Long userIdx,@Param("reviewIdx") final Long reviewIdx);
+    void deleteReviewByUserIdxAndReviewIdx(@Param("userIdx") final Long userIdx, @Param("reviewIdx") final Long reviewIdx);
 }
