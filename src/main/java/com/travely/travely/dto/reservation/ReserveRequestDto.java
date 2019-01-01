@@ -1,15 +1,12 @@
 package com.travely.travely.dto.reservation;
 
-import com.travely.travely.domain.Baggage;
 import com.travely.travely.dto.baggage.BagDto;
 import com.travely.travely.util.typeHandler.PayType;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
@@ -38,13 +35,17 @@ public class ReserveRequestDto {
         this.payType = payType;
     }
 
+    public void checkSpace(final Long limit) {
+        if (!(limit - gainBagsCount() >= 0)) throw new RuntimeException();
+    }
+
     public void checkCount() {
         bagDtos.forEach(bagDto -> {
             if (!bagDto.checkCount()) throw new RuntimeException();
         });
     }
 
-    public Long getBagsCount() {
+    public Long gainBagsCount() {
         return bagDtos.stream().mapToLong(BagDto::getBagCount).sum();
     }
 }

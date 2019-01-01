@@ -29,7 +29,7 @@ public class OwnerService {
         String msg;
         final ReserveJoinPayment reserveJoinPayment = ownerMapper.getReserveJoinPaymentFindByReserveCode(reserveCode);
 
-        if(reserveJoinPayment!=null){
+        if (reserveJoinPayment != null) {
             //현금결제
             //reserve테이블의 예약완료 -> 보관중으로
             final long reserveIdx = reserveJoinPayment.getReserveIdx();
@@ -42,9 +42,9 @@ public class OwnerService {
             final ProgressType progressType = ProgressType.DONE;
             ownerMapper.setProgressToDoneOnPayment(payIdx, progressType);
 
-            return msg="READ";
-        }else{
-            return msg="NO DATA";
+            return msg = "READ";
+        } else {
+            return msg = "NO DATA";
         }
 
 
@@ -54,11 +54,10 @@ public class OwnerService {
     //업주면 true 아니면 false
     public boolean areYouOwner(final String reserveCode, final long ownerIdx) {
         final ReserveJoinStore reserveJoinStore = ownerMapper.getReserveJoinStoreFindByReserveCode(reserveCode);
-        if(reserveJoinStore!=null){
+        if (reserveJoinStore != null) {
             if (reserveJoinStore.getOwnerIdx() == ownerIdx) return true;
             else return false;
-        }
-        else return false;
+        } else return false;
 
     }
 

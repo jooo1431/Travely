@@ -14,7 +14,7 @@ public class FavoriteService {
     private final FavoriteMapper favoriteMapper;
 
     public FavoriteResponseDto updateFavorite(Long userIdx, Long storeIdx) {
-        Favorite favorite = new Favorite(userIdx,storeIdx);
+        Favorite favorite = new Favorite(userIdx, storeIdx);
         favoriteMapper.insertFavorite(favorite);
         return new FavoriteResponseDto(favoriteMapper.findByFavorite(favorite));
     }

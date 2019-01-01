@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 public class RestWeekResponseDto {
     private long weekIdx;
-    private String week;
+    private long week;
     private long storeIdx;
 
     public RestWeekResponseDto(RestWeek restWeek) {

@@ -1,7 +1,8 @@
 package com.travely.travely.web;
 
 import com.travely.travely.dto.reservation.ReserveRequestDto;
-import com.travely.travely.dto.reservation.ReservationQR;
+import com.travely.travely.dto.reservation.ReserveResponseDto;
+import com.travely.travely.dto.reservation.ReserveViewDto;
 import com.travely.travely.service.ReservationService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import java.sql.Date;
+import java.sql.Timestamp;
 
 @Slf4j
 @RestController
@@ -29,65 +33,62 @@ public class ReservationController {
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PostMapping("/save")
-    public ResponseEntity<ReservationQR> saveReservation(@ApiIgnore Authentication authentication, @RequestBody final ReserveRequestDto reserveRequestDto) {
+    public ResponseEntity<ReserveResponseDto> saveReservation(@ApiIgnore Authentication authentication, @RequestBody final ReserveRequestDto reserveRequestDto) {
 
-        Long userIdx = Long.parseLong((String)authentication.getPrincipal());
+        log.info("time" + new Timestamp(reserveRequestDto.getStartTime()));
+        log.info("time" + new Date(reserveRequestDto.getStartTime()));
 
-        //짐수용한도 체크하기
-        final long limit = reservationService.checkLimit(reserveRequestDto.getStoreIdx());
+        Long userIdx = Long.parseLong((String) authentication.getPrincipal());
 
-        if (limit <= 0)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        ReserveResponseDto reserveResponseDto = reservationService.saveReservation(userIdx, reserveRequestDto);
 
-        //맡기고자 하는 짐의 양이 limit보다 많으면
-        if (!(reservationService.isFull(reserveRequestDto.getBagDtos(), limit)))
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-
-        ReservationQR reservationQR = reservationService.saveReservation(userIdx, reserveRequestDto);
-        //예약작업
-        if (reservationQR == null)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        else
-            return ResponseEntity.status(HttpStatus.CREATED).body(reservationQR);
+        return ResponseEntity.status(HttpStatus.CREATED).body(reserveResponseDto);
     }
 
-//    @ApiOperation(value = "예약 취소", notes = "예약상태 조회 후 삭제")
-//    @ApiResponses(value = {
-//            @ApiResponse(code = 200, message = "[예약 취소 성공] 혹은 [예약 내역 없음] 출력"),
-//            @ApiResponse(code = 500, message = "서버에러")
-//    })
-//    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-//    @PostMapping("/cancel")
-//    public ResponseEntity<String> cancelReservation(@ApiIgnore Authentication authentication) {
-//
-//        long userIdx = Long.parseLong((String) authentication.getPrincipal());
-//        String msg = reservationService.cancelReservation(userIdx);
-//
-//        //비밀번호 체크하는부분추가해야함
-//
-//        if (msg == null)
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-//        return ResponseEntity.ok().body(msg);
-//    }
 
-//    @ApiOperation(value = "예약 조회", notes = "예약상태 조회 후 결과 반환")
-//    @ApiResponses(value = {
-//            @ApiResponse(code = 200, message = "예약 조회 성공"),
-//            @ApiResponse(code = 204, message = "예약 내역 없음"),
-//            @ApiResponse(code = 500, message = "서버에러")
-//    })
-//    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-//    @PostMapping("/info")
-//    public ResponseEntity<ReservationQR> getReservation(@ApiIgnore Authentication authentication) {
-//
-//        long userIdx = Long.parseLong((String) authentication.getPrincipal());
-//
-//        ReservationQR reservationQR = reservationService.getReservation(userIdx);
-//
-//        if (reservationQR == null) {
-//            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-//        }
-//        return ResponseEntity.ok().body(reservationQR);
-//    }
+    @ApiOperation(value = "예약 취소", notes = "예약상태 조회 후 삭제")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "예약 취소"),
+            @ApiResponse(code = 500, message = "서버에러")
+    })
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @DeleteMapping("/cancel")
+    public ResponseEntity<Void> cancelReservation(@ApiIgnore Authentication authentication) {
 
+        Long userIdx = Long.parseLong((String) authentication.getPrincipal());
+
+        reservationService.cancelReservation(userIdx);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @ApiOperation(value = "예약 세부정보 조회", notes = "예약 코드로 예약 내용 조회")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "예약 조회 성공"),
+            @ApiResponse(code = 500, message = "서버에러")
+    })
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @GetMapping("/{reserveCode}")
+    public ResponseEntity<ReserveViewDto> getReservation(@PathVariable("reserveCode") final String reserveCode) {
+
+        ReserveViewDto reserveViewDto = reservationService.getReserveMyInfo(reserveCode);
+
+        return ResponseEntity.ok().body(reserveViewDto);
+    }
+
+    @ApiOperation(value = "가격표 조회", notes = "가격표 조회")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "조회 성공"),
+            @ApiResponse(code = 500, message = "서버에러")
+    })
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @GetMapping("/price")
+    public ResponseEntity<Void> getAllPrice(){
+
+        //시간대별 + 가격
+
+        return null;
+    }
 }
+
+

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 @RestControllerAdvice
 public class StoreExceptionControllerAdvice {
-    private static final String FIELD ="store";
+    private static final String FIELD = "store";
 
     @ExceptionHandler(NotFoundStoreException.class)
     public ResponseEntity<ExceptionResponseDto> emailAlreadyExists(NotFoundStoreException exception) {

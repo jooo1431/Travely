@@ -23,8 +23,8 @@ public class CommonConfig {
         return new Gson();
     }
 
-    public static List getCheckedList(List maybeList){
-        if(maybeList == null) return new ArrayList<>();
+    public static List getCheckedList(List maybeList) {
+        if (maybeList == null) return new ArrayList<>();
         return maybeList;
     }
 }

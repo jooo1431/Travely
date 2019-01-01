@@ -13,7 +13,7 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class ReservationQR {
+public class ReserveResponseDto {
 
     //맡고 찾는 시간
     private Timestamp startTime;
@@ -30,9 +30,9 @@ public class ReservationQR {
     //짐 사진
     private List<String> bagImgs;
     //상가정보 및 평점
-    private StoreDto storeDto;
+    private StoreDto store;
 
-    public ReservationQR(final ReserveRequestDto reserveRequestDto, final String reserveCode, final StoreDto storeDto, final long price, final StateType stateType) {
+    public ReserveResponseDto(final ReserveRequestDto reserveRequestDto, final String reserveCode, final StoreDto storeDto, final long price, final StateType stateType) {
         this.startTime = new Timestamp(reserveRequestDto.getStartTime());
         this.endTime = new Timestamp(reserveRequestDto.getEndTime());
         this.payType = reserveRequestDto.getPayType();
@@ -40,12 +40,12 @@ public class ReservationQR {
         this.price = price;
         this.reserveCode = reserveCode;
         this.bagDtos = reserveRequestDto.getBagDtos();
-        this.storeDto = storeDto;
+        this.store = storeDto;
         this.bagImgs = null;
     }
 
     @Builder
-    public ReservationQR(Timestamp startTime, Timestamp endTime, PayType payType, StateType stateType, long price, String reserveCode, List<BagDto> bagDtos, List<String> bagImgs, StoreDto storeDto) {
+    public ReserveResponseDto(Timestamp startTime, Timestamp endTime, PayType payType, StateType stateType, long price, String reserveCode, List<BagDto> bagDtos, List<String> bagImgs, StoreDto storeDto) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.payType = payType;
@@ -54,6 +54,6 @@ public class ReservationQR {
         this.reserveCode = reserveCode;
         this.bagDtos = bagDtos;
         this.bagImgs = bagImgs;
-        this.storeDto = storeDto;
+        this.store = storeDto;
     }
 }

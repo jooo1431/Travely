@@ -25,7 +25,7 @@ public enum StateType implements CommonEnum {
         return message;
     }
 
-    public void checkReserve(){
-        if(this.value<3) throw new RuntimeException();
+    public void checkReserve() {
+        if (this.value < 3) throw new RuntimeException();
     }
 }
