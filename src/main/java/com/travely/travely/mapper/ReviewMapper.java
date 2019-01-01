@@ -22,6 +22,6 @@ public interface ReviewMapper {
     @Options(useGeneratedKeys = true, keyColumn = "review.reviewIdx", keyProperty = "review.reviewIdx")
     void saveReview(@Param("review") final Review review);
 
-    @Select("SELECT r.reviewIdx,r.content,r.liked,r.createAt,s.*,si.storeImgUrl FROM review as r JOIN store as s, (SELECT * FROM storeImg GROUP BY storeIdx) as si WHERE r.storeIdx = s.storeIdx AND s.storeIdx = si.storeIdx AND r.userIdx = #{userIdx}")
+    @Select("SELECT r.reviewIdx,r.content,r.liked,r.createAt,s.*,si.storeImgUrl FROM review as r JOIN store as s, (SELECT * FROM storeImg GROUP BY storeIdx) as si WHERE r.storeIdx = s.storeIdx AND s.storeIdx = si.storeIdx AND r.userIdx = #{userIdx} ORDER BY r.createAt DESC")
     List<ReviewStoreResponseDto> findReviewsAndStoreByUserIdx(@Param("userIdx") final Long userIdx);
 }
