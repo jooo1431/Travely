@@ -54,4 +54,18 @@ public class ReviewController {
 
         return ResponseEntity.ok().body(reviewStoreResponseDtos);
     }
+
+    @ApiOperation(value = "리뷰 삭제", notes = "사용자의 리뷰 삭제")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "리뷰 삭제 성공"),
+            @ApiResponse(code = 400, message = "잘못 된 접근"),
+            @ApiResponse(code = 500, message = "서버에러")
+    })
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @DeleteMapping("/delete/{reviewIdx}")
+    public ResponseEntity<Void> deleteReview(@ApiIgnore final Authentication authentication,@PathVariable final Long reviewIdx) {
+        Long userIdx = Long.parseLong((String) authentication.getPrincipal());
+        reviewService.deleteReview(userIdx,reviewIdx);
+        return ResponseEntity.ok().build();
+    }
 }

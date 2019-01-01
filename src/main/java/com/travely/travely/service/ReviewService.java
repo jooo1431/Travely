@@ -48,4 +48,9 @@ public class ReviewService {
         if (reviewStoreResponseDtos == null) return new ArrayList<>();
         return reviewStoreResponseDtos;
     }
+
+    @Transactional
+    public void deleteReview(final Long userIdx,final Long reviewIdx){
+        reviewMapper.deleteReviewByUserIdxAndReviewIdx(userIdx,reviewIdx);
+    }
 }
