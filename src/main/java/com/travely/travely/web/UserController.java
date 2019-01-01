@@ -5,8 +5,6 @@ import com.travely.travely.dto.exception.ExceptionResponseDto;
 import com.travely.travely.dto.user.LoginUsersRequestDto;
 import com.travely.travely.dto.user.UsersInfoResponseDto;
 import com.travely.travely.dto.user.UsersSaveRequestDto;
-import com.travely.travely.mapper.ReservationMapper;
-import com.travely.travely.mapper.UserMapper;
 import com.travely.travely.service.UserService;
 import com.travely.travely.util.JwtUtil;
 import io.swagger.annotations.*;
@@ -27,8 +25,6 @@ import springfox.documentation.annotations.ApiIgnore;
 public class UserController {
 
     private final UserService userService;
-    private final ReservationMapper reservationMapper;
-
 
     @ApiOperation(value = "일반 유저 생성", notes = "일반 유저를 생성합니다. 성공시 jwt 토큰을 헤더에 넣어서 반환합니다.")
     @ApiResponses(value = {
@@ -51,9 +47,11 @@ public class UserController {
             @ApiResponse(code = 403, message = "로그인 실패"),
             @ApiResponse(code = 500, message = "서버 에러")
     })
+
     @PostMapping("/login")
     public void login(@RequestBody LoginUsersRequestDto loginUsersRequestDto) {
     }
+
 
     @ApiOperation(value = "프로필 조회", notes = "프로필을 조회합니다.")
     @ApiResponses(value = {

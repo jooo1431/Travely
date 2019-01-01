@@ -11,6 +11,7 @@ public class ReviewResponseDto {
     private String content;
     private Long like;
     private Long createdAt;
+    private String userName;
 
     public ReviewResponseDto(Review review) {
         this.reviewIdx = review.getReviewIdx();
@@ -19,5 +20,6 @@ public class ReviewResponseDto {
         this.content = review.getContent();
         this.like = review.getLike();
         this.createdAt = review.getCreateAt().getTime();
+        this.userName = review.getUsers().getName();
     }
 }

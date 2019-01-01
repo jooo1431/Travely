@@ -17,6 +17,8 @@ public class Review {
     private long like;
     private Timestamp createAt;
 
+    private Users users;
+
     @Builder
     public Review(long reviewIdx, long storeIdx, long userIdx, String content, long like, Timestamp createAt) {
         this.reviewIdx = reviewIdx;
