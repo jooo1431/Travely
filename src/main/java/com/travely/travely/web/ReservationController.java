@@ -75,6 +75,20 @@ public class ReservationController {
 
         return ResponseEntity.ok().body(reserveViewDto);
     }
+
+    @ApiOperation(value = "가격표 조회", notes = "가격표 조회")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "조회 성공"),
+            @ApiResponse(code = 500, message = "서버에러")
+    })
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @GetMapping("/price")
+    public ResponseEntity<Void> getAllPrice(){
+
+        //시간대별 + 가격
+
+        return null;
+    }
 }
 
 

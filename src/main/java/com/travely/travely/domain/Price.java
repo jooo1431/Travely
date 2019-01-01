@@ -19,12 +19,6 @@ public class Price {
         return hour;
     }
 
-    public Long getDiffHour(final Long hour) {
-        Long temp = hour - this.getPriceIdx() + 1;
-        if (hour - this.getPriceIdx() % 12 == 0) temp--;
-        return temp;
-    }
-
     public Long findPriceIdxByUnit(final List<Price> prices, final Long unit) {
         for (Price price : prices) {
             if (price.getPrice() == unit) return price.getPriceIdx();
@@ -34,7 +28,7 @@ public class Price {
 
     public Long getPriceUnit(final List<Price> prices, final Long hour) {
         Long unit = 0L;
-        for (int i = 0; i < prices.size() - 1; i++) {
+        for (int i = 0; i < prices.size(); i++) {
             unit = prices.get(i).compareHour(hour, unit);
         }
         return unit;
@@ -46,5 +40,14 @@ public class Price {
         return price;
     }
 
+    public Long getExtraChargeCount(final Long hour, final Long finalIdx) {
+        Long extra =0L;
+        if(hour>finalIdx){
+            final Long temp = hour - finalIdx;
+            extra = temp / 12;
+            if (temp % 12 == 0) extra--;
+        }
+        return extra;
+    }
 
 }

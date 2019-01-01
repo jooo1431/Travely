@@ -51,9 +51,6 @@ public class ReservationService {
                 reserve.checkReserved(userIdx);
             }
 
-            //올바른 시간에 예약을 하려하는지
-            reserves.get(0).getStore().checkReserveTime(reserveRequestDto);
-
             //해당 업체에서 보관할수 있는지 확인, 보관가능하면 보관 가능한 양을 반환, 보관 불가능하면 익셉션
             Long totalBagCount = 0L;
             for (Reserve reserve : reserves) {
@@ -64,6 +61,9 @@ public class ReservationService {
 
         //휴무일에 예약이 시작되거나 끝나는지 확인
         store.checkRestWeek(reserveRequestDto);
+
+        //올바른 시간에 예약을 하려는지
+         //store.checkReserveTime(reserveRequestDto);
 
         //내가 가지고온 짐의 양과 비교하여 보관할수 있는지 확인
         reserveRequestDto.checkSpace(limit);
@@ -168,11 +168,12 @@ public class ReservationService {
                 .build();
 
         //가격단위와 단위에 해당하는 시간
-        List<Price> prices = priceMapper.getAllPrice();
-        final Long hour = prices.get(0).getMillsecToHour(reserve.getStartTime().getTime(), reserve.getEndTime().getTime());
-        log.info("@" + hour);
-        final Long priceUnit = prices.get(0).getPriceUnit(prices, hour);
-        final Long priceIdx = prices.get(0).findPriceIdxByUnit(prices, priceUnit);
+        List<Price> priceList = priceMapper.getAllPrice();
+        final Long hour = priceList.get(0).getMillsecToHour(reserve.getStartTime().getTime(), reserve.getEndTime().getTime());
+        final Long priceUnit = priceList.get(0).getPriceUnit(priceList, hour);
+        final Long priceIdx = priceList.get(0).findPriceIdxByUnit(priceList, priceUnit);
+        final Long extraChargeCount = priceList.get(0).getExtraChargeCount(hour,priceList.get(priceList.size()-1).getPriceIdx());
+        final Long extraCharge = priceList.get(0).getPrice();
 
         ReserveViewDto reserveViewDto = ReserveViewDto.builder()
                 .stateType(reserve.getState())
@@ -189,39 +190,39 @@ public class ReservationService {
                 .storeDto(storeDto)
                 .priceIdx(priceIdx)
                 .priceUnit(priceUnit)
+                .extraCharge(extraCharge)
+                .extraChargeCount(extraChargeCount)
                 .build();
 
         return reserveViewDto;
+    }
+
+    public void getAllPrice(){
+        List<Price> prices = priceMapper.getAllPrice();
+
+
     }
 
     //가격계산 --> 가격반환
     private long priceTag(final ReserveRequestDto reserveRequestDto) {
 
         //계산의 기본단위 변수
+        List<Price> priceList = priceMapper.getAllPrice();
 
-        List<Price> prices = priceMapper.getAllPrice();
-
-        final Long hour = prices.get(0).getMillsecToHour(reserveRequestDto.getStartTime(), reserveRequestDto.getEndTime());
-
-        final Long unit = prices.get(0).getPriceUnit(prices, hour);
-        //계산을 위해 가방의 갯수를 구해야함.
+        //계산에 쓰일 시간값
+        final Long hour = priceList.get(0).getMillsecToHour(reserveRequestDto.getStartTime(), reserveRequestDto.getEndTime());
+        //단위 가격 책정
+        final Long unit = priceList.get(0).getPriceUnit(priceList, hour);
+        //가방의 갯수.
         final Long count = reserveRequestDto.gainBagsCount();
 
-        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        //추가시간 계산
+        final Long extraChargeCount = priceList.get(0).getExtraChargeCount(hour,priceList.get(priceList.size()-1).getPriceIdx());
+        final Long extraCharge = priceList.get(0).getPrice();
+        //총 가격
+        final Long price = count * (unit + extraChargeCount * extraCharge);
 
-        //가격계산
-        Long temp = unit * count;
-
-        if (hour > prices.get(prices.size() - 1).getPriceIdx()) {
-            //초과시간 계산
-            Long overTime = prices.get(prices.size() - 1).getDiffHour(hour);
-
-            //초과시간 가격계산
-            Long overTemp = overTime * count * prices.get(prices.size() - 1).getPrice();
-            temp = temp + overTemp;
-        }
-
-        return temp;
+        return price;
     }
 
 }
