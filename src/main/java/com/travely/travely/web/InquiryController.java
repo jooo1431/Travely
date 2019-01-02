@@ -1,5 +1,6 @@
 package com.travely.travely.web;
 
+import com.travely.travely.domain.Inquiry;
 import com.travely.travely.dto.inquiry.InquiryDto;
 import com.travely.travely.service.InquiryService;
 import io.swagger.annotations.*;
@@ -26,10 +27,8 @@ public class InquiryController {
             @ApiResponse(code = 500, message = "서버에러")})
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @GetMapping("/{inquiryIdx}")
-    public ResponseEntity findInquiryIdx(@ApiIgnore Authentication authentication,
-                                         @PathVariable final Long inquiryIdx){
-        String inquiryContent = inquiryService.findInquiry(inquiryIdx);
-        return new ResponseEntity<>(inquiryContent, HttpStatus.OK);
+    public ResponseEntity<String> findInquiryIdx(@PathVariable final Long inquiryIdx){
+        return ResponseEntity.ok(inquiryService.findInquiry(inquiryIdx).getCreateAt().toString());
     }
 
 

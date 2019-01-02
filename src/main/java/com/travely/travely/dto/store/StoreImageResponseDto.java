@@ -9,7 +9,7 @@ public class StoreImageResponseDto {
     private String storeImg;
 
     public StoreImageResponseDto(StoreImg storeImg) {
-        this.storeImgIdx =storeImg.getStoreImgIdx();
+        this.storeImgIdx = storeImg.getStoreImgIdx();
         this.storeImg = storeImg.getStoreImg();
     }
 }

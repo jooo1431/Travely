@@ -1,15 +1,18 @@
 package com.travely.travely.dto.store;
 
-import com.travely.travely.domain.Review;
 import com.travely.travely.domain.Store;
 import com.travely.travely.dto.review.ReviewResponseDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class StoreDetailsResonseDto {
@@ -27,6 +30,7 @@ public class StoreDetailsResonseDto {
     private Long limit;
     private Long currentBag;
     private Double grade;
+    private String addressNumber;
 
     private List<ReviewResponseDto> reviewResponseDtos;
     private List<StoreImageResponseDto> storeImageResponseDtos;
@@ -45,6 +49,7 @@ public class StoreDetailsResonseDto {
         this.longitude = store.getLongitude();
         this.limit = store.getLimit();
         this.currentBag = currentBag;
+        this.addressNumber = store.getAddressNumber();
         this.reviewResponseDtos = store.getReviews().stream()
                 .map(review -> new ReviewResponseDto(review)).collect(Collectors.toList());
         this.storeImageResponseDtos = store.getStoreImgs().stream()

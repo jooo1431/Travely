@@ -12,6 +12,6 @@ public interface InquiryMapper {
     @Insert("INSERT inquiry SET userIdx = #{userIdx}, content = #{inquiry.content}, createAt = #{inquiry.createAt}")
     void saveInquiry(@Param("userIdx") final Long userIdx, @Param("inquiry") final Inquiry inquiry);
 
-    @Select("SELECT content FROM inquiry WHERE inquiryIdx = #{inquiryIdx}")
-    String findByInquiryIdx(@Param("inquiryIdx") final Long inquiryIdx);
+    @Select("SELECT * FROM inquiry WHERE inquiryIdx = #{inquiryIdx}")
+    Inquiry findByInquiryIdx(@Param("inquiryIdx") final Long inquiryIdx);
 }

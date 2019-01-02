@@ -2,6 +2,7 @@ package com.travely.travely.web;
 
 import com.travely.travely.auth.jwt.JwtInfo;
 import com.travely.travely.dto.exception.ExceptionResponseDto;
+import com.travely.travely.dto.store.StoreInfoResponseDto;
 import com.travely.travely.dto.user.LoginUsersRequestDto;
 import com.travely.travely.dto.user.UsersInfoResponseDto;
 import com.travely.travely.dto.user.UsersSaveRequestDto;
@@ -17,6 +18,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -64,5 +67,18 @@ public class UserController {
         Long userIdx = Long.parseLong((String) authentication.getPrincipal());
 
         return ResponseEntity.ok(userService.getMyProfile(userIdx));
+    }
+
+    @ApiOperation(value = "최근 예약 상가 조회", notes = "최근 예약상가를 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "예약상가 조회 성공"),
+            @ApiResponse(code = 500, message = "서버 내부 에러")
+    })
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @GetMapping("/reserve/{reserveIdx}/stores")
+    public ResponseEntity<List<StoreInfoResponseDto>> getLikedStores(@ApiIgnore Authentication authentication, @PathVariable Long reserveIdx){
+        Long userIdx = Long.parseLong((String) authentication.getPrincipal());
+
+        return ResponseEntity.ok(userService.getLikedStoreDtos(userIdx,reserveIdx));
     }
 }

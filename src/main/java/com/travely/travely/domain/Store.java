@@ -21,6 +21,7 @@ public class Store {
     private String storeCall;
     private String storeUrl;
     private String address;
+    private String addressNumber;
     private Timestamp openTime;
     private Timestamp closeTime;
     private double latitude;
@@ -48,8 +49,22 @@ public class Store {
     }
 
     public Double getGrade() {
-        return reviews.stream().mapToDouble(Review::getLike).average().orElse(0);
+        return getReviews().stream().mapToDouble(Review::getLike).average().orElse(0);
+    }
 
+    public Long getSpace(final Long totalBagCount) {
+        final Long space = this.limit - totalBagCount;
+        if (space > 0) return space;
+        else throw new RuntimeException();
+    }
+
+    public void checkRestWeek(ReserveRequestDto reserveRequestDto) {
+        final Timestamp startTime = new Timestamp(reserveRequestDto.getStartTime());
+        final Timestamp endTime = new Timestamp(reserveRequestDto.getEndTime());
+        for (RestWeek restWeek : this.getRestWeeks()) {
+            restWeek.checkRest(startTime);
+            restWeek.checkRest(endTime);
+        }
     }
 
     public void checkReserveTime(ReserveRequestDto reserveRequestDto) {

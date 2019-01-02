@@ -25,35 +25,35 @@ public class ImageController {
 
     private final S3Util s3Util;
 
-    @ApiOperation(value = "사진 조회", notes = "사진을 조회한다")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "사진 조회 성공"),
-            @ApiResponse(code = 500, message = "서버에러")})
-    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @GetMapping("/{classify}")
-    public ResponseEntity findImage(@ApiIgnore Authentication authentication,
-                                    @PathVariable() final String classify) {
-        Long userIdx = Long.parseLong((String) authentication.getPrincipal());
-        String profileImg = imageService.findImg(userIdx, classify);
-        return new ResponseEntity<>(profileImg, HttpStatus.OK);
-    }
-
-    @ApiOperation(value = "사진 수정", notes = "사진을 수정합니다")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "사진 수정 성공"),
-            @ApiResponse(code = 500, message = "서버 내부 에러")
-    })
-    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @PutMapping("/{classify}")
-    public ResponseEntity updateImage(@ApiIgnore Authentication authentication,
-                                      @RequestBody final MultipartFile image,
-                                      @PathVariable() final String classify){
-        Long userIdx = Long.parseLong((String) authentication.getPrincipal());
-        ImageDto imageDto = new ImageDto(image, classify);
-        imageService.updateImg(userIdx, imageDto);
-
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+//    @ApiOperation(value = "사진 조회", notes = "사진을 조회한다")
+//    @ApiResponses(value = {
+//            @ApiResponse(code = 200, message = "사진 조회 성공"),
+//            @ApiResponse(code = 500, message = "서버에러")})
+//    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+//    @GetMapping("/{classify}")
+//    public ResponseEntity findImage(@ApiIgnore Authentication authentication,
+//                                    @PathVariable() final String classify) {
+//        Long userIdx = Long.parseLong((String) authentication.getPrincipal());
+//        String profileImg = imageService.findImg(userIdx, classify);
+//        return new ResponseEntity<>(profileImg, HttpStatus.OK);
+//    }
+//
+//    @ApiOperation(value = "사진 수정", notes = "사진을 수정합니다")
+//    @ApiResponses(value = {
+//            @ApiResponse(code = 200, message = "사진 수정 성공"),
+//            @ApiResponse(code = 500, message = "서버 내부 에러")
+//    })
+//    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+//    @PutMapping("/{classify}")
+//    public ResponseEntity updateImage(@ApiIgnore Authentication authentication,
+//                                      @RequestBody final MultipartFile image,
+//                                      @PathVariable() final String classify){
+//        Long userIdx = Long.parseLong((String) authentication.getPrincipal());
+//        ImageDto imageDto = new ImageDto(image, classify);
+//        imageService.updateImg(userIdx, imageDto);
+//
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
 
 
     @ApiOperation(value = "사진 등록", notes = "이미지를 등록합니다.")

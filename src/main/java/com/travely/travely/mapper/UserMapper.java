@@ -24,7 +24,8 @@ public interface UserMapper {
             @Result(property = "favorites", javaType = List.class, column = "userIdx",
                     many = @Many(select = "com.travely.travely.mapper.FavoriteMapper.findFavoriteByUserIdx", fetchType = FetchType.LAZY)),
             @Result(property = "reserves", javaType = List.class, column = "userIdx",
-                    many = @Many(select = "com.travely.travely.mapper.ReservationMapper.findReserveByUserIdx", fetchType = FetchType.LAZY)),
+                    many = @Many(select = "com.travely.travely.mapper.ReservationMapper.findReserveByUserIdxOrderByReviewIdx", fetchType = FetchType.LAZY)),
     })
-    Users findUserByUserIdx(@Param("userIdx")final Long userId);
+    Users findUserByUserIdx(@Param("userIdx") final Long userIdx);
+
 }

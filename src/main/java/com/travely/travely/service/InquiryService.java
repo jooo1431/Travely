@@ -31,8 +31,7 @@ public class InquiryService {
             return HttpStatus.BAD_REQUEST;
     }
 
-    public String findInquiry(final Long inquiryIdx){
-        String inquiryContent = inquiryMapper.findByInquiryIdx(inquiryIdx);
-        return inquiryContent;
+    public Inquiry findInquiry(final Long inquiryIdx){
+        return inquiryMapper.findByInquiryIdx(inquiryIdx);
     }
 }
