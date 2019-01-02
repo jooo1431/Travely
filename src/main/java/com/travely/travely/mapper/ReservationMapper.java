@@ -35,6 +35,30 @@ public interface ReservationMapper {
     })
     List<Reserve> findReserveByStoreIdx(@Param("storeIdx") final Long storeIdx);
 
+    @Select("select * from reserve where useridx=#{userIdx} order by reserveIdx desc limit 1;")
+    @Results(value = {
+            @Result(property = "reserveIdx",column = "reserveIdx"),
+            @Result(property = "baggages", javaType = List.class, column = "reserveIdx",
+                    many = @Many(select = "com.travely.travely.mapper.BaggageMapper.findBaggageByReserveIdx", fetchType = FetchType.EAGER)),
+            @Result(property = "store", javaType = Store.class, column = "storeIdx",
+                    one = @One(select = "com.travely.travely.mapper.StoreMapper.findStoreByStoreIdx", fetchType = FetchType.EAGER))
+    })
+    List<Reserve> findReserveByUserIdxOrderByReviewIdx(@Param("userIdx") final Long userIdx);
+
+
+    @Select("select * from reserve where useridx=#{userIdx} and reserveidx<#{reserveIdx} limit 5;")
+    @Results(value = {
+            @Result(property = "reserveIdx",column = "reserveIdx"),
+            @Result(property = "baggages", javaType = List.class, column = "reserveIdx",
+                    many = @Many(select = "com.travely.travely.mapper.BaggageMapper.findBaggageByReserveIdx", fetchType = FetchType.EAGER)),
+            @Result(property = "store", javaType = Store.class, column = "storeIdx",
+                    one = @One(select = "com.travely.travely.mapper.StoreMapper.findStoreByStoreIdx", fetchType = FetchType.EAGER))
+    })
+    List<Reserve> findReserveByUserIdxAndReserveIdx(@Param("userIdx") final Long userIdx,@Param("reserveIdx") final Long reserveIdx);
+
+
+    ///////////////////////////////////////////
+
     //예약 목록에 등록
     @Insert("INSERT INTO reserve (userIdx, storeIdx, startTime, endTime, state, price,reserveCode,depositTime,takeTime)" +
             " VALUES (#{reserve.userIdx},#{reserve.storeIdx},#{reserve.startTime},#{reserve.endTime},#{reserve.state},#{reserve.price},#{reserve.reserveCode},#{reserve.depositTime},#{reserve.takeTime})")

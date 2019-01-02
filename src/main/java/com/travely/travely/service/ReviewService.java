@@ -14,9 +14,9 @@ public class ReviewService {
 
     private final ReviewMapper reviewMapper;
 
-    public List<ReviewResponseDto> getReviewResponseDtos(final Long storeIdx) {
+    public List<ReviewResponseDto> getReviewResponseDtos(final Long storeIdx,final Long reviewIdx) {
         return reviewMapper
-                .findReviewsByStoreIdx(storeIdx)
+                .findReviewsByReviewIdxAndStoreIdx(reviewIdx,storeIdx)
                 .stream()
                 .map(review -> new ReviewResponseDto(review))
                 .collect(Collectors.toList());

@@ -7,6 +7,7 @@ import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.Upload;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,19 +39,23 @@ public class S3FileUploadService {
     }
 
 
-    public String upload(MultipartFile uploadFile) throws IOException {
+    public String upload(String classify, MultipartFile uploadFile) throws IOException {
 
         String origName = uploadFile.getOriginalFilename();
         String url;
+        classify = classify + "/";
+        long fileSize = 10 * 1024 * 1024;               // Set file size 5MB
 
         try {
-
             final String ext = origName.substring(origName.lastIndexOf('.'));
             final String saveFileName = getUuid() + ext;
             File file = new File(System.getProperty("user.dir") + saveFileName);
+            if( fileSize < file.length() ){
+                return "파일 사이즈를 초과했습";
+            }
             uploadFile.transferTo(file);
-            uploadOnS3(saveFileName, file);
-            url = defaultUrl + saveFileName;
+            uploadOnS3(classify + saveFileName, file);
+            url = defaultUrl +classify +  saveFileName;
             file.delete();
 
         } catch (StringIndexOutOfBoundsException e) {
@@ -59,7 +64,6 @@ public class S3FileUploadService {
         }
         return url;
     }
-
 
     private static String getUuid() {
 

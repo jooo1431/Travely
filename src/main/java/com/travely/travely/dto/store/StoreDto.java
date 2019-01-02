@@ -26,12 +26,16 @@ public class StoreDto {
     //상가주소
     private String address;
     //상가 평점
+    private String addressNumber;
+
     private double avgLike;
     //상가id
     private long storeIdx;
 
     @Builder
-    public StoreDto(String ownerName, String storeName, String storeCall, double latitude, double longitude, Timestamp openTime, Timestamp closeTime, String address, double avgLike, long storeIdx) {
+    public StoreDto(String ownerName, String storeName, String storeCall, double latitude,
+                    double longitude, Timestamp openTime, Timestamp closeTime, String address, double avgLike,
+                    long storeIdx,String addressNumber) {
         this.ownerName = ownerName;
         this.storeName = storeName;
         this.storeCall = storeCall;
@@ -42,5 +46,6 @@ public class StoreDto {
         this.address = address;
         this.avgLike = avgLike;
         this.storeIdx = storeIdx;
+        this.addressNumber = addressNumber;
     }
 }

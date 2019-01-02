@@ -21,6 +21,7 @@ public class Store {
     private String storeCall;
     private String storeUrl;
     private String address;
+    private String addressNumber;
     private Timestamp openTime;
     private Timestamp closeTime;
     private double latitude;
@@ -32,9 +33,7 @@ public class Store {
     private List<RestWeek> restWeeks;
     private Users users;
 
-    public List<Review> getReviews() {
-        return CommonConfig.getCheckedList(reviews);
-    }
+    public List<Review> getReviews() { return CommonConfig.getCheckedList(reviews); }
 
     public List<StoreImg> getStoreImgs() {
         return CommonConfig.getCheckedList(storeImgs);
@@ -50,8 +49,7 @@ public class Store {
     }
 
     public Double getGrade() {
-        if (reviews == null) return 0D;
-        return reviews.stream().mapToDouble(Review::getLike).average().orElse(0);
+        return getReviews().stream().mapToDouble(Review::getLike).average().orElse(0);
     }
 
     public Long getSpace(final Long totalBagCount) {
@@ -83,5 +81,4 @@ public class Store {
             return true;
         return false;
     }
-
 }

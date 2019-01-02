@@ -4,6 +4,7 @@ import com.travely.travely.domain.Payment;
 import com.travely.travely.domain.Price;
 import com.travely.travely.domain.Reserve;
 import com.travely.travely.domain.Store;
+import com.travely.travely.dto.reservation.PriceResponseDto;
 import com.travely.travely.dto.reservation.ReserveRequestDto;
 import com.travely.travely.dto.reservation.ReserveResponseDto;
 import com.travely.travely.dto.reservation.ReserveViewDto;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -63,7 +65,7 @@ public class ReservationService {
         store.checkRestWeek(reserveRequestDto);
 
         //올바른 시간에 예약을 하려는지
-         //store.checkReserveTime(reserveRequestDto);
+         store.checkReserveTime(reserveRequestDto);
 
         //내가 가지고온 짐의 양과 비교하여 보관할수 있는지 확인
         reserveRequestDto.checkSpace(limit);
@@ -145,6 +147,12 @@ public class ReservationService {
         reservationMapper.deletePayment(reserve.getReserveIdx(), cancelProgress);
     }
 
+    public List<PriceResponseDto> getPrices(){
+        return priceMapper.getAllPrice()
+                .stream()
+                .map(price -> new PriceResponseDto(price))
+                .collect(Collectors.toList());
+    }
 
     //reserveCode로 예약정보 + 보관정보를 보자
 
@@ -195,12 +203,6 @@ public class ReservationService {
                 .build();
 
         return reserveViewDto;
-    }
-
-    public void getAllPrice(){
-        List<Price> prices = priceMapper.getAllPrice();
-
-
     }
 
     //가격계산 --> 가격반환
