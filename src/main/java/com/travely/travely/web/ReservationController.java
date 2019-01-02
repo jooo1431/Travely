@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/reservation")
@@ -78,7 +79,7 @@ public class ReservationController {
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @GetMapping("/price/list")
-    public ResponseEntity<List<PriceResponseDto>> getAllPrice(){
+    public ResponseEntity<List<PriceResponseDto>> getAllPrice() {
 
         return ResponseEntity.ok(reservationService.getPrices());
     }

@@ -7,7 +7,6 @@ import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.Upload;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -50,12 +49,12 @@ public class S3FileUploadService {
             final String ext = origName.substring(origName.lastIndexOf('.'));
             final String saveFileName = getUuid() + ext;
             File file = new File(System.getProperty("user.dir") + saveFileName);
-            if( fileSize < file.length() ){
+            if (fileSize < file.length()) {
                 return "파일 사이즈를 초과했습";
             }
             uploadFile.transferTo(file);
             uploadOnS3(classify + saveFileName, file);
-            url = defaultUrl +classify +  saveFileName;
+            url = defaultUrl + classify + saveFileName;
             file.delete();
 
         } catch (StringIndexOutOfBoundsException e) {

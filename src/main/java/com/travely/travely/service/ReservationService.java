@@ -39,6 +39,9 @@ public class ReservationService {
         final List<Reserve> reserves = reservationMapper.findReserveByStoreIdx(reserveRequestDto.getStoreIdx());
         final Store store = storeMapper.findStoreByStoreIdx(reserveRequestDto.getStoreIdx());
 
+        //예약시간의 적합성 판단
+        reserveRequestDto.checkTime();
+
         // 짐갯수 0개인경우
         reserveRequestDto.checkCount();
 
@@ -125,11 +128,11 @@ public class ReservationService {
         final Reserve reserve = reservationMapper.findReserveByUserIdx(userIdx);
         if (reserve == null) throw new NotFoundReserveException();
 
-        reservationMapper.deleteReservation(reserve.getReserveIdx(), cancelState);
-        reservationMapper.deletePayment(reserve.getReserveIdx(), cancelProgress);
+        reservationMapper.updateReservation(reserve.getReserveIdx(), cancelState);
+        reservationMapper.updatePayment(reserve.getReserveIdx(), cancelProgress);
     }
 
-    public List<PriceResponseDto> getPrices(){
+    public List<PriceResponseDto> getPrices() {
         return priceMapper.getAllPrice()
                 .stream()
                 .map(price -> new PriceResponseDto(price))
