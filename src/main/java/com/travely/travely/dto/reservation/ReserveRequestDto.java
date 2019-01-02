@@ -37,12 +37,17 @@ public class ReserveRequestDto {
         this.payType = payType;
     }
 
+    public List<BagDto> getBagDtos() {
+        if (this.bagDtos == null) throw new NotFoundBaggageException();
+        return bagDtos;
+    }
+
     public void checkSpace(final Long limit) {
         if (!(limit - gainBagsCount() >= 0)) throw new ExceedCapacityException();
     }
 
     public void checkCount() {
-        bagDtos.forEach(bagDto -> {
+        getBagDtos().forEach(bagDto -> {
             if (!bagDto.checkCount()) throw new NotFoundBaggageException();
         });
     }
