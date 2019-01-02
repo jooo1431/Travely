@@ -46,11 +46,28 @@ public class ReviewController {
             @ApiResponse(code = 500, message = "서버에러")
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @GetMapping("/{offset}")
-    public ResponseEntity<List<ReviewStoreResponseDto>> getAllMyReview(@ApiIgnore final Authentication authentication, @PathVariable final Long offset) {
+    @GetMapping("/")
+    public ResponseEntity<List<ReviewStoreResponseDto>> getMyReview(@ApiIgnore final Authentication authentication) {
         Long userIdx = Long.parseLong((String) authentication.getPrincipal());
 
-        List<ReviewStoreResponseDto> reviewStoreResponseDtos = reviewService.getAllMyReviews(userIdx, offset);
+        List<ReviewStoreResponseDto> reviewStoreResponseDtos = reviewService.getMyReviews(userIdx);
+
+        return ResponseEntity.ok().body(reviewStoreResponseDtos);
+    }
+
+    @ApiOperation(value = "나의 리뷰 조회", notes = "리뷰 조회")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "리뷰 조회 성공"),
+            @ApiResponse(code = 204, message = "작성 리뷰 없음"),
+            @ApiResponse(code = 400, message = "잘못 된 접근"),
+            @ApiResponse(code = 500, message = "서버에러")
+    })
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @GetMapping("/{reviewIdx}")
+    public ResponseEntity<List<ReviewStoreResponseDto>> getMoreMyReview(@ApiIgnore final Authentication authentication,@PathVariable Long reviewIdx) {
+        Long userIdx = Long.parseLong((String) authentication.getPrincipal());
+
+        List<ReviewStoreResponseDto> reviewStoreResponseDtos = reviewService.getMoreMyReviews(userIdx,reviewIdx);
 
         return ResponseEntity.ok().body(reviewStoreResponseDtos);
     }

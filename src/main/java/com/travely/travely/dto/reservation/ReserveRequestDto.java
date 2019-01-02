@@ -1,6 +1,8 @@
 package com.travely.travely.dto.reservation;
 
 import com.travely.travely.dto.baggage.BagDto;
+import com.travely.travely.exception.ExceedCapacityException;
+import com.travely.travely.exception.NotFoundBaggageException;
 import com.travely.travely.util.typeHandler.PayType;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -36,12 +38,12 @@ public class ReserveRequestDto {
     }
 
     public void checkSpace(final Long limit) {
-        if (!(limit - gainBagsCount() >= 0)) throw new RuntimeException();
+        if (!(limit - gainBagsCount() >= 0)) throw new ExceedCapacityException();
     }
 
     public void checkCount() {
         bagDtos.forEach(bagDto -> {
-            if (!bagDto.checkCount()) throw new RuntimeException();
+            if (!bagDto.checkCount()) throw new NotFoundBaggageException();
         });
     }
 

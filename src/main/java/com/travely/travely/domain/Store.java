@@ -2,6 +2,8 @@ package com.travely.travely.domain;
 
 import com.travely.travely.config.CommonConfig;
 import com.travely.travely.dto.reservation.ReserveRequestDto;
+import com.travely.travely.exception.ExceedCapacityException;
+import com.travely.travely.exception.NotCorrectTimeException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -57,7 +59,7 @@ public class Store {
     public Long getSpace(final Long totalBagCount) {
         final Long space = this.limit - totalBagCount;
         if (space > 0) return space;
-        else throw new RuntimeException();
+        else throw new ExceedCapacityException();
     }
 
     public void checkRestWeek(ReserveRequestDto reserveRequestDto) {
@@ -70,8 +72,8 @@ public class Store {
     }
 
     public void checkReserveTime(ReserveRequestDto reserveRequestDto) {
-        if (!checkHour(new Timestamp(reserveRequestDto.getStartTime()))) throw new RuntimeException();
-        if (!checkHour(new Timestamp(reserveRequestDto.getEndTime()))) throw new RuntimeException();
+        if (!checkHour(new Timestamp(reserveRequestDto.getStartTime()))) throw new NotCorrectTimeException();
+        if (!checkHour(new Timestamp(reserveRequestDto.getEndTime()))) throw new NotCorrectTimeException();
     }
 
     private Boolean checkHour(Timestamp timestamp) {

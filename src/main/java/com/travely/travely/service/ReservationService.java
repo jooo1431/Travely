@@ -8,6 +8,7 @@ import com.travely.travely.dto.reservation.ReserveRequestDto;
 import com.travely.travely.dto.reservation.ReserveResponseDto;
 import com.travely.travely.dto.reservation.ReserveViewDto;
 import com.travely.travely.dto.store.StoreDto;
+import com.travely.travely.exception.NotFoundReserveException;
 import com.travely.travely.mapper.PriceMapper;
 import com.travely.travely.mapper.ReservationMapper;
 import com.travely.travely.mapper.StoreMapper;
@@ -88,8 +89,6 @@ public class ReservationService {
 
         //예약목록 저장 결제목록에 저장 진행중으로, 짐목록 저장
         final Reserve saveReserve = reserveResponseDto.toEntity(userIdx);
-        log.info("@" + saveReserve.getStoreIdx());
-        log.info("@" + saveReserve.getUserIdx());
 
         //여기서 예약목록에 저장
         reservationMapper.saveReservation(saveReserve);
@@ -122,7 +121,7 @@ public class ReservationService {
         //정상적으로 예약된게 있는지 확인
 
         final Reserve reserve = reservationMapper.findReserveByUserIdx(userIdx);
-        if (reserve == null) throw new RuntimeException();
+        if (reserve == null) throw new NotFoundReserveException();
 
         reservationMapper.deleteReservation(reserve.getReserveIdx(), cancelState);
         reservationMapper.deletePayment(reserve.getReserveIdx(), cancelProgress);
@@ -135,7 +134,7 @@ public class ReservationService {
         final Reserve reserve = reservationMapper.findReserveByReserveCode(reserveCode);
         final Store store = reserve.getStore();
         //예약내역이 없으면?
-        if (reserve == null) throw new RuntimeException();
+        if (reserve == null) throw new NotFoundReserveException();
 
         final StoreDto storeDto = StoreDto.builder()
                 .store(store)

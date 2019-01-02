@@ -1,5 +1,6 @@
 package com.travely.travely.domain;
 
+import com.travely.travely.exception.NotCorrectWeekException;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,7 +19,7 @@ public class RestWeek {
     public void checkRest(final Timestamp timestamp) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(timestamp.getTime());
-        if (calendar.DAY_OF_WEEK == this.week) throw new RuntimeException();
+        if (calendar.DAY_OF_WEEK == this.week) throw new NotCorrectWeekException();
     }
 
     @Builder

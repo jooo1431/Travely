@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,12 +43,14 @@ public class ReviewService {
         return review;
     }
 
-    public List<ReviewStoreResponseDto> getAllMyReviews(final Long userIdx, final Long offset) {
-        //5*1-5,5*1
-        //5*offset-5, 5*offset
-        final Long start = 5 * offset - 5;
-        final Long end = 5 * offset;
-        List<ReviewStoreResponseDto> reviewStoreResponseDtos = reviewMapper.findReviewsAndStoreByUserIdx(userIdx, start, end);
+    public List<ReviewStoreResponseDto> getMyReviews(final Long userIdx) {
+        List<ReviewStoreResponseDto> reviewStoreResponseDtos = reviewMapper.findReviewsAndStoreByUserIdx(userIdx);
+        if (reviewStoreResponseDtos == null) return new ArrayList<>();
+        return reviewStoreResponseDtos;
+    }
+
+    public List<ReviewStoreResponseDto> getMoreMyReviews(final Long userIdx, final Long reviewIdx) {
+        List<ReviewStoreResponseDto> reviewStoreResponseDtos = reviewMapper.findMoreReviewsAndStoreByUserIdx(userIdx,reviewIdx);
         if (reviewStoreResponseDtos == null) return new ArrayList<>();
         return reviewStoreResponseDtos;
     }
