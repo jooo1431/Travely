@@ -27,6 +27,8 @@ public class StoreDto {
     //상가주소
     private String address;
     //상가 평점
+    private String addressNumber;
+
     private double avgLike;
     //상가id
     private long storeIdx;

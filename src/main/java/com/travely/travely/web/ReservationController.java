@@ -1,5 +1,6 @@
 package com.travely.travely.web;
 
+import com.travely.travely.dto.reservation.PriceResponseDto;
 import com.travely.travely.dto.reservation.ReserveRequestDto;
 import com.travely.travely.dto.reservation.ReserveResponseDto;
 import com.travely.travely.dto.reservation.ReserveViewDto;
@@ -13,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/api/reservation")
@@ -48,7 +50,6 @@ public class ReservationController {
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @DeleteMapping("/cancel")
     public ResponseEntity<Void> cancelReservation(@ApiIgnore Authentication authentication) {
-
         Long userIdx = Long.parseLong((String) authentication.getPrincipal());
 
         reservationService.cancelReservation(userIdx);
@@ -70,6 +71,17 @@ public class ReservationController {
         return ResponseEntity.ok().body(reserveViewDto);
     }
 
+    @ApiOperation(value = "가격표 조회", notes = "가격표 조회")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "조회 성공"),
+            @ApiResponse(code = 500, message = "서버에러")
+    })
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @GetMapping("/price/list")
+    public ResponseEntity<List<PriceResponseDto>> getAllPrice(){
+
+        return ResponseEntity.ok(reservationService.getPrices());
+    }
 }
 
 

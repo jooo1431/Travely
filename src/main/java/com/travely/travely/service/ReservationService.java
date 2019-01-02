@@ -4,6 +4,7 @@ import com.travely.travely.domain.Payment;
 import com.travely.travely.domain.Price;
 import com.travely.travely.domain.Reserve;
 import com.travely.travely.domain.Store;
+import com.travely.travely.dto.reservation.PriceResponseDto;
 import com.travely.travely.dto.reservation.ReserveRequestDto;
 import com.travely.travely.dto.reservation.ReserveResponseDto;
 import com.travely.travely.dto.reservation.ReserveViewDto;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -127,6 +129,12 @@ public class ReservationService {
         reservationMapper.deletePayment(reserve.getReserveIdx(), cancelProgress);
     }
 
+    public List<PriceResponseDto> getPrices(){
+        return priceMapper.getAllPrice()
+                .stream()
+                .map(price -> new PriceResponseDto(price))
+                .collect(Collectors.toList());
+    }
 
     //reserveCode로 예약정보 + 보관정보를 보자
 

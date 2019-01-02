@@ -33,6 +33,23 @@ public class Reserve {
     private Store store;
     private Users users;
 
+    @Builder
+    public Reserve(long reserveIdx, long userIdx, long storeIdx, Timestamp startTime, Timestamp endTime, StateType state, long price, String reserveCode, Timestamp depositTime, Timestamp takeTime, List<Baggage> baggages, List<BaggageImg> baggageImgs, Payment payment) {
+        this.reserveIdx = reserveIdx;
+        this.userIdx = userIdx;
+        this.storeIdx = storeIdx;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.state = state;
+        this.price = price;
+        this.reserveCode = reserveCode;
+        this.depositTime = depositTime;
+        this.takeTime = takeTime;
+        this.baggages = baggages;
+        this.baggageImgs = baggageImgs;
+        this.payment = payment;
+    }
+
     public List<Baggage> getBaggages() {
         return CommonConfig.getCheckedList(baggages);
     }
@@ -54,6 +71,14 @@ public class Reserve {
     public Users getUsers() {
         if (this.users == null) throw new RuntimeException();
         return this.users;
+    }
+
+    public Long getBagCount() {
+        if (state.checkReserve()) {
+            List<Baggage> baggages = CommonConfig.getCheckedList(this.baggages);
+            return baggages.stream().map(Baggage::getBagCount).reduce((x, y) -> x + y).orElse(0L);
+        }
+        return 0L;
     }
 
     public Long getTotalBag() {
@@ -79,6 +104,5 @@ public class Reserve {
         this.baggageImgs = baggageImgs;
         this.payment = payment;
     }
-
 
 }
