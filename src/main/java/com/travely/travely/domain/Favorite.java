@@ -1,21 +1,20 @@
 package com.travely.travely.domain;
 
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class favorite {
+public class Favorite {
     private long favoriteIdx;
-    private long useIdx;
+    private long userIdx;
     private long storeIdx;
+    private int isFavorite;
 
-    @Builder
-    public favorite(long favoriteIdx, long useIdx, long storeIdx) {
-        this.favoriteIdx = favoriteIdx;
-        this.useIdx = useIdx;
+    public Favorite(Long userIdx, Long storeIdx) {
+        this.userIdx = userIdx;
         this.storeIdx = storeIdx;
+        this.isFavorite = 1;
     }
 }

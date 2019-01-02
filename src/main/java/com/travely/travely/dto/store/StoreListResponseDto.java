@@ -1,20 +1,24 @@
 package com.travely.travely.dto.store;
 
-import com.travely.travely.domain.StoreCount;
-import com.travely.travely.domain.StoreJoinLocal;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class StoreListResponseDto {
 
-    private long localName;
-    private long cnt;
-    private long localIdx;
+    private String storeName;
+    private long storeIdx;
+    private String regionName;
+    private long regionIdx;
 
-    public StoreListResponseDto(final StoreCount storeCount) {
-
-        this.cnt = storeCount.getCnt();
-        this.localIdx = storeCount.getLocalIdx();
-        this.localName = storeCount.getLocalName();
+    @Builder
+    public StoreListResponseDto(String storeName, long storeIdx, String regionName, long regionIdx) {
+        this.storeName = storeName;
+        this.storeIdx = storeIdx;
+        this.regionName = regionName;
+        this.regionIdx = regionIdx;
     }
 }

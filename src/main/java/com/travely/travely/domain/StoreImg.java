@@ -8,12 +8,14 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class StoreImg {
-    private long storeIdx;
-    private String storeImg;
+    private Long storeIdx;
+    private Long storeImgIdx;
+    private String storeImgUrl;
 
     @Builder
-    public StoreImg(long storeIdx, String storeImg) {
+    public StoreImg(Long storeIdx, Long storeImgIdx, String storeImgUrl) {
         this.storeIdx = storeIdx;
-        this.storeImg = storeImg;
+        this.storeImgIdx = storeImgIdx;
+        this.storeImgUrl = storeImgUrl;
     }
 }
