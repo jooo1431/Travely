@@ -1,6 +1,7 @@
 package com.travely.travely.domain;
 
 import com.travely.travely.config.CommonConfig;
+import com.travely.travely.exception.AlreadyExistsReserveException;
 import com.travely.travely.util.typeHandler.StateType;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -85,7 +86,7 @@ public class Reserve {
     }
 
     public void checkReserved(final Long userIdx) {
-        if (this.userIdx == userIdx) throw new RuntimeException();
+        if (this.userIdx == userIdx) throw new AlreadyExistsReserveException();
     }
 
     @Builder

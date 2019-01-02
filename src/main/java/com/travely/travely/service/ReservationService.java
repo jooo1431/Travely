@@ -9,6 +9,7 @@ import com.travely.travely.dto.reservation.ReserveRequestDto;
 import com.travely.travely.dto.reservation.ReserveResponseDto;
 import com.travely.travely.dto.reservation.ReserveViewDto;
 import com.travely.travely.dto.store.StoreDto;
+import com.travely.travely.exception.NotFoundReserveException;
 import com.travely.travely.mapper.PriceMapper;
 import com.travely.travely.mapper.ReservationMapper;
 import com.travely.travely.mapper.StoreMapper;
@@ -19,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -36,8 +36,8 @@ public class ReservationService {
     @Transactional
     public ReserveResponseDto saveReservation(final long userIdx, final ReserveRequestDto reserveRequestDto) {
 
-        List<Reserve> reserves = reservationMapper.findReserveByStoreIdx(reserveRequestDto.getStoreIdx());
-        Store store = storeMapper.findStoreByStoreIdx(reserveRequestDto.getStoreIdx());
+        final List<Reserve> reserves = reservationMapper.findReserveByStoreIdx(reserveRequestDto.getStoreIdx());
+        final Store store = storeMapper.findStoreByStoreIdx(reserveRequestDto.getStoreIdx());
 
         // 짐갯수 0개인경우
         reserveRequestDto.checkCount();
@@ -65,7 +65,7 @@ public class ReservationService {
         store.checkRestWeek(reserveRequestDto);
 
         //올바른 시간에 예약을 하려는지
-         store.checkReserveTime(reserveRequestDto);
+        store.checkReserveTime(reserveRequestDto);
 
         //내가 가지고온 짐의 양과 비교하여 보관할수 있는지 확인
         reserveRequestDto.checkSpace(limit);
@@ -78,43 +78,25 @@ public class ReservationService {
         final String reserveCode = uuid.toString().substring(0, 7);
 
         //결제타입과 무관하게 일단 예약 완료 상태로 만든다.
-        StateType stateType = StateType.ReserveOk;
+        final StateType stateType = StateType.ReserveOk;
 
         //가격 책정
         long price = priceTag(reserveRequestDto);
 
-        StoreDto storeDto = StoreDto.builder()
-                .ownerName(store.getUsers().getName())
-                .openTime(store.getOpenTime())
-                .longitude(store.getLongitude())
-                .latitude(store.getLatitude())
-                .closeTime(store.getCloseTime())
-                .avgLike(like)
-                .address(store.getAddress())
-                .storeName(store.getStoreName())
-                .storeIdx(store.getStoreIdx())
-                .storeCall(store.getStoreCall())
+        //리스폰스에 담길 가게정보
+        final StoreDto storeDto = StoreDto.builder()
+                .store(store)
                 .build();
-        ReserveResponseDto reserveResponseDto = new ReserveResponseDto(reserveRequestDto, reserveCode, storeDto, price, stateType);
+        final ReserveResponseDto reserveResponseDto = new ReserveResponseDto(reserveRequestDto, reserveCode, storeDto, price, stateType);
 
         //예약목록 저장 결제목록에 저장 진행중으로, 짐목록 저장
-        Reserve saveReserve = Reserve.builder()
-                .userIdx(userIdx)
-                .storeIdx(reserveRequestDto.getStoreIdx())
-                .startTime(new Timestamp(reserveRequestDto.getStartTime()))
-                .endTime(new Timestamp(reserveRequestDto.getEndTime()))
-                .state(stateType)
-                .price(price)
-                .reserveCode(reserveCode)
-                .depositTime(null)
-                .takeTime(null)
-                .build();
+        final Reserve saveReserve = reserveResponseDto.toEntity(userIdx);
 
         //여기서 예약목록에 저장
         reservationMapper.saveReservation(saveReserve);
 
         //일단 결제 진행중인 상태로 결제테이블에 저장할거임
-        Payment payment = Payment.builder()
+        final Payment payment = Payment.builder()
                 .payType(reserveRequestDto.getPayType())
                 .totalPrice(price)
                 .reserveIdx(saveReserve.getReserveIdx())
@@ -135,13 +117,13 @@ public class ReservationService {
 
     @Transactional
     public void cancelReservation(final long userIdx) {
-        StateType cancelState = StateType.Cancel;
-        ProgressType cancelProgress = ProgressType.CANCEL;
+        final StateType cancelState = StateType.Cancel;
+        final ProgressType cancelProgress = ProgressType.CANCEL;
         //예약 취소하면 결제테이블에 있는 것도 결제 취소로 전부 바꿔버린다.
         //정상적으로 예약된게 있는지 확인
 
-        Reserve reserve = reservationMapper.findReserveByUserIdx(userIdx);
-        if (reserve == null) throw new RuntimeException();
+        final Reserve reserve = reservationMapper.findReserveByUserIdx(userIdx);
+        if (reserve == null) throw new NotFoundReserveException();
 
         reservationMapper.deleteReservation(reserve.getReserveIdx(), cancelState);
         reservationMapper.deletePayment(reserve.getReserveIdx(), cancelProgress);
@@ -157,44 +139,25 @@ public class ReservationService {
     //reserveCode로 예약정보 + 보관정보를 보자
 
     public ReserveViewDto getReserveMyInfo(final String reserveCode) {
-        Reserve reserve = reservationMapper.findReserveByReserveCode(reserveCode);
-
+        final Reserve reserve = reservationMapper.findReserveByReserveCode(reserveCode);
+        final Store store = reserve.getStore();
         //예약내역이 없으면?
-        if (reserve == null) throw new RuntimeException();
+        if (reserve == null) throw new NotFoundReserveException();
 
-        StoreDto storeDto = StoreDto.builder()
-                .openTime(reserve.getStore().getOpenTime())
-                .storeCall(reserve.getStore().getStoreCall())
-                .storeIdx(reserve.getStoreIdx())
-                .storeName(reserve.getStore().getStoreName())
-                .address(reserve.getStore().getAddress())
-                .avgLike(reserve.getStore().getGrade())
-                .latitude(reserve.getStore().getLatitude())
-                .longitude(reserve.getStore().getLongitude())
-                .ownerName(reserve.getStore().getUsers().getName())
-                .closeTime(reserve.getStore().getCloseTime())
+        final StoreDto storeDto = StoreDto.builder()
+                .store(store)
                 .build();
 
         //가격단위와 단위에 해당하는 시간
-        List<Price> priceList = priceMapper.getAllPrice();
+        final List<Price> priceList = priceMapper.getAllPrice();
         final Long hour = priceList.get(0).getMillsecToHour(reserve.getStartTime().getTime(), reserve.getEndTime().getTime());
         final Long priceUnit = priceList.get(0).getPriceUnit(priceList, hour);
         final Long priceIdx = priceList.get(0).findPriceIdxByUnit(priceList, priceUnit);
-        final Long extraChargeCount = priceList.get(0).getExtraChargeCount(hour,priceList.get(priceList.size()-1).getPriceIdx());
+        final Long extraChargeCount = priceList.get(0).getExtraChargeCount(hour, priceList.get(priceList.size() - 1).getPriceIdx());
         final Long extraCharge = priceList.get(0).getPrice();
 
-        ReserveViewDto reserveViewDto = ReserveViewDto.builder()
-                .stateType(reserve.getState())
-                .reserveCode(reserveCode)
-                .startTime(reserve.getStartTime())
-                .endTime(reserve.getEndTime())
-                .depositTime(reserve.getDepositTime())
-                .takeTime(reserve.getTakeTime())
-                .baggages(reserve.getBaggages())
-                .price(reserve.getPrice())
-                .payType(reserve.getPayment().getPayType())
-                .progressType(reserve.getPayment().getProgressType())
-                .baggageImgs(reserve.getBaggageImgs())
+        final ReserveViewDto reserveViewDto = ReserveViewDto.builder()
+                .reserve(reserve)
                 .storeDto(storeDto)
                 .priceIdx(priceIdx)
                 .priceUnit(priceUnit)
@@ -219,7 +182,7 @@ public class ReservationService {
         final Long count = reserveRequestDto.gainBagsCount();
 
         //추가시간 계산
-        final Long extraChargeCount = priceList.get(0).getExtraChargeCount(hour,priceList.get(priceList.size()-1).getPriceIdx());
+        final Long extraChargeCount = priceList.get(0).getExtraChargeCount(hour, priceList.get(priceList.size() - 1).getPriceIdx());
         final Long extraCharge = priceList.get(0).getPrice();
         //총 가격
         final Long price = count * (unit + extraChargeCount * extraCharge);

@@ -41,8 +41,8 @@ public class Price {
     }
 
     public Long getExtraChargeCount(final Long hour, final Long finalIdx) {
-        Long extra =0L;
-        if(hour>finalIdx){
+        Long extra = 0L;
+        if (hour > finalIdx) {
             final Long temp = hour - finalIdx;
             extra = temp / 12;
             if (temp % 12 == 0) extra--;

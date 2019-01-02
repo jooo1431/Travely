@@ -18,7 +18,7 @@ public class ReviewResponseDto {
         this.storeIdx = review.getStoreIdx();
         this.userIdx = review.getUserIdx();
         this.content = review.getContent();
-        this.like = review.getLike();
+        this.like = review.getLiked();
         this.createdAt = review.getCreateAt().getTime();
         this.userName = review.getUsers().getName();
     }
