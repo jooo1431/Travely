@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,9 +21,9 @@ public class ReviewService {
 
     private final ReviewMapper reviewMapper;
 
-    public List<ReviewResponseDto> getReviewResponseDtos(final Long storeIdx,final Long reviewIdx) {
+    public List<ReviewResponseDto> getReviewResponseDtos(final Long storeIdx, final Long reviewIdx) {
         return reviewMapper
-                .findReviewsByReviewIdxAndStoreIdx(reviewIdx,storeIdx)
+                .findReviewsByReviewIdxAndStoreIdx(reviewIdx, storeIdx)
                 .stream()
                 .map(review -> new ReviewResponseDto(review))
                 .collect(Collectors.toList());
@@ -50,7 +49,7 @@ public class ReviewService {
     }
 
     public List<ReviewStoreResponseDto> getMoreMyReviews(final Long userIdx, final Long reviewIdx) {
-        List<ReviewStoreResponseDto> reviewStoreResponseDtos = reviewMapper.findMoreReviewsAndStoreByUserIdx(userIdx,reviewIdx);
+        List<ReviewStoreResponseDto> reviewStoreResponseDtos = reviewMapper.findMoreReviewsAndStoreByUserIdx(userIdx, reviewIdx);
         if (reviewStoreResponseDtos == null) return new ArrayList<>();
         return reviewStoreResponseDtos;
     }

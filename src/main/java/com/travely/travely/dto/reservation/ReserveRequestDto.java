@@ -2,6 +2,7 @@ package com.travely.travely.dto.reservation;
 
 import com.travely.travely.dto.baggage.BagDto;
 import com.travely.travely.exception.ExceedCapacityException;
+import com.travely.travely.exception.NotCorrectTimeException;
 import com.travely.travely.exception.NotFoundBaggageException;
 import com.travely.travely.util.typeHandler.PayType;
 import io.swagger.annotations.ApiModelProperty;
@@ -50,6 +51,10 @@ public class ReserveRequestDto {
         getBagDtos().forEach(bagDto -> {
             if (!bagDto.checkCount()) throw new NotFoundBaggageException();
         });
+    }
+
+    public void checkTime() {
+        if (this.startTime > this.endTime) throw new NotCorrectTimeException();
     }
 
     public Long gainBagsCount() {

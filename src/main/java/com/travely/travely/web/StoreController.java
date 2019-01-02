@@ -44,7 +44,7 @@ public class StoreController {
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @GetMapping("/{storeIdx}/reviews/{reviewIdx}")
-    public ResponseEntity<List<ReviewResponseDto>> getStoreDetails(@PathVariable Long storeIdx,@PathVariable Long reviewIdx) {
-        return ResponseEntity.ok(reviewService.getReviewResponseDtos(storeIdx,reviewIdx));
+    public ResponseEntity<List<ReviewResponseDto>> getStoreDetails(@PathVariable Long storeIdx, @PathVariable Long reviewIdx) {
+        return ResponseEntity.ok(reviewService.getReviewResponseDtos(storeIdx, reviewIdx));
     }
 }

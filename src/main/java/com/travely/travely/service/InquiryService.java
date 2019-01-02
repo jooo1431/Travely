@@ -17,21 +17,21 @@ public class InquiryService {
 
     /**
      * 문의 사항 저장하기
+     *
      * @param inquiryDto
      * @return HttpStatus
      */
     @Transactional
-    public HttpStatus saveInquiry(final Long userIdx, final InquiryDto inquiryDto){
-        if( inquiryDto.checkProperties() ) {
+    public HttpStatus saveInquiry(final Long userIdx, final InquiryDto inquiryDto) {
+        if (inquiryDto.checkProperties()) {
             Inquiry inquiry = inquiryDto.toEntity();
             inquiryMapper.saveInquiry(userIdx, inquiry);
             return HttpStatus.OK;
-        }
-        else
+        } else
             return HttpStatus.BAD_REQUEST;
     }
 
-    public Inquiry findInquiry(final Long inquiryIdx){
+    public Inquiry findInquiry(final Long inquiryIdx) {
         return inquiryMapper.findByInquiryIdx(inquiryIdx);
     }
 }

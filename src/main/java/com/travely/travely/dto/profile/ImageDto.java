@@ -10,17 +10,17 @@ public class ImageDto {
     private String tableName = classify + "Img";
     private int limit;
 
-    public ImageDto(MultipartFile photo, String classify){
+    public ImageDto(MultipartFile photo, String classify) {
         this.photo = photo;
         this.classify = classify;
     }
 
 
-    public boolean checkClassify(){
-        return (this.classify == "profile" || this.classify =="baggage" || this.classify == "inquiry" );
+    public boolean checkClassify() {
+        return (this.classify == "profile" || this.classify == "baggage" || this.classify == "inquiry");
     }
 
-    public boolean checkProperties(){
-        return ( this.photo != null & this.classify != null);
+    public boolean checkProperties() {
+        return (this.photo != null & this.classify != null);
     }
 }
