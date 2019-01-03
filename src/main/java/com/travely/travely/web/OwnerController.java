@@ -1,5 +1,6 @@
 package com.travely.travely.web;
 
+import com.travely.travely.dto.owner.AllReserveResponseDto;
 import com.travely.travely.dto.owner.ReserveArchiveInfoResponseDto;
 import com.travely.travely.dto.owner.ReserveArchiveResponseDto;
 import com.travely.travely.dto.review.ReviewUserImgResponseDto;
@@ -8,6 +9,7 @@ import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -102,13 +104,16 @@ public class OwnerController {
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @GetMapping("/reserve")
-    public ResponseEntity<List<ReserveArchiveResponseDto>> getAllReserveArchive(@ApiIgnore Authentication authentication){
+    public ResponseEntity<AllReserveResponseDto> getAllReserveArchive(@ApiIgnore Authentication authentication){
 
         Long ownerIdx = Long.parseLong((String) authentication.getPrincipal());
 
-        List<ReserveArchiveResponseDto> reserveArchiveResponseDtos = ownerService.getReservedAndArchiving(ownerIdx);
+        List<ReserveArchiveResponseDto> reserveResponseDtos = ownerService.getReserved(ownerIdx);
+        List<ReserveArchiveResponseDto> storeResponseDtos = ownerService.getStoring(ownerIdx);
 
-        return ResponseEntity.ok(reserveArchiveResponseDtos);
+        AllReserveResponseDto allReserveResponseDto = ownerService.getReservedAndStoring(reserveResponseDtos,storeResponseDtos);
+
+        return ResponseEntity.ok(allReserveResponseDto);
     }
 
     @ApiOperation(value = "예약코드 조회", notes = "예약코드 조회")
