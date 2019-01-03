@@ -1,9 +1,9 @@
 package com.travely.travely.util.typeHandler;
 
 public enum ProgressType implements CommonEnum {
-    ING(0, "결제진행중"),
-    DONE(1, "결제완료"),
-    CANCEL(2, "결제취소");
+    ING(0, "payment in progress."),
+    DONE(1, "payment completed"),
+    CANCEL(2, "payment canceled.");
 
     private int value;
     private String message;

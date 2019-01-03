@@ -168,7 +168,7 @@ public interface ReservationMapper {
     })
     List<Reserve> findMoreReserveByStoreIdxAndStateType(@Param("storeIdx") final Long storeIdx, @Param("stateType") final StateType stateType, @Param("reserveIdx") final Long reserveIdx);
 
-    @Select("SELECT * FROM reserve WHERE reserveIdx = #{reserveIdx} AND state = #{stateType}")
+    @Select("SELECT * FROM reserve WHERE reserveIdx = #{reserveIdx}")
     @Results(value = {
             @Result(property = "reserveIdx", javaType = Long.class, column = "reserveIdx"),
             @Result(property = "storeIdx", javaType = Long.class, column = "storeIdx"),
@@ -184,5 +184,5 @@ public interface ReservationMapper {
             @Result(property = "users", javaType = Store.class, column = "userIdx",
                     one = @One(select = "com.travely.travely.mapper.UserMapper.findUserByUserIdx", fetchType = FetchType.LAZY))
     })
-    Reserve findReserveByReserveIdxAndState(@Param("reserveIdx") final Long reserveIdx, @Param("stateType") final StateType stateType);
+    Reserve findReserveByReserveIdx(@Param("reserveIdx") final Long reserveIdx);
 }

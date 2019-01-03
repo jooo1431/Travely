@@ -1,11 +1,11 @@
 package com.travely.travely.util.typeHandler;
 
 public enum StateType implements CommonEnum {
-    ReserveOk(0, "예약완료"),
-    PayOk(1, "결제완료"),
-    Archiving(2, "보관중"),
-    TakeOff(3, "짐수거"),
-    Cancel(4, "예약 및 결제 취소");
+    RESERVED(0, "reservation completed."),
+    PAYED(1, "payment completed"),
+    ARCHIVE(2, "archiving"),
+    PICKUP(3, "pickup completed."),
+    CANCEL(4, "reservation or payment canceled.");
 
     private int value;
     private String message;

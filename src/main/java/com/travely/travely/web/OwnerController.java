@@ -75,9 +75,9 @@ public class OwnerController {
         return ResponseEntity.ok(ownerArchiveInfoResponseDto);
     }
 
-    @ApiOperation(value = "짐 픽업", notes = "짐 픽업")
+    @ApiOperation(value = "짐 보관 및 픽업", notes = "짐 보관 및 픽업시 reserve의 state타입 변경")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "짐 픽업"),
+            @ApiResponse(code = 200, message = "짐 보관 및 픽업 성공"),
             @ApiResponse(code = 401, message = "인증 에러"),
             @ApiResponse(code = 500, message = "서버에러")
     })
@@ -87,7 +87,7 @@ public class OwnerController {
 
         Long ownerIdx = Long.parseLong((String) authentication.getPrincipal());
 
-        ownerService.pickUpBaggage(ownerIdx, reserveIdx);
+        ownerService.updateBaggageState(ownerIdx, reserveIdx);
 
         return ResponseEntity.ok().build();
     }
