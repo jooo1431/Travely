@@ -9,7 +9,6 @@ import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -104,14 +103,14 @@ public class OwnerController {
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @GetMapping("/reserve")
-    public ResponseEntity<AllReserveResponseDto> getAllReserveArchive(@ApiIgnore Authentication authentication){
+    public ResponseEntity<AllReserveResponseDto> getAllReserveArchive(@ApiIgnore Authentication authentication) {
 
         Long ownerIdx = Long.parseLong((String) authentication.getPrincipal());
 
         List<ReserveArchiveResponseDto> reserveResponseDtos = ownerService.getReserved(ownerIdx);
         List<ReserveArchiveResponseDto> storeResponseDtos = ownerService.getStoring(ownerIdx);
 
-        AllReserveResponseDto allReserveResponseDto = ownerService.getReservedAndStoring(reserveResponseDtos,storeResponseDtos);
+        AllReserveResponseDto allReserveResponseDto = ownerService.getReservedAndStoring(reserveResponseDtos, storeResponseDtos);
 
         return ResponseEntity.ok(allReserveResponseDto);
     }
@@ -125,11 +124,11 @@ public class OwnerController {
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @GetMapping("/reserve/{reserveCode}")
-    public ResponseEntity<ReserveArchiveInfoResponseDto> readReserveCode(@ApiIgnore Authentication authentication,@PathVariable String reserveCode){
+    public ResponseEntity<ReserveArchiveInfoResponseDto> readReserveCode(@ApiIgnore Authentication authentication, @PathVariable String reserveCode) {
 
         Long ownerIdx = Long.parseLong((String) authentication.getPrincipal());
 
-        ReserveArchiveInfoResponseDto reserveArchiveInfoResponseDto = ownerService.readReserveCode(ownerIdx,reserveCode);
+        ReserveArchiveInfoResponseDto reserveArchiveInfoResponseDto = ownerService.readReserveCode(ownerIdx, reserveCode);
 
         return ResponseEntity.ok(reserveArchiveInfoResponseDto);
     }

@@ -16,8 +16,8 @@ import java.util.List;
 public class ReserveResponseDto {
 
     //맡고 찾는 시간
-    private Timestamp startTime;
-    private Timestamp endTime;
+    private Long startTime;
+    private Long endTime;
     //결제 종류
     private PayType payType;
     //상태정보
@@ -31,8 +31,8 @@ public class ReserveResponseDto {
     private StoreDto store;
 
     public ReserveResponseDto(final ReserveRequestDto reserveRequestDto, final String reserveCode, final StoreDto storeDto, final long price, final StateType stateType) {
-        this.startTime = new Timestamp(reserveRequestDto.getStartTime());
-        this.endTime = new Timestamp(reserveRequestDto.getEndTime());
+        this.startTime = new Timestamp(reserveRequestDto.getStartTime()).getTime();
+        this.endTime = new Timestamp(reserveRequestDto.getEndTime()).getTime();
         this.payType = reserveRequestDto.getPayType();
         this.stateType = stateType;
         this.price = price;
@@ -43,10 +43,10 @@ public class ReserveResponseDto {
 
     public Reserve toEntity(final Long userIdx) {
         return Reserve.builder()
-                .endTime(this.endTime)
+                .endTime(new Timestamp(this.endTime))
                 .price(this.price)
                 .reserveCode(this.reserveCode)
-                .startTime(this.startTime)
+                .startTime(new Timestamp(this.startTime))
                 .state(this.stateType)
                 .storeIdx(store.getStoreIdx())
                 .userIdx(userIdx)

@@ -9,7 +9,7 @@ public class ReviewStoreResponseDto {
     private Long reviewIdx;
     private String content;
     private Long liked;
-    private Timestamp createAt;
+    private Long createAt;
     //store Info
     private long storeIdx;
     private long ownerIdx;
@@ -18,8 +18,8 @@ public class ReviewStoreResponseDto {
     private String storeCall;
     private String storeUrl;
     private String address;
-    private Timestamp openTime;
-    private Timestamp closeTime;
+    private Long openTime;
+    private Long closeTime;
     private double latitude;
     private double longitude;
     private long limit;
