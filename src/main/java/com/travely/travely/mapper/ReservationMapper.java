@@ -16,8 +16,8 @@ public interface ReservationMapper {
 
     ///save에 쓰이는 쿼리
 
-    //reserve와 연결된 테이블 정보 불러오기
-    @Select("SELECT * FROM reserve WHERE storeIdx = #{storeIdx} AND state < 3 ")
+    //reserve와 연결된 예약 정보 불러오기
+    @Select("SELECT * FROM reserve WHERE storeIdx = #{storeIdx} AND state < 2")
     @Results(value = {
             @Result(property = "reserveIdx", javaType = Long.class, column = "reserveIdx"),
             @Result(property = "storeIdx", javaType = Long.class, column = "storeIdx"),
@@ -34,6 +34,25 @@ public interface ReservationMapper {
                     one = @One(select = "com.travely.travely.mapper.UserMapper.findUserByUserIdx", fetchType = FetchType.LAZY))
     })
     List<Reserve> findReserveByStoreIdx(@Param("storeIdx") final Long storeIdx);
+
+    //reserve와 연결된 보관 정보 불러오기
+    @Select("SELECT * FROM reserve WHERE storeIdx = #{storeIdx} AND state = 2")
+    @Results(value = {
+            @Result(property = "reserveIdx", javaType = Long.class, column = "reserveIdx"),
+            @Result(property = "storeIdx", javaType = Long.class, column = "storeIdx"),
+            @Result(property = "userIdx", javaType = Long.class, column = "userIdx"),
+            @Result(property = "baggages", javaType = List.class, column = "reserveIdx",
+                    many = @Many(select = "com.travely.travely.mapper.BaggageMapper.findBaggageByReserveIdx", fetchType = FetchType.LAZY)),
+            @Result(property = "baggageImgs", javaType = List.class, column = "reserveIdx",
+                    many = @Many(select = "com.travely.travely.mapper.BaggageImgMapper.findBaggageImgByReserveIdx", fetchType = FetchType.LAZY)),
+            @Result(property = "payment", javaType = Payment.class, column = "reserveIdx",
+                    one = @One(select = "com.travely.travely.mapper.PaymentMapper.findPaymentByReserveIdx", fetchType = FetchType.LAZY)),
+            @Result(property = "store", javaType = Store.class, column = "storeIdx",
+                    one = @One(select = "com.travely.travely.mapper.StoreMapper.findStoreByStoreIdx", fetchType = FetchType.LAZY)),
+            @Result(property = "users", javaType = Store.class, column = "userIdx",
+                    one = @One(select = "com.travely.travely.mapper.UserMapper.findUserByUserIdx", fetchType = FetchType.LAZY))
+    })
+    List<Reserve> findStoreByStoreIdx(@Param("storeIdx") final Long storeIdx);
 
     @Select("select * from reserve where useridx=#{userIdx} order by reserveIdx desc limit 1;")
     @Results(value = {

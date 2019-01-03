@@ -3,13 +3,11 @@ package com.travely.travely.service;
 import com.travely.travely.domain.Reserve;
 import com.travely.travely.domain.Review;
 import com.travely.travely.domain.Store;
+import com.travely.travely.dto.owner.AllReserveResponseDto;
 import com.travely.travely.dto.owner.ReserveArchiveInfoResponseDto;
 import com.travely.travely.dto.owner.ReserveArchiveResponseDto;
 import com.travely.travely.dto.review.ReviewUserImgResponseDto;
-import com.travely.travely.exception.AuthenticationErrorException;
-import com.travely.travely.exception.NotFoundReserveArchiveException;
-import com.travely.travely.exception.NotFoundReserveException;
-import com.travely.travely.exception.NotFoundReviewException;
+import com.travely.travely.exception.*;
 import com.travely.travely.mapper.ReservationMapper;
 import com.travely.travely.mapper.ReviewMapper;
 import com.travely.travely.mapper.StoreMapper;
@@ -17,6 +15,7 @@ import com.travely.travely.util.typeHandler.StateType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -78,12 +77,29 @@ public class OwnerService {
         return reviewUserImgResponseDtos;
     }
 
-    public List<ReserveArchiveResponseDto> getReservedAndArchiving(final Long ownerIdx){
+    public List<ReserveArchiveResponseDto> getReserved(final Long ownerIdx){
         Store store = storeMapper.findStoreByUserIdx(ownerIdx);
         List<Reserve> reserveList = reservationMapper.findReserveByStoreIdx(store.getStoreIdx());
-        if(reserveList ==null) throw new NotFoundReserveArchiveException();
-        List<ReserveArchiveResponseDto> reserveArchiveResponseDtos = reserveList.stream().map(reserve -> new ReserveArchiveResponseDto(reserve)).collect(Collectors.toList());
-        return reserveArchiveResponseDtos;
+        List<Reserve> storingList = reservationMapper.findStoreByStoreIdx(store.getStoreIdx());
+        if(reserveList ==null) throw new NotFoundReserveException();
+
+        List<ReserveArchiveResponseDto> reserveResponseDtos = reserveList.stream().map(reserve -> new ReserveArchiveResponseDto(reserve)).collect(Collectors.toList());
+        return reserveResponseDtos;
+    }
+
+    public List<ReserveArchiveResponseDto> getStoring(final Long ownerIdx){
+        Store store = storeMapper.findStoreByUserIdx(ownerIdx);
+        List<Reserve> storingList = reservationMapper.findStoreByStoreIdx(store.getStoreIdx());
+        if(storingList ==null) throw new NotFoundStoringException();
+        List<ReserveArchiveResponseDto> storingResponseDtos = storingList.stream().map(reserve -> new ReserveArchiveResponseDto(reserve)).collect(Collectors.toList());
+        return storingResponseDtos;
+    }
+
+    @Transactional
+    public AllReserveResponseDto getReservedAndStoring(List<ReserveArchiveResponseDto> reserveResponseDtos, List<ReserveArchiveResponseDto> storingResponseDtos){
+        AllReserveResponseDto allReserveResponseDto = new AllReserveResponseDto(reserveResponseDtos, storingResponseDtos);
+
+        return allReserveResponseDto;
     }
 
     public ReserveArchiveInfoResponseDto readReserveCode(final Long ownerIdx, final String reserveCode){
