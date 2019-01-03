@@ -60,7 +60,7 @@ public class ReserveRequestDto {
 
     public void checkCurrentTime(){
         final Long currentTime = new Timestamp(System.currentTimeMillis()).getTime();
-        if(currentTime-this.startTime<0) throw new NotCorrectTimeException();
+        if(this.startTime-currentTime<0) throw new NotCorrectTimeException();
     }
 
     public Long gainBagsCount() {
