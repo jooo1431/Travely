@@ -41,6 +41,7 @@ public class ReservationService {
 
         //예약시간의 적합성 판단
         reserveRequestDto.checkTime();
+        reserveRequestDto.checkCurrentTime();
 
         // 짐갯수 0개인경우
         reserveRequestDto.checkCount();
