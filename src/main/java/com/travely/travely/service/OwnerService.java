@@ -29,8 +29,10 @@ public class OwnerService {
     final private ReservationMapper reservationMapper;
     final private ReviewMapper reviewMapper;
 
-    final private StateType ARCHIVE = StateType.Archiving;
-    final private StateType PICKUP = StateType.TakeOff;
+    final private StateType RESERVED = StateType.RESERVED;
+    final private StateType PAYED = StateType.PAYED;
+    final private StateType ARCHIVE = StateType.ARCHIVE;
+    final private StateType PICKUP = StateType.PICKUP;
 
     public List<OwnerArchiveResponseDto> getArchives(final Long userIdx) {
         final Store store = storeMapper.findStoreByUserIdx(userIdx);
@@ -53,7 +55,7 @@ public class OwnerService {
     }
 
     public OwnerArchiveInfoResponseDto getArchiveByReserveIdx(final Long ownerIdx, final Long reserveIdx) {
-        final Reserve reserve = reservationMapper.findReserveByReserveIdxAndState(reserveIdx, ARCHIVE);
+        final Reserve reserve = reservationMapper.findReserveByReserveIdx(reserveIdx);
 
         if (reserve == null) throw new NotFoundReserveException();
         if (reserve.getStore().getOwnerIdx() != ownerIdx) throw new AuthenticationErrorException();
@@ -62,13 +64,16 @@ public class OwnerService {
         return ownerArchiveInfoResponseDto;
     }
 
-    public void pickUpBaggage(final Long ownerIdx, final Long reserveIdx) {
-        final Reserve reserve = reservationMapper.findReserveByReserveIdxAndState(reserveIdx, ARCHIVE);
+    public void updateBaggageState(final Long ownerIdx, final Long reserveIdx) {
+        final Reserve reserve = reservationMapper.findReserveByReserveIdx(reserveIdx);
 
         if (reserve == null) throw new NotFoundReserveException();
         if (reserve.getStore().getOwnerIdx() != ownerIdx) throw new AuthenticationErrorException();
 
-        reservationMapper.updateReservation(reserve.getReserveIdx(), PICKUP);
+        if (reserve.getState() == RESERVED && reserve.getState() == PAYED)
+            reservationMapper.updateReservation(reserve.getReserveIdx(), ARCHIVE);
+        else if (reserve.getState() == ARCHIVE)
+            reservationMapper.updateReservation(reserve.getReserveIdx(), PICKUP);
     }
 
     public List<ReviewUserImgResponseDto> getReviews(final Long ownerIdx) {
@@ -90,4 +95,5 @@ public class OwnerService {
         List<ReviewUserImgResponseDto> reviewUserImgResponseDtos = reviewList.stream().map(review -> new ReviewUserImgResponseDto(review)).collect(Collectors.toList());
         return reviewUserImgResponseDtos;
     }
+
 }
