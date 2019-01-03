@@ -4,6 +4,7 @@ import com.travely.travely.domain.Payment;
 import com.travely.travely.domain.Reserve;
 import com.travely.travely.domain.Store;
 import com.travely.travely.dto.baggage.BagDto;
+import com.travely.travely.util.typeHandler.PayType;
 import com.travely.travely.util.typeHandler.ProgressType;
 import com.travely.travely.util.typeHandler.StateType;
 import org.apache.ibatis.annotations.*;
@@ -101,6 +102,11 @@ public interface ReservationMapper {
     //예약 목록 삭제처리
     @Update("UPDATE reserve SET state = #{cancel} WHERE reserveIdx = #{reserveIdx}")
     void deleteReservation(@Param("reserveIdx") final long reserveIdx, @Param("cancel") final StateType stateType);
+
+    @Update("UPDATE reserve A natural JOIN payment B\n" +
+            "SET A.state = #{reserve_cancle}, B.progressType = #{pay_cancle}\n" +
+            "where A.startTime <= utc_timestamp() and B.progressType = 0")
+    void deleteReservationAndPayment(@Param("reserve_cancle") final StateType stateType, @Param("pay_cancle") final ProgressType progressType);
 
     //결제 목록 취소 처리
     @Update("UPDATE payment SET progressType = #{cancel} WHERE reserveIdx = #{reserveIdx}")
