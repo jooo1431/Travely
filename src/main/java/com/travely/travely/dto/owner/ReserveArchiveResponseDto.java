@@ -21,8 +21,8 @@ public class ReserveArchiveResponseDto {
     private ProgressType progressType;
     private Long price;
     private List<BagDto> bagDtos;
-    private Timestamp startTime;
-    private Timestamp endTime;
+    private Long startTime;
+    private Long endTime;
 
     @Builder
     public ReserveArchiveResponseDto(Reserve reserve) {
@@ -34,7 +34,7 @@ public class ReserveArchiveResponseDto {
         this.progressType = reserve.getPayment().getProgressType();
         this.price = reserve.getPrice();
         this.bagDtos = reserve.getBaggages().stream().map(baggage -> new BagDto(baggage)).collect(Collectors.toList());
-        this.startTime = reserve.getStartTime();
-        this.endTime = reserve.getEndTime();
+        this.startTime = reserve.getStartTime().getTime();
+        this.endTime = reserve.getEndTime().getTime();
     }
 }

@@ -16,4 +16,5 @@ public interface RegionMapper {
                     many = @Many(select = "com.travely.travely.mapper.StoreMapper.findStoresByRegionIdx", fetchType = FetchType.LAZY))
     })
     List<Region> findAllRegion();
+
 }
