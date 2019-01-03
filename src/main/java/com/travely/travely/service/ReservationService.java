@@ -36,7 +36,7 @@ public class ReservationService {
     @Transactional
     public ReserveResponseDto saveReservation(final long userIdx, final ReserveRequestDto reserveRequestDto) {
 
-        final List<Reserve> reserves = reservationMapper.findReserveByStoreIdx(reserveRequestDto.getStoreIdx());
+        final List<Reserve> reserves = reservationMapper.findReserveStateUnderPickUpByStoreIdx(reserveRequestDto.getStoreIdx());
         final Store store = storeMapper.findStoreByStoreIdx(reserveRequestDto.getStoreIdx());
 
         //예약기능 On/Off 검사
