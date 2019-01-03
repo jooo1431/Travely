@@ -38,7 +38,7 @@ public class ReservationController {
             @ApiResponse(code = 500, message = "서버에러")
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<ReserveResponseDto> saveReservation(@ApiIgnore Authentication authentication, @RequestBody final ReserveRequestDto reserveRequestDto) {
 
         Long userIdx = Long.parseLong((String) authentication.getPrincipal());
@@ -55,7 +55,7 @@ public class ReservationController {
             @ApiResponse(code = 500, message = "서버에러")
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @DeleteMapping("/")
+    @DeleteMapping("")
     public ResponseEntity<Void> cancelReservation(@ApiIgnore Authentication authentication) {
         Long userIdx = Long.parseLong((String) authentication.getPrincipal());
 
@@ -96,7 +96,7 @@ public class ReservationController {
             @ApiResponse(code = 500, message = "서버에러")
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<ReserveViewResponseDto> getReservation(@ApiIgnore Authentication authentication) {
 
         Long userIdx = Long.parseLong((String) authentication.getPrincipal());
