@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
-public class OwnerArchiveInfoResponseDto {
+public class ReserveArchiveInfoResponseDto {
     private Long reserveIdx;
     private Long userIdx;
     private String userImgUrl;
@@ -29,8 +29,7 @@ public class OwnerArchiveInfoResponseDto {
     private Long price;
     private List<BagImgDto> bagImgDtos;
 
-    @Builder
-    public OwnerArchiveInfoResponseDto(final Reserve reserve) {
+    public ReserveArchiveInfoResponseDto(final Reserve reserve) {
         this.reserveIdx = reserve.getReserveIdx();
         this.userIdx = reserve.getUserIdx();
         this.userImgUrl = reserve.getUsers().getProfileImg();
