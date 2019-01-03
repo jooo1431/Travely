@@ -20,8 +20,8 @@ public interface StoreMapper {
 
     @Select("SELECT * FROM store WHERE storeIdx = #{storeIdx}")
     @Results(value = {
-            @Result(column = "storeIdx",property = "storeIdx"),
-            @Result(column = "userIdx",property = "ownerIdx"),
+            @Result(column = "storeIdx", property = "storeIdx"),
+            @Result(column = "userIdx", property = "ownerIdx"),
             @Result(property = "reviews", javaType = List.class, column = "storeIdx",
                     many = @Many(select = "com.travely.travely.mapper.ReviewMapper.findReviewsByStoreIdx", fetchType = FetchType.LAZY)),
             @Result(property = "storeImgs", javaType = List.class, column = "storeIdx",
@@ -35,6 +35,10 @@ public interface StoreMapper {
 
     @Select("select * from store where regionIdx = #{regionIdx}")
     List<Store> findStoresByRegionIdx(@Param("regionIdx") final long regionIdx);
+
+    @Select("SELECT * FROM store WHERE userIdx = #{userIdx}")
+    Store findStoreByUserIdx(@Param("userIdx") final Long userIdx);
+
 
 }
 

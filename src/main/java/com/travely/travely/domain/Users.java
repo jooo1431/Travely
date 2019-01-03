@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.AuthorityUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -54,9 +52,9 @@ public class Users {
         return CommonConfig.getCheckedList(reserves);
     }
 
-    public Long getBagCount(){
+    public Long getBagCount() {
         Reserve reserve = getReserves().stream().findFirst().orElse(null);
-        if(reserve == null) return 0L;
+        if (reserve == null) return 0L;
         return reserve.getBagCount();
     }
 }

@@ -35,17 +35,17 @@ public class ProfileDto {
     private String phone;
 
     @Builder
-    public ProfileDto(Profile profile){
+    public ProfileDto(Profile profile) {
         this.email = profile.getEmail();
         this.name = profile.getName();
         this.phone = profile.getPhone();
     }
 
-    public boolean checkProperties(){
-        return ( this.email != null & this.name != null & this.phone != null);
+    public boolean checkProperties() {
+        return (this.email != null & this.name != null & this.phone != null);
     }
 
-    public Profile toEntity(){
+    public Profile toEntity() {
         return Profile.builder()
                 .email(email)
                 .name(name)

@@ -63,7 +63,7 @@ public class UserController {
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @GetMapping("/profile")
-    public ResponseEntity<UsersInfoResponseDto> getMyProfile(@ApiIgnore Authentication authentication){
+    public ResponseEntity<UsersInfoResponseDto> getMyProfile(@ApiIgnore Authentication authentication) {
         Long userIdx = Long.parseLong((String) authentication.getPrincipal());
 
         return ResponseEntity.ok(userService.getMyProfile(userIdx));
@@ -76,9 +76,9 @@ public class UserController {
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @GetMapping("/reserve/{reserveIdx}/stores")
-    public ResponseEntity<List<StoreInfoResponseDto>> getLikedStores(@ApiIgnore Authentication authentication, @PathVariable Long reserveIdx){
+    public ResponseEntity<List<StoreInfoResponseDto>> getLikedStores(@ApiIgnore Authentication authentication, @PathVariable Long reserveIdx) {
         Long userIdx = Long.parseLong((String) authentication.getPrincipal());
 
-        return ResponseEntity.ok(userService.getLikedStoreDtos(userIdx,reserveIdx));
+        return ResponseEntity.ok(userService.getLikedStoreDtos(userIdx, reserveIdx));
     }
 }

@@ -42,6 +42,13 @@ public class ReservationService {
         final List<Reserve> reserves = reservationMapper.findReserveByStoreIdx(reserveRequestDto.getStoreIdx());
         final Store store = storeMapper.findStoreByStoreIdx(reserveRequestDto.getStoreIdx());
 
+        //예약기능 On/Off 검사
+        store.checkAvailable();
+
+        //예약시간의 적합성 판단
+        reserveRequestDto.checkTime();
+        reserveRequestDto.checkCurrentTime();
+
         // 짐갯수 0개인경우
         reserveRequestDto.checkCount();
 
@@ -81,7 +88,7 @@ public class ReservationService {
         final String reserveCode = uuid.toString().substring(0, 7);
 
         //결제타입과 무관하게 일단 예약 완료 상태로 만든다.
-        final StateType stateType = StateType.ReserveOk;
+        final StateType stateType = StateType.RESERVED;
 
         //가격 책정
         long price = priceTag(reserveRequestDto);
@@ -120,7 +127,7 @@ public class ReservationService {
 
     @Transactional
     public void cancelReservation(final long userIdx) {
-        final StateType cancelState = StateType.Cancel;
+        final StateType cancelState = StateType.CANCEL;
         final ProgressType cancelProgress = ProgressType.CANCEL;
         //예약 취소하면 결제테이블에 있는 것도 결제 취소로 전부 바꿔버린다.
         //정상적으로 예약된게 있는지 확인
@@ -128,13 +135,13 @@ public class ReservationService {
         final Reserve reserve = reservationMapper.findReserveByUserIdx(userIdx);
         if (reserve == null) throw new NotFoundReserveException();
 
-        reservationMapper.deleteReservation(reserve.getReserveIdx(), cancelState);
-        reservationMapper.deletePayment(reserve.getReserveIdx(), cancelProgress);
+        reservationMapper.updateReservation(reserve.getReserveIdx(), cancelState);
+        reservationMapper.updatePayment(reserve.getReserveIdx(), cancelProgress);
     }
 
     @Transactional
     public void cancelReservation() {
-        reservationMapper.deleteReservationAndPayment(StateType.Cancel,ProgressType.CANCEL);
+        reservationMapper.deleteReservationAndPayment(StateType.CANCEL,ProgressType.CANCEL);
     }
 
     public List<PriceResponseDto> getPrices(){
