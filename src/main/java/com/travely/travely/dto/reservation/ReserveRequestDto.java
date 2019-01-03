@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Getter
@@ -55,6 +56,11 @@ public class ReserveRequestDto {
 
     public void checkTime() {
         if (this.startTime > this.endTime) throw new NotCorrectTimeException();
+    }
+
+    public void checkCurrentTime(){
+        final Long currentTime = new Timestamp(System.currentTimeMillis()).getTime();
+        if(currentTime-this.startTime<0) throw new NotCorrectTimeException();
     }
 
     public Long gainBagsCount() {

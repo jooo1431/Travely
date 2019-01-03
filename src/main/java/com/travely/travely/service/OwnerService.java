@@ -3,10 +3,11 @@ package com.travely.travely.service;
 import com.travely.travely.domain.Reserve;
 import com.travely.travely.domain.Review;
 import com.travely.travely.domain.Store;
-import com.travely.travely.dto.owner.OwnerArchiveInfoResponseDto;
-import com.travely.travely.dto.owner.OwnerArchiveResponseDto;
+import com.travely.travely.dto.owner.ReserveArchiveInfoResponseDto;
+import com.travely.travely.dto.owner.ReserveArchiveResponseDto;
 import com.travely.travely.dto.review.ReviewUserImgResponseDto;
 import com.travely.travely.exception.AuthenticationErrorException;
+import com.travely.travely.exception.NotFoundReserveArchiveException;
 import com.travely.travely.exception.NotFoundReserveException;
 import com.travely.travely.exception.NotFoundReviewException;
 import com.travely.travely.mapper.ReservationMapper;
@@ -34,34 +35,15 @@ public class OwnerService {
     final private StateType ARCHIVE = StateType.ARCHIVE;
     final private StateType PICKUP = StateType.PICKUP;
 
-    public List<OwnerArchiveResponseDto> getArchives(final Long userIdx) {
-        final Store store = storeMapper.findStoreByUserIdx(userIdx);
-        final List<Reserve> reserveList = reservationMapper.findReserveByStoreIdxAndStateType(store.getStoreIdx(), ARCHIVE);
 
-        if (reserveList == null) throw new NotFoundReserveException();
-
-        List<OwnerArchiveResponseDto> ownerArchiveResponseDtos = reserveList.stream().map(reserve -> new OwnerArchiveResponseDto(reserve)).collect(Collectors.toList());
-        return ownerArchiveResponseDtos;
-    }
-
-    public List<OwnerArchiveResponseDto> getMoreArchives(final Long userIdx, final Long reserveIdx) {
-        final Store store = storeMapper.findStoreByUserIdx(userIdx);
-        final List<Reserve> reserveList = reservationMapper.findMoreReserveByStoreIdxAndStateType(store.getStoreIdx(), ARCHIVE, reserveIdx);
-
-        if (reserveList == null) throw new NotFoundReserveException();
-
-        List<OwnerArchiveResponseDto> ownerArchiveResponseDtos = reserveList.stream().map(reserve -> new OwnerArchiveResponseDto(reserve)).collect(Collectors.toList());
-        return ownerArchiveResponseDtos;
-    }
-
-    public OwnerArchiveInfoResponseDto getArchiveByReserveIdx(final Long ownerIdx, final Long reserveIdx) {
+    public ReserveArchiveInfoResponseDto getArchiveByReserveIdx(final Long ownerIdx, final Long reserveIdx) {
         final Reserve reserve = reservationMapper.findReserveByReserveIdx(reserveIdx);
 
         if (reserve == null) throw new NotFoundReserveException();
         if (reserve.getStore().getOwnerIdx() != ownerIdx) throw new AuthenticationErrorException();
 
-        OwnerArchiveInfoResponseDto ownerArchiveInfoResponseDto = OwnerArchiveInfoResponseDto.builder().reserve(reserve).build();
-        return ownerArchiveInfoResponseDto;
+        ReserveArchiveInfoResponseDto reserveArchiveInfoResponseDto = new ReserveArchiveInfoResponseDto(reserve);
+        return reserveArchiveInfoResponseDto;
     }
 
     public void updateBaggageState(final Long ownerIdx, final Long reserveIdx) {
@@ -94,6 +76,22 @@ public class OwnerService {
 
         List<ReviewUserImgResponseDto> reviewUserImgResponseDtos = reviewList.stream().map(review -> new ReviewUserImgResponseDto(review)).collect(Collectors.toList());
         return reviewUserImgResponseDtos;
+    }
+
+    public List<ReserveArchiveResponseDto> getReservedAndArchiving(final Long ownerIdx){
+        Store store = storeMapper.findStoreByUserIdx(ownerIdx);
+        List<Reserve> reserveList = reservationMapper.findReserveByStoreIdx(store.getStoreIdx());
+        if(reserveList ==null) throw new NotFoundReserveArchiveException();
+        List<ReserveArchiveResponseDto> reserveArchiveResponseDtos = reserveList.stream().map(reserve -> new ReserveArchiveResponseDto(reserve)).collect(Collectors.toList());
+        return reserveArchiveResponseDtos;
+    }
+
+    public ReserveArchiveInfoResponseDto readReserveCode(final Long ownerIdx, final String reserveCode){
+        Reserve reserve = reservationMapper.findReserveByReserveCode(reserveCode);
+        if(reserve == null) throw new NotFoundReserveException();
+        if(ownerIdx != reserve.getStore().getOwnerIdx()) throw new AuthenticationErrorException();
+        ReserveArchiveInfoResponseDto reserveArchiveInfoResponseDto = new ReserveArchiveInfoResponseDto(reserve);
+        return reserveArchiveInfoResponseDto;
     }
 
 }

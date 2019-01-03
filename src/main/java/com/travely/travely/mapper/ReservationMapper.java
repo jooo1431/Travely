@@ -185,4 +185,6 @@ public interface ReservationMapper {
                     one = @One(select = "com.travely.travely.mapper.UserMapper.findUserByUserIdx", fetchType = FetchType.LAZY))
     })
     Reserve findReserveByReserveIdx(@Param("reserveIdx") final Long reserveIdx);
+
+
 }
