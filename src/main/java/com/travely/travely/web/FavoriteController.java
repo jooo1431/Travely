@@ -1,18 +1,17 @@
 package com.travely.travely.web;
 
-import com.travely.travely.dto.favorite.FavoriteResponseDto;
+import com.travely.travely.dto.favorite.FavoriteStateResponseDto;
+import com.travely.travely.dto.favorite.FavoriteStoreResponseDto;
 import com.travely.travely.service.FavoriteService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
-
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -31,8 +30,22 @@ public class FavoriteController {
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PutMapping("/{storeIdx}")
-    public ResponseEntity<FavoriteResponseDto> addOrDeleteFavorite(@PathVariable Long storeIdx, @ApiIgnore Authentication authentication) {
+    public ResponseEntity<FavoriteStateResponseDto> addOrDeleteFavorite(@PathVariable Long storeIdx, @ApiIgnore Authentication authentication) {
         Long userIdx = Long.parseLong((String) authentication.getPrincipal());
         return ResponseEntity.ok(favoriteService.updateFavorite(userIdx, storeIdx));
     }
+
+//    @ApiOperation(value = "즐겨찾는 상가 목록 조회", notes = "지역별 즐겨찾는 상가를 반환합니다.")
+//    @ApiResponses(value = {
+//            @ApiResponse(code = 200, message = "즐겨찾는 상가 정보 반환 성공"),
+//            @ApiResponse(code = 500, message = "서버 에러")
+//    })
+//    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+//    @GetMapping("")
+//    public ResponseEntity getFavoriteStoreList(@ApiIgnore Authentication authentication) {
+//        Long userIdx = Long.parseLong((String)authentication.getPrincipal());
+//
+//        return new ResponseEntity<>(favoriteService.getFavoriteStoreList(userIdx), HttpStatus.OK);
+//    }
 }
+

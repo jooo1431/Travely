@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.authority.AuthorityUtils;
 
+import java.util.List;
+
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Users {
@@ -17,6 +19,9 @@ public class Users {
     private String phone;
     private String profileImg;
     private String auth;
+    //List<String> favoriteStoreList;
+
+   // public
 
     public UserDetailsImpl createUserDetails() {
         return new UserDetailsImpl(userIdx.toString(), password, AuthorityUtils.createAuthorityList(auth));
