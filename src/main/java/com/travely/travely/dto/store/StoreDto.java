@@ -21,9 +21,9 @@ public class StoreDto {
     //상가경도
     private double longitude;
     //상가영업시작시간
-    private Timestamp openTime;
+    private Long openTime;
     //상가영업종료시간
-    private Timestamp closeTime;
+    private Long closeTime;
     //상가주소
     private String address;
     //상가 평점
@@ -40,8 +40,8 @@ public class StoreDto {
         this.storeCall = store.getStoreCall();
         this.latitude = store.getLatitude();
         this.longitude = store.getLongitude();
-        this.openTime = store.getOpenTime();
-        this.closeTime = store.getCloseTime();
+        this.openTime = store.getOpenTime().getTime();
+        this.closeTime = store.getCloseTime().getTime();
         this.address = store.getAddress();
         this.avgLike = store.getGrade();
         this.storeIdx = store.getStoreIdx();
