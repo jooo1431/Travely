@@ -27,11 +27,12 @@ public class StoreDto {
     //상가주소
     private String address;
     //상가 평점
+    private double avgLike;
+    //상가 지번주소
     private String addressNumber;
 
-    private double avgLike;
     //상가id
-    private long storeIdx;
+    private Long storeIdx;
 
     @Builder
     public StoreDto(final Store store) {
