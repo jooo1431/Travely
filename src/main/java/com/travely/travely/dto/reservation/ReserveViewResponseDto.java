@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
-public class ReserveViewDto {
+public class ReserveViewResponseDto {
     private StateType stateType;
     private String reserveCode;
     private Long startTime;
@@ -45,7 +45,7 @@ public class ReserveViewDto {
     }
 
     @Builder
-    public ReserveViewDto(final Reserve reserve, final StoreDto storeDto, final Long priceIdx, final Long priceUnit, final Long extraCharge, final Long extraChargeCount) {
+    public ReserveViewResponseDto(final Reserve reserve, final StoreDto storeDto, final Long priceIdx, final Long priceUnit, final Long extraCharge, final Long extraChargeCount) {
         this.stateType = reserve.getState();
         this.reserveCode = reserve.getReserveCode();
         this.startTime = reserve.getStartTime().getTime();

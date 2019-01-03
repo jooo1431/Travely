@@ -7,7 +7,7 @@ import com.travely.travely.domain.Store;
 import com.travely.travely.dto.reservation.PriceResponseDto;
 import com.travely.travely.dto.reservation.ReserveRequestDto;
 import com.travely.travely.dto.reservation.ReserveResponseDto;
-import com.travely.travely.dto.reservation.ReserveViewDto;
+import com.travely.travely.dto.reservation.ReserveViewResponseDto;
 import com.travely.travely.dto.store.StoreDto;
 import com.travely.travely.exception.NotFoundReserveException;
 import com.travely.travely.mapper.PriceMapper;
@@ -144,9 +144,8 @@ public class ReservationService {
     }
 
     //reserveCode로 예약정보 + 보관정보를 보자
-
-    public ReserveViewDto getReserveMyInfo(final String reserveCode) {
-        final Reserve reserve = reservationMapper.findReserveByReserveCode(reserveCode);
+    public ReserveViewResponseDto getReserveMyInfo(final Long reserveIdx) {
+        final Reserve reserve = reservationMapper.findReserveByReserveIdx(reserveIdx);
         final Store store = reserve.getStore();
         //예약내역이 없으면?
         if (reserve == null) throw new NotFoundReserveException();
@@ -163,7 +162,7 @@ public class ReservationService {
         final Long extraChargeCount = priceList.get(0).getExtraChargeCount(hour, priceList.get(priceList.size() - 1).getPriceIdx());
         final Long extraCharge = priceList.get(0).getPrice();
 
-        final ReserveViewDto reserveViewDto = ReserveViewDto.builder()
+        final ReserveViewResponseDto reserveViewResponseDto = ReserveViewResponseDto.builder()
                 .reserve(reserve)
                 .storeDto(storeDto)
                 .priceIdx(priceIdx)
@@ -172,7 +171,7 @@ public class ReservationService {
                 .extraChargeCount(extraChargeCount)
                 .build();
 
-        return reserveViewDto;
+        return reserveViewResponseDto;
     }
 
     //가격계산 --> 가격반환
