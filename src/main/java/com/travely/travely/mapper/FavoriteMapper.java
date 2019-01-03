@@ -14,7 +14,7 @@ public interface FavoriteMapper {
     void insertFavorite(@Param("favorite") Favorite favorite);
 
     @Select("select * from favorite where userIdx=#{favorite.userIdx} and storeIdx=#{favorite.storeIdx}")
-    Favorite findByFavorite(@Param("favorite")Favorite favorite);
+    Favorite findByFavorite(@Param("favorite") Favorite favorite);
 
     @Select("select * from favorite where userIdx=#{userIdx}")
     List<Favorite> findFavoriteByUserIdx(@Param("userIdx") Long userIdx);

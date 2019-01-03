@@ -64,10 +64,10 @@ public class ReviewController {
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @GetMapping("/{reviewIdx}")
-    public ResponseEntity<List<ReviewStoreResponseDto>> getMoreMyReview(@ApiIgnore final Authentication authentication,@PathVariable Long reviewIdx) {
+    public ResponseEntity<List<ReviewStoreResponseDto>> getMoreMyReview(@ApiIgnore final Authentication authentication, @PathVariable Long reviewIdx) {
         Long userIdx = Long.parseLong((String) authentication.getPrincipal());
 
-        List<ReviewStoreResponseDto> reviewStoreResponseDtos = reviewService.getMoreMyReviews(userIdx,reviewIdx);
+        List<ReviewStoreResponseDto> reviewStoreResponseDtos = reviewService.getMoreMyReviews(userIdx, reviewIdx);
 
         return ResponseEntity.ok().body(reviewStoreResponseDtos);
     }

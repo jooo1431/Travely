@@ -14,38 +14,39 @@ import org.springframework.transaction.annotation.Transactional;
 public class ImageService {
     private final S3FileUploadService s3FileUploadService;
     private final ImageMapper imageMapper;
+
     /**
      * 사진 조회
+     *
      * @param userIdx
      * @return (String)ImageUrl
      */
-    public String findImg(final Long userIdx, final String classify){
-        if( classify.equals("profile")) {
+    public String findImg(final Long userIdx, final String classify) {
+        if (classify.equals("profile")) {
             String imgUrl = imageMapper.findByUserIdx(userIdx);
             return imgUrl;
-        }
-        else return "찾을 수 없습니다";
+        } else return "찾을 수 없습니다";
     }
 
     /**
      * 프로필 사진 수정
+     *
      * @param userIdx
      * @param imageDto
      * @return HttpStatus
      */
     @Transactional
-    public HttpStatus updateImg(final Long userIdx, final ImageDto imageDto){
-        try{
-                final String ImageUrl = s3FileUploadService.upload(imageDto.getClassify(), imageDto.getPhoto());
+    public HttpStatus updateImg(final Long userIdx, final ImageDto imageDto) {
+        try {
+            final String ImageUrl = s3FileUploadService.upload(imageDto.getClassify(), imageDto.getPhoto());
 
-            if( imageDto.checkClassify() ) {
+            if (imageDto.checkClassify()) {
                 imageMapper.updateImg(userIdx, ImageUrl);
                 return HttpStatus.OK;
-            }
-            else {
+            } else {
                 return HttpStatus.BAD_REQUEST;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException("");
         }
     }

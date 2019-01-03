@@ -1,7 +1,6 @@
 package com.travely.travely.dto.inquiry;
 
 import com.travely.travely.domain.Inquiry;
-import com.travely.travely.domain.InquiryImg;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,7 +15,7 @@ public class InquiryDto {
 
     private MultipartFile[] inquiryImgs;
 
-    public Inquiry toEntity(){
+    public Inquiry toEntity() {
         return Inquiry.builder()
 //                .userIdx(userIdx)
                 .content(content)
@@ -24,7 +23,7 @@ public class InquiryDto {
                 .build();
     }
 
-    public boolean checkProperties(){
+    public boolean checkProperties() {
         return this.content != null;
     }
 }
