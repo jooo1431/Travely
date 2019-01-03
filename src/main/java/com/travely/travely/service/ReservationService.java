@@ -39,6 +39,9 @@ public class ReservationService {
         final List<Reserve> reserves = reservationMapper.findReserveByStoreIdx(reserveRequestDto.getStoreIdx());
         final Store store = storeMapper.findStoreByStoreIdx(reserveRequestDto.getStoreIdx());
 
+        //예약기능 On/Off 검사
+        store.checkAvailable();
+
         //예약시간의 적합성 판단
         reserveRequestDto.checkTime();
         reserveRequestDto.checkCurrentTime();
