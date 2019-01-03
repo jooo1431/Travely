@@ -34,7 +34,7 @@ public class ImageController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")
     })
-    @PostMapping("/")
+    @PostMapping()
     public ResponseEntity<String> uploadImage(@RequestParam("data") MultipartFile multipartFile) throws IOException {
         return ResponseEntity.status(HttpStatus.CREATED).body(s3Util.upload(multipartFile, "/"));
     }
