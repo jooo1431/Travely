@@ -22,7 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OwnerController {
 
-    final private OwnerService ownerService;
+    private final OwnerService ownerService;
 
     @ApiOperation(value = "보관 내역 상세 조회", notes = "보관 내역 상세 조회")
     @ApiResponses(value = {

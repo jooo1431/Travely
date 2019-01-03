@@ -50,7 +50,7 @@ public class ReviewController {
             @ApiResponse(code = 500, message = "서버에러")
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<List<ReviewStoreResponseDto>> getMyReview(@ApiIgnore final Authentication authentication) {
         Long userIdx = Long.parseLong((String) authentication.getPrincipal());
 
