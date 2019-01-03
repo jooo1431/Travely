@@ -4,7 +4,6 @@ import com.travely.travely.domain.Reserve;
 import com.travely.travely.domain.Review;
 import com.travely.travely.domain.Store;
 import com.travely.travely.dto.owner.ReserveArchiveInfoResponseDto;
-import com.travely.travely.dto.owner.OwnerArchiveResponseDto;
 import com.travely.travely.dto.owner.ReserveArchiveResponseDto;
 import com.travely.travely.dto.review.ReviewUserImgResponseDto;
 import com.travely.travely.exception.AuthenticationErrorException;
@@ -36,25 +35,6 @@ public class OwnerService {
     final private StateType ARCHIVE = StateType.ARCHIVE;
     final private StateType PICKUP = StateType.PICKUP;
 
-    public List<OwnerArchiveResponseDto> getArchives(final Long userIdx) {
-        final Store store = storeMapper.findStoreByUserIdx(userIdx);
-        final List<Reserve> reserveList = reservationMapper.findReserveByStoreIdxAndStateType(store.getStoreIdx(), ARCHIVE);
-
-        if (reserveList == null) throw new NotFoundReserveException();
-
-        List<OwnerArchiveResponseDto> ownerArchiveResponseDtos = reserveList.stream().map(reserve -> new OwnerArchiveResponseDto(reserve)).collect(Collectors.toList());
-        return ownerArchiveResponseDtos;
-    }
-
-    public List<OwnerArchiveResponseDto> getMoreArchives(final Long userIdx, final Long reserveIdx) {
-        final Store store = storeMapper.findStoreByUserIdx(userIdx);
-        final List<Reserve> reserveList = reservationMapper.findMoreReserveByStoreIdxAndStateType(store.getStoreIdx(), ARCHIVE, reserveIdx);
-
-        if (reserveList == null) throw new NotFoundReserveException();
-
-        List<OwnerArchiveResponseDto> ownerArchiveResponseDtos = reserveList.stream().map(reserve -> new OwnerArchiveResponseDto(reserve)).collect(Collectors.toList());
-        return ownerArchiveResponseDtos;
-    }
 
     public ReserveArchiveInfoResponseDto getArchiveByReserveIdx(final Long ownerIdx, final Long reserveIdx) {
         final Reserve reserve = reservationMapper.findReserveByReserveIdx(reserveIdx);

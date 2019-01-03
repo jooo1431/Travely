@@ -3,6 +3,7 @@ package com.travely.travely.dto.owner;
 import com.travely.travely.domain.Reserve;
 import com.travely.travely.dto.baggage.BagDto;
 import com.travely.travely.util.typeHandler.ProgressType;
+import com.travely.travely.util.typeHandler.StateType;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -16,6 +17,7 @@ public class ReserveArchiveResponseDto {
     private Long userIdx;
     private String userImg;
     private String userName;
+    private StateType stateType;
     private ProgressType progressType;
     private Long price;
     private List<BagDto> bagDtos;
@@ -28,6 +30,7 @@ public class ReserveArchiveResponseDto {
         this.userIdx = reserve.getUserIdx();
         this.userImg = reserve.getUsers().getProfileImg();
         this.userName = reserve.getUsers().getName();
+        this.stateType = reserve.getState();
         this.progressType = reserve.getPayment().getProgressType();
         this.price = reserve.getPrice();
         this.bagDtos = reserve.getBaggages().stream().map(baggage -> new BagDto(baggage)).collect(Collectors.toList());
