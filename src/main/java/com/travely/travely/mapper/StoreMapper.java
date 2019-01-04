@@ -52,22 +52,24 @@ public interface StoreMapper {
     })
     Store findStoreByFavoriteUserIdx();
 
-    @Select("SELECT store.* FROM store INNER JOIN review WHERE review.storeIdx = store.storeIdx AND review.userIdx = #{userIdx} ORDER BY reviewIdx DESC LIMIT 5")
+    @Select("SELECT store.*, @temp := #{userIdx} as temp FROM store INNER JOIN review WHERE review.storeIdx = store.storeIdx AND review.userIdx = #{userIdx} ORDER BY review.reviewIdx DESC LIMIT 5")
     @Results(value = {
             @Result(column = "storeIdx", property = "storeIdx"),
+            @Result(column = "userIdx", property = "ownerIdx"),
             @Result(property = "storeImgs", javaType = List.class, column = "storeIdx",
                     many = @Many(select = "com.travely.travely.mapper.StoreImgMapper.findStoreImgsByStoreIdx", fetchType = FetchType.EAGER)),
-            @Result(property = "reviews", javaType = List.class, column = "storeIdx",
+            @Result(property = "reviews", javaType = List.class, column = "{temp=temp, storeIdx=storeIdx}",
                     many = @Many(select = "com.travely.travely.mapper.ReviewMapper.findMyReviewsByStoreIdx", fetchType = FetchType.EAGER))
     })
     List<Store> findMyReviewOfStoreByUserIdx(@Param("userIdx")final Long userIdx);
 
-    @Select("SELECT store.* FROM store INNER JOIN review WHERE review.storeIdx = store.storeIdx AND review.userIdx = #{userIdx} WHERE reviewIdx < #{reviewIdx} ORDER BY reviewIdx DESC LIMIT 5")
+    @Select("SELECT store.*,@temp := #{userIdx} as temp FROM store INNER JOIN review WHERE review.storeIdx = store.storeIdx AND review.userIdx = #{userIdx} AND review.reviewIdx < #{reviewIdx} ORDER BY review.reviewIdx DESC LIMIT 5")
     @Results(value = {
             @Result(column = "storeIdx", property = "storeIdx"),
+            @Result(column = "userIdx", property = "ownerIdx"),
             @Result(property = "storeImgs", javaType = List.class, column = "storeIdx",
                     many = @Many(select = "com.travely.travely.mapper.StoreImgMapper.findStoreImgsByStoreIdx", fetchType = FetchType.EAGER)),
-            @Result(property = "reviews", javaType = List.class, column = "storeIdx",
+            @Result(property = "reviews", javaType = List.class, column = "{temp=temp, storeIdx=storeIdx}",
                     many = @Many(select = "com.travely.travely.mapper.ReviewMapper.findMyReviewsByStoreIdx", fetchType = FetchType.EAGER))
     })
     List<Store> findMoreMyReviewOfStoreByUserIdx(@Param("userIdx")final Long userIdx,@Param("reviewIdx")final Long reviewIdx);
