@@ -81,7 +81,6 @@ public class OwnerController {
     @ApiOperation(value = "가게 리뷰 보기", notes = "가게 리뷰 보기")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "가게 리뷰 조회 성공"),
-            @ApiResponse(code = 204, message = "리뷰 없음"),
             @ApiResponse(code = 401, message = "인증 에러"),
             @ApiResponse(code = 500, message = "서버에러")
     })
@@ -99,7 +98,6 @@ public class OwnerController {
     @ApiOperation(value = "가게 리뷰 추가 보기", notes = "가게 리뷰 추가 보기")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "가게 리뷰 추가 조회 성공"),
-            @ApiResponse(code = 204, message = "리뷰 없음"),
             @ApiResponse(code = 401, message = "인증 에러"),
             @ApiResponse(code = 500, message = "서버에러")
     })
