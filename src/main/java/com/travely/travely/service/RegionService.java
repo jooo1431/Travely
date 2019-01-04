@@ -18,4 +18,11 @@ public class RegionService {
         return regionMapper.findAllRegion()
                 .stream().map(region -> new RegionResponseDto(region)).collect(Collectors.toList());
     }
+
+    public List<RegionResponseDto> getAllRegion(Long userIdx) {
+        return regionMapper.findAllRegionByUserIdx(userIdx)
+                .stream().map(region -> new RegionResponseDto(region))
+                .filter(regionResponseDto -> !regionResponseDto.getSimpleStoreResponseDtos().isEmpty())
+                .collect(Collectors.toList());
+    }
 }

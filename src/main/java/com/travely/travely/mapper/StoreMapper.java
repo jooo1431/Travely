@@ -39,6 +39,19 @@ public interface StoreMapper {
     @Select("SELECT * FROM store WHERE userIdx = #{userIdx}")
     Store findStoreByUserIdx(@Param("userIdx") final Long userIdx);
 
+    @Select("SELECT * FROM store natural join favorite WHERE favorite.userIdx = #{temp} and isFavorite = 1 and regionIdx = #{regionIdx}")
+    @Results(value = {
+            @Result(column = "storeIdx", property = "storeIdx"),
+            @Result(column = "userIdx", property = "ownerIdx"),
+            @Result(property = "storeImgs", javaType = List.class, column = "storeIdx",
+                    many = @Many(select = "com.travely.travely.mapper.StoreImgMapper.findStoreImgsByStoreIdx", fetchType = FetchType.EAGER)),
+            @Result(property = "restWeeks", javaType = List.class, column = "storeIdx",
+                    many = @Many(select = "com.travely.travely.mapper.RestWeekMapper.findRestWeeksByStoreIdx", fetchType = FetchType.EAGER)),
+            @Result(property = "users", javaType = Users.class, column = "userIdx",
+                    one = @One(select = "com.travely.travely.mapper.UserMapper.findUserByUserIdx", fetchType = FetchType.EAGER))
+    })
+    Store findStoreByFavoriteUserIdx();
+
 
 }
 

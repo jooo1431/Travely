@@ -36,10 +36,11 @@ public class InquiryController {
             @ApiResponse(code = 500, message = "서버에러")})
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PostMapping("")
-    public ResponseEntity saveInquiry(@ApiIgnore Authentication authentication,
+    public ResponseEntity<Void> saveInquiry(@ApiIgnore Authentication authentication,
                                       @RequestBody final InquiryDto inquiryDto) {
         Long userIdx = Long.parseLong((String) authentication.getPrincipal());
-        return new ResponseEntity<>(inquiryService.saveInquiry(userIdx, inquiryDto));
+        inquiryService.saveInquiry(userIdx,inquiryDto);
+        return ResponseEntity.ok().build();
     }
 
 

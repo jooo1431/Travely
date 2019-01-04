@@ -44,7 +44,7 @@ public class ReservationController {
         Long userIdx = Long.parseLong((String) authentication.getPrincipal());
 
         ReserveResponseDto reserveResponseDto = reservationService.saveReservation(userIdx, reserveRequestDto);
-
+        reserveRequestDto.getBagDtos().forEach(bagDto -> log.info(bagDto.getBagCount()+"@@@@@@@@"));
         return ResponseEntity.status(HttpStatus.CREATED).body(reserveResponseDto);
     }
 
