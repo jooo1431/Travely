@@ -28,4 +28,7 @@ public interface UserMapper {
     })
     Users findUserByUserIdx(@Param("userIdx") final Long userIdx);
 
+    @Select("SELECT * FROM users WHERE userIdx = #{userIdx}")
+    Users findUserByUserIdxFromReview(@Param("userIdx") final Long userIdx);
+
 }

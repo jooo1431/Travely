@@ -32,12 +32,12 @@ public interface ReviewMapper {
 
     @Insert("INSERT INTO review VALUES (NULL,#{review.storeIdx},#{review.userIdx},#{review.content},#{review.liked}, NOW()) " +
             "ON DUPLICATE KEY UPDATE content = #{review.content}, liked = #{review.liked}, createAt = NOW()")
-    @SelectKey(resultType = Timestamp.class,
+    @SelectKey(resultType = Long.class,
             before = false,
-            keyColumn = "createAt",
-            keyProperty = "review.createAt",
-            statement = "SELECT createAt FROM review WHERE storeIdx=#{review.storeIdx} AND userIdx = #{review.userIdx}")
-    @Options(useGeneratedKeys = true, keyColumn = "review.reviewIdx", keyProperty = "review.reviewIdx")
+            keyColumn = "reviewIdx",
+            keyProperty = "review.reviewIdx",
+            statement = "SELECT reviewIdx FROM review WHERE storeIdx=#{review.storeIdx} AND userIdx = #{review.userIdx}")
+    @Options(useGeneratedKeys = true, keyColumn = "review.reviewIdx", keyProperty = "reviewIdx")
     void saveReview(@Param("review") final Review review);
 
     @Select("SELECT r.reviewIdx, r.content,r.liked,r.createAt, si.* FROM review as r LEFT JOIN (SELECT s.*,si.storeImgUrl FROM storeImg as si NATURAL JOIN store as s GROUP BY storeIdx) as si ON r.storeIdx = si.storeIdx WHERE r.userIdx = #{userIdx} ORDER BY r.reviewIdx DESC LIMIT 3")
@@ -60,4 +60,11 @@ public interface ReviewMapper {
     @Select("select * from review where userIdx = #{userIdx}")
     List<Review> findReviewsByUserIdx(@Param("userIdx") final Long userIdx);
 
+
+    @Select("SELECT * FROM review WHERE reviewIdx = #{reviewIdx}")
+    @Results(value = {
+            @Result(property = "users", column = "userIdx", javaType = Long.class,
+            one = @One(select = "com.travely.travely.mapper.UserMapper.findUserByUserIdxFromReview", fetchType = FetchType.EAGER))
+    })
+    Review findReviewByReviewIdx(@Param("reviewIdx")final Long reviewIdx);
 }

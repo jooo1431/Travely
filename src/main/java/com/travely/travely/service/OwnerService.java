@@ -1,5 +1,6 @@
 package com.travely.travely.service;
 
+import com.travely.travely.config.CommonConfig;
 import com.travely.travely.domain.Reserve;
 import com.travely.travely.domain.Review;
 import com.travely.travely.domain.Store;
@@ -54,7 +55,7 @@ public class OwnerService {
         if (reserve == null) throw new NotFoundReserveException();
         if (reserve.getStore().getOwnerIdx() != ownerIdx) throw new AuthenticationErrorException();
 
-        if (reserve.getState() == RESERVED && reserve.getState() == PAYED)
+        if (reserve.getState() == RESERVED || reserve.getState() == PAYED)
             reservationMapper.updateReservation(reserve.getReserveIdx(), ARCHIVE);
         else if (reserve.getState() == ARCHIVE)
             reservationMapper.updateReservation(reserve.getReserveIdx(), PICKUP);
@@ -64,7 +65,7 @@ public class OwnerService {
         Store store = storeMapper.findStoreByUserIdx(ownerIdx);
         List<Review> reviewList = reviewMapper.findReviewsByStoreIdx(store.getStoreIdx());
 
-        if (reviewList == null) throw new NotFoundReviewException();
+        reviewList = CommonConfig.getCheckedList(reviewList);
 
         List<ReviewUserImgResponseDto> reviewUserImgResponseDtos = reviewList.stream().map(review -> new ReviewUserImgResponseDto(review)).collect(Collectors.toList());
         return reviewUserImgResponseDtos;
@@ -73,8 +74,7 @@ public class OwnerService {
     public List<ReviewUserImgResponseDto> getMoreReviews(final Long ownerIdx, final Long reviewIdx) {
         Store store = storeMapper.findStoreByUserIdx(ownerIdx);
         List<Review> reviewList = reviewMapper.findMoreReviewsByStoreIdx(store.getStoreIdx(), reviewIdx);
-
-        if (reviewList == null) throw new NotFoundReviewException();
+        reviewList = CommonConfig.getCheckedList(reviewList);
 
         List<ReviewUserImgResponseDto> reviewUserImgResponseDtos = reviewList.stream().map(review -> new ReviewUserImgResponseDto(review)).collect(Collectors.toList());
         return reviewUserImgResponseDtos;

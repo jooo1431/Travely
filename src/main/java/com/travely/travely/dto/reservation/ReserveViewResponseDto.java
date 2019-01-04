@@ -44,14 +44,19 @@ public class ReserveViewResponseDto {
         return CommonConfig.getCheckedList(bagImgDtos);
     }
 
+    public Long getTimeFromTimestamp(Timestamp timestamp){
+        if(timestamp == null) return new Timestamp(0).getTime();
+        return timestamp.getTime();
+    }
+
     @Builder
     public ReserveViewResponseDto(final Reserve reserve, final StoreDto storeDto, final Long priceIdx, final Long priceUnit, final Long extraCharge, final Long extraChargeCount) {
         this.stateType = reserve.getState();
         this.reserveCode = reserve.getReserveCode();
         this.startTime = reserve.getStartTime().getTime();
         this.endTime = reserve.getEndTime().getTime();
-        this.depositTime = reserve.getDepositTime().getTime();
-        this.takeTime = reserve.getTakeTime().getTime();
+        this.depositTime = getTimeFromTimestamp(reserve.getDepositTime());
+        this.takeTime = getTimeFromTimestamp(reserve.getTakeTime());
         this.bagDtos = reserve.getBaggages().stream()
                 .map(baggage -> new BagDto(baggage)).collect(Collectors.toList());
         this.price = reserve.getPrice();
