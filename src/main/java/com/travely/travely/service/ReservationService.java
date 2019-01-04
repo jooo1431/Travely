@@ -4,10 +4,7 @@ import com.travely.travely.domain.Payment;
 import com.travely.travely.domain.Price;
 import com.travely.travely.domain.Reserve;
 import com.travely.travely.domain.Store;
-import com.travely.travely.dto.reservation.PriceResponseDto;
-import com.travely.travely.dto.reservation.ReserveRequestDto;
-import com.travely.travely.dto.reservation.ReserveResponseDto;
-import com.travely.travely.dto.reservation.ReserveViewResponseDto;
+import com.travely.travely.dto.reservation.*;
 import com.travely.travely.dto.store.StoreDto;
 import com.travely.travely.exception.NotFoundReserveException;
 import com.travely.travely.mapper.PriceMapper;
@@ -204,4 +201,7 @@ public class ReservationService {
         return price;
     }
 
+    public ReserveFlagDto getReserveFlagDto(Long userIdx) {
+        return new ReserveFlagDto(reservationMapper.findReserveByUserIdx(userIdx));
+    }
 }
