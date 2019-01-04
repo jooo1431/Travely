@@ -3,7 +3,9 @@ package com.travely.travely.web;
 import com.travely.travely.dto.owner.AllReserveResponseDto;
 import com.travely.travely.dto.owner.ReserveArchiveInfoResponseDto;
 import com.travely.travely.dto.owner.ReserveArchiveResponseDto;
+import com.travely.travely.dto.review.ReviewStoreGradeResponseDto;
 import com.travely.travely.dto.review.ReviewUserImgResponseDto;
+import com.travely.travely.dto.store.StoreGradeReview;
 import com.travely.travely.service.OwnerService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
@@ -47,10 +49,11 @@ public class OwnerController {
             "  \"overTime\": 짐을 찾아가야 하는시간이 현재시간보다 초과했을 경우 0보다 큰 getTime값이 출력됩니다. 아닐경우에는 0이 출력됩니다. Long")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "보관내역 상세 조회 성공"),
-            @ApiResponse(code = 401, message = "인증 에러"),
+            @ApiResponse(code = 403, message = "인증 에러"),
             @ApiResponse(code = 500, message = "서버에러")
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/reserve/{reserveIdx}")
     public ResponseEntity<ReserveArchiveInfoResponseDto> getArchiveByReserveIdx(@ApiIgnore Authentication authentication, @PathVariable final Long reserveIdx) {
 
@@ -68,6 +71,7 @@ public class OwnerController {
             @ApiResponse(code = 500, message = "서버에러")
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/reserve/{reserveIdx}")
     public ResponseEntity<Void> updateReserveToPickUp(@ApiIgnore Authentication authentication, @PathVariable final Long reserveIdx) {
 
@@ -81,27 +85,31 @@ public class OwnerController {
     @ApiOperation(value = "가게 리뷰 보기", notes = "가게 리뷰 보기")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "가게 리뷰 조회 성공"),
-            @ApiResponse(code = 401, message = "인증 에러"),
+            @ApiResponse(code = 403, message = "인증 에러"),
             @ApiResponse(code = 500, message = "서버에러")
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/review")
-    public ResponseEntity<List<ReviewUserImgResponseDto>> getRiviews(@ApiIgnore Authentication authentication) {
+    public ResponseEntity<ReviewStoreGradeResponseDto> getRiviews(@ApiIgnore Authentication authentication) {
 
         Long ownerIdx = Long.parseLong((String) authentication.getPrincipal());
 
         List<ReviewUserImgResponseDto> reviewUserImgResponseDtos = ownerService.getReviews(ownerIdx);
+        StoreGradeReview storeGradeReview = ownerService.getStoreTotalReviewCountAndGrade(ownerIdx);
 
-        return ResponseEntity.ok().body(reviewUserImgResponseDtos);
+
+        return ResponseEntity.ok().body(new ReviewStoreGradeResponseDto(reviewUserImgResponseDtos,storeGradeReview));
     }
 
     @ApiOperation(value = "가게 리뷰 추가 보기", notes = "가게 리뷰 추가 보기")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "가게 리뷰 추가 조회 성공"),
-            @ApiResponse(code = 401, message = "인증 에러"),
+            @ApiResponse(code = 403, message = "인증 에러"),
             @ApiResponse(code = 500, message = "서버에러")
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/review/{reviewIdx}")
     public ResponseEntity<List<ReviewUserImgResponseDto>> getMoreRiviews(@ApiIgnore Authentication authentication, @PathVariable Long reviewIdx) {
 
@@ -115,15 +123,13 @@ public class OwnerController {
     @ApiOperation(value = "가게 예약 보관 목록 조회", notes = "가게 예약 보관 목록 조회")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "가게 예약 보관 목록 조회"),
-            @ApiResponse(code = 204, message = "예약 및 보관내역 없음"),
-            @ApiResponse(code = 401, message = "인증 에러"),
+            @ApiResponse(code = 403, message = "인증 에러"),
             @ApiResponse(code = 500, message = "서버에러")
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/reserve")
     public ResponseEntity<AllReserveResponseDto> getAllReserveArchive(@ApiIgnore Authentication authentication) {
-
         Long ownerIdx = Long.parseLong((String) authentication.getPrincipal());
 
         List<ReserveArchiveResponseDto> reserveResponseDtos = ownerService.getReserved(ownerIdx);
@@ -138,10 +144,11 @@ public class OwnerController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "예약코드 조회 성공"),
             @ApiResponse(code = 400, message = "예약 및 보관내역 없음"),
-            @ApiResponse(code = 401, message = "인증 에러"),
+            @ApiResponse(code = 403, message = "인증 에러"),
             @ApiResponse(code = 500, message = "서버에러")
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/reserve/{storeIdx}/{reserveCode}")
     public ResponseEntity<ReserveArchiveInfoResponseDto> readReserveCode(@ApiIgnore Authentication authentication, @PathVariable final Long storeIdx, @PathVariable final String reserveCode) {
 

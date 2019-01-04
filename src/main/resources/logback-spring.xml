@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+    <property name="LOG_PARENT_PATH" value="../log"/>
+    <property name="LOG_CHILD_INFO" value="info"/>
+    <property name="LOG_CHILD_WARN" value="warn"/>
+    <property name="LOG_CHILD_ERROR" value="error"/>
+    <property name="LOG_CHILD_BACKUP" value="backup"/>
+    <property name="MAX_HISTORY" value="30"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread] %-5level %logger{35} : %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <timestamp key="byDate" datePattern="yyyyMMdd"/>
+    <appender name="FILE-INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PARENT_PATH}/${LOG_CHILD_INFO}/info-${byDate}.log</file>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread] %yellow%-5level %logger{35} : %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOGS_PATH}/${LOG_CHILD_BACKUP}/info-%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <timestamp key="byDate" datePattern="yyyyMMdd"/>
+    <appender name="FILE-WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PARENT_PATH}/${LOG_CHILD_WARN}/warn-${byDate}.log</file>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread] %-5level %logger{35} : %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOGS_PATH}/${LOG_CHILD_BACKUP}/warn-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <timestamp key="byDate" datePattern="yyyyMMdd"/>
+    <appender name="FILE-ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PARENT_PATH}/${LOG_CHILD_ERROR}/error-${byDate}.log</file>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread] %-5level %logger{35} : %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PARENT_PATH}/${LOG_CHILD_BACKUP}/error-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <logger name="com.travely.travely" level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE-INFO"/>
+        <appender-ref ref="FILE-WARN"/>
+        <appender-ref ref="FILE-ERROR"/>
+    </logger>
+
+</configuration>
+
+

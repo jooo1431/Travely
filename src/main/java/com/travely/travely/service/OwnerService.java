@@ -8,9 +8,9 @@ import com.travely.travely.dto.owner.AllReserveResponseDto;
 import com.travely.travely.dto.owner.ReserveArchiveInfoResponseDto;
 import com.travely.travely.dto.owner.ReserveArchiveResponseDto;
 import com.travely.travely.dto.review.ReviewUserImgResponseDto;
+import com.travely.travely.dto.store.StoreGradeReview;
 import com.travely.travely.exception.AuthenticationErrorException;
 import com.travely.travely.exception.NotFoundReserveException;
-import com.travely.travely.exception.NotFoundReviewException;
 import com.travely.travely.exception.NotFoundStoringException;
 import com.travely.travely.mapper.ReservationMapper;
 import com.travely.travely.mapper.ReviewMapper;
@@ -39,6 +39,11 @@ public class OwnerService {
     final private StateType PICKUP = StateType.PICKUP;
 
 
+    public StoreGradeReview getStoreTotalReviewCountAndGrade(final Long ownerIdx){
+        Store store = storeMapper.findStoreByOwnerIdx(ownerIdx);
+       return new StoreGradeReview(store);
+    }
+
     public ReserveArchiveInfoResponseDto getArchiveByReserveIdx(final Long ownerIdx, final Long reserveIdx) {
         final Reserve reserve = reservationMapper.findReserveByReserveIdx(reserveIdx);
 
@@ -62,9 +67,7 @@ public class OwnerService {
     }
 
     public List<ReviewUserImgResponseDto> getReviews(final Long ownerIdx) {
-        Store store = storeMapper.findStoreByUserIdx(ownerIdx);
-        List<Review> reviewList = reviewMapper.findReviewsByStoreIdx(store.getStoreIdx());
-
+        List<Review> reviewList = reviewMapper.findReviewsByOwnerIdx(ownerIdx);
         reviewList = CommonConfig.getCheckedList(reviewList);
 
         List<ReviewUserImgResponseDto> reviewUserImgResponseDtos = reviewList.stream().map(review -> new ReviewUserImgResponseDto(review)).collect(Collectors.toList());
@@ -72,8 +75,7 @@ public class OwnerService {
     }
 
     public List<ReviewUserImgResponseDto> getMoreReviews(final Long ownerIdx, final Long reviewIdx) {
-        Store store = storeMapper.findStoreByUserIdx(ownerIdx);
-        List<Review> reviewList = reviewMapper.findMoreReviewsByStoreIdx(store.getStoreIdx(), reviewIdx);
+        List<Review> reviewList = reviewMapper.findMoreReviewsByOwnerIdx(ownerIdx,reviewIdx);
         reviewList = CommonConfig.getCheckedList(reviewList);
 
         List<ReviewUserImgResponseDto> reviewUserImgResponseDtos = reviewList.stream().map(review -> new ReviewUserImgResponseDto(review)).collect(Collectors.toList());
@@ -81,21 +83,13 @@ public class OwnerService {
     }
 
     public List<ReserveArchiveResponseDto> getReserved(final Long ownerIdx) {
-        Store store = storeMapper.findStoreByUserIdx(ownerIdx);
-        List<Reserve> reserveList = reservationMapper.findReserveByStoreIdx(store.getStoreIdx());
-
-        if (reserveList == null) throw new NotFoundReserveException();
-
-        List<ReserveArchiveResponseDto> reserveResponseDtos = reserveList.stream().map(reserve -> new ReserveArchiveResponseDto(reserve)).collect(Collectors.toList());
-        return reserveResponseDtos;
+        List<Reserve> reserveList = CommonConfig.getCheckedList(reservationMapper.findUnderArvhiceReserveByOwnerIdx(ownerIdx));
+        return reserveList.stream().map(reserve -> new ReserveArchiveResponseDto(reserve)).collect(Collectors.toList());
     }
 
     public List<ReserveArchiveResponseDto> getStoring(final Long ownerIdx) {
-        Store store = storeMapper.findStoreByUserIdx(ownerIdx);
-        List<Reserve> storingList = reservationMapper.findStoreByStoreIdx(store.getStoreIdx());
-        if (storingList == null) throw new NotFoundStoringException();
-        List<ReserveArchiveResponseDto> storingResponseDtos = storingList.stream().map(reserve -> new ReserveArchiveResponseDto(reserve)).collect(Collectors.toList());
-        return storingResponseDtos;
+        List<Reserve> storingList = CommonConfig.getCheckedList(reservationMapper.findArchiveReserveByOwnerIdx(ownerIdx));
+        return storingList.stream().map(reserve -> new ReserveArchiveResponseDto(reserve)).collect(Collectors.toList());
     }
 
     @Transactional
