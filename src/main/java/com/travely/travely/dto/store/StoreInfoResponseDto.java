@@ -41,6 +41,6 @@ public class StoreInfoResponseDto {
         } else {
             this.storeImage = storeImg.getStoreImgUrl();
         }
-        log.info(new Timestamp(1546942800000L)+"@@@@@@@@@@@@@@@@");
+
     }
 }

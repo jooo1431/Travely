@@ -83,7 +83,7 @@ public class OwnerService {
     public List<ReserveArchiveResponseDto> getReserved(final Long ownerIdx) {
         Store store = storeMapper.findStoreByUserIdx(ownerIdx);
         List<Reserve> reserveList = reservationMapper.findReserveByStoreIdx(store.getStoreIdx());
-        List<Reserve> storingList = reservationMapper.findStoreByStoreIdx(store.getStoreIdx());
+
         if (reserveList == null) throw new NotFoundReserveException();
 
         List<ReserveArchiveResponseDto> reserveResponseDtos = reserveList.stream().map(reserve -> new ReserveArchiveResponseDto(reserve)).collect(Collectors.toList());
