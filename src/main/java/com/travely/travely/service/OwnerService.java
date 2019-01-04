@@ -7,7 +7,10 @@ import com.travely.travely.dto.owner.AllReserveResponseDto;
 import com.travely.travely.dto.owner.ReserveArchiveInfoResponseDto;
 import com.travely.travely.dto.owner.ReserveArchiveResponseDto;
 import com.travely.travely.dto.review.ReviewUserImgResponseDto;
-import com.travely.travely.exception.*;
+import com.travely.travely.exception.AuthenticationErrorException;
+import com.travely.travely.exception.NotFoundReserveException;
+import com.travely.travely.exception.NotFoundReviewException;
+import com.travely.travely.exception.NotFoundStoringException;
 import com.travely.travely.mapper.ReservationMapper;
 import com.travely.travely.mapper.ReviewMapper;
 import com.travely.travely.mapper.StoreMapper;
@@ -77,35 +80,35 @@ public class OwnerService {
         return reviewUserImgResponseDtos;
     }
 
-    public List<ReserveArchiveResponseDto> getReserved(final Long ownerIdx){
+    public List<ReserveArchiveResponseDto> getReserved(final Long ownerIdx) {
         Store store = storeMapper.findStoreByUserIdx(ownerIdx);
         List<Reserve> reserveList = reservationMapper.findReserveByStoreIdx(store.getStoreIdx());
         List<Reserve> storingList = reservationMapper.findStoreByStoreIdx(store.getStoreIdx());
-        if(reserveList ==null) throw new NotFoundReserveException();
+        if (reserveList == null) throw new NotFoundReserveException();
 
         List<ReserveArchiveResponseDto> reserveResponseDtos = reserveList.stream().map(reserve -> new ReserveArchiveResponseDto(reserve)).collect(Collectors.toList());
         return reserveResponseDtos;
     }
 
-    public List<ReserveArchiveResponseDto> getStoring(final Long ownerIdx){
+    public List<ReserveArchiveResponseDto> getStoring(final Long ownerIdx) {
         Store store = storeMapper.findStoreByUserIdx(ownerIdx);
         List<Reserve> storingList = reservationMapper.findStoreByStoreIdx(store.getStoreIdx());
-        if(storingList ==null) throw new NotFoundStoringException();
+        if (storingList == null) throw new NotFoundStoringException();
         List<ReserveArchiveResponseDto> storingResponseDtos = storingList.stream().map(reserve -> new ReserveArchiveResponseDto(reserve)).collect(Collectors.toList());
         return storingResponseDtos;
     }
 
     @Transactional
-    public AllReserveResponseDto getReservedAndStoring(List<ReserveArchiveResponseDto> reserveResponseDtos, List<ReserveArchiveResponseDto> storingResponseDtos){
+    public AllReserveResponseDto getReservedAndStoring(List<ReserveArchiveResponseDto> reserveResponseDtos, List<ReserveArchiveResponseDto> storingResponseDtos) {
         AllReserveResponseDto allReserveResponseDto = new AllReserveResponseDto(reserveResponseDtos, storingResponseDtos);
 
         return allReserveResponseDto;
     }
 
-    public ReserveArchiveInfoResponseDto readReserveCode(final Long ownerIdx, final String reserveCode){
-        Reserve reserve = reservationMapper.findReserveByReserveCode(reserveCode);
-        if(reserve == null) throw new NotFoundReserveException();
-        if(ownerIdx != reserve.getStore().getOwnerIdx()) throw new AuthenticationErrorException();
+    public ReserveArchiveInfoResponseDto readReserveCode(final Long ownerIdx, final Long storeIdx, final String reserveCode) {
+        Reserve reserve = reservationMapper.findReserveByReserveCode(reserveCode, storeIdx);
+        if (reserve == null) throw new NotFoundReserveException();
+        if (ownerIdx != reserve.getStore().getOwnerIdx()) throw new AuthenticationErrorException();
         ReserveArchiveInfoResponseDto reserveArchiveInfoResponseDto = new ReserveArchiveInfoResponseDto(reserve);
         return reserveArchiveInfoResponseDto;
     }

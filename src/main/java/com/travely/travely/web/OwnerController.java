@@ -24,7 +24,26 @@ public class OwnerController {
 
     private final OwnerService ownerService;
 
-    @ApiOperation(value = "보관 내역 상세 조회", notes = "보관 내역 상세 조회")
+    @ApiOperation(value = "보관 내역 상세 조회", notes = "  \"reserveIdx\": 예약 고유번호입니다.Long\n" +
+            "  \"userIdx\": 사용자 고유번호입니다. Long\n" +
+            "  \"userImgUrl\": \"사용자 프로필 경로 입니다. String\",\n" +
+            "  \"userName\": \"사용자의 이름입니다. String\",\n" +
+            "  \"userPhone\": \"000-0000-0000 형식의 사용자 전화번호 입니다. String\",\n" +
+            "  \"payType\": \"CASH,CARD 와 같은 Enum타입의 결제방식입니다. String\",\n" +
+            "  \"bagDtoList\": [\n" +
+            "    {\n" +
+            "      \"bagType\": \"CARRIER,ETC 로 Enum타입의 짐의 종류를 나타냅니다. String\",\n" +
+            "      \"bagCount\": 가방 갯수입니다. Long\n" +
+            "    }\n" +
+            "  ],\n" +
+            "  \"startTime\": getTime한 밀리세컨드 값입니다. Long 이하 시간값은 전부 동일합니다.\n" +
+            "  \"depositTime\": \n" +
+            "  \"endTime\": \n" +
+            "  \"takeTime\": \n" +
+            "  \"progressType\": \"ING,DONE,CANCEL 결제 상태를 나타내는 Enum 타입입니다. String\",\n" +
+            "  \"price\": 총 가격을 나타냅니다. Long\n" +
+            "  \"bagImgDtos\": [bagImgUrl :가방의 이미지 주소가 들어가는 배열입니다.] String\n" +
+            "  \"overTime\": 짐을 찾아가야 하는시간이 현재시간보다 초과했을 경우 0보다 큰 getTime값이 출력됩니다. 아닐경우에는 0이 출력됩니다. Long")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "보관내역 상세 조회 성공"),
             @ApiResponse(code = 401, message = "인증 에러"),
@@ -123,12 +142,12 @@ public class OwnerController {
             @ApiResponse(code = 500, message = "서버에러")
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @GetMapping("/reserve/{reserveCode}")
-    public ResponseEntity<ReserveArchiveInfoResponseDto> readReserveCode(@ApiIgnore Authentication authentication, @PathVariable String reserveCode) {
+    @GetMapping("/reserve/{storeIdx}/{reserveCode}")
+    public ResponseEntity<ReserveArchiveInfoResponseDto> readReserveCode(@ApiIgnore Authentication authentication, @PathVariable final Long storeIdx, @PathVariable final String reserveCode) {
 
         Long ownerIdx = Long.parseLong((String) authentication.getPrincipal());
 
-        ReserveArchiveInfoResponseDto reserveArchiveInfoResponseDto = ownerService.readReserveCode(ownerIdx, reserveCode);
+        ReserveArchiveInfoResponseDto reserveArchiveInfoResponseDto = ownerService.readReserveCode(ownerIdx, storeIdx, reserveCode);
 
         return ResponseEntity.ok(reserveArchiveInfoResponseDto);
     }

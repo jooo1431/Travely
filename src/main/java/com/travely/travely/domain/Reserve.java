@@ -2,6 +2,9 @@ package com.travely.travely.domain;
 
 import com.travely.travely.config.CommonConfig;
 import com.travely.travely.exception.AlreadyExistsReserveException;
+import com.travely.travely.exception.NotFoundPaymentException;
+import com.travely.travely.exception.NotFoundStoreException;
+import com.travely.travely.exception.NotFoundUserException;
 import com.travely.travely.util.typeHandler.StateType;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -50,6 +53,16 @@ public class Reserve {
         this.payment = payment;
     }
 
+    public Timestamp getDepositTime() {
+        if (depositTime == null) return new Timestamp(0);
+        return depositTime;
+    }
+
+    public Timestamp getTakeTime() {
+        if (takeTime == null) return new Timestamp(0);
+        return takeTime;
+    }
+
     public List<Baggage> getBaggages() {
         return CommonConfig.getCheckedList(baggages);
     }
@@ -59,17 +72,17 @@ public class Reserve {
     }
 
     public Payment getPayment() {
-        if (payment == null) throw new RuntimeException();
+        if (payment == null) throw new NotFoundPaymentException();
         return payment;
     }
 
     public Store getStore() {
-        if (store == null) throw new RuntimeException();
+        if (store == null) throw new NotFoundStoreException();
         return store;
     }
 
     public Users getUsers() {
-        if (this.users == null) throw new RuntimeException();
+        if (this.users == null) throw new NotFoundUserException();
         return this.users;
     }
 

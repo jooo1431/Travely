@@ -72,4 +72,14 @@ public class ReserveExceptionControllerAdvice {
                         .message(exception.getMessage())
                         .build());
     }
+
+    @ExceptionHandler(NotFoundPaymentException.class)
+    public ResponseEntity<ExceptionResponseDto> notFoundPayment(NotFoundPaymentException exception) {
+        log.info("[NotFoundPaymentException]  {}", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ExceptionResponseDto.builder()
+                        .field(FIELD)
+                        .message(exception.getMessage())
+                        .build());
+    }
 }

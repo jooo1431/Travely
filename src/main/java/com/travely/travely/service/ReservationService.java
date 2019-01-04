@@ -20,6 +20,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -136,7 +139,12 @@ public class ReservationService {
         reservationMapper.updatePayment(reserve.getReserveIdx(), cancelProgress);
     }
 
-    public List<PriceResponseDto> getPrices() {
+    @Transactional
+    public void cancelReservation() {
+        reservationMapper.deleteReservationAndPayment(StateType.CANCEL,ProgressType.CANCEL);
+    }
+
+    public List<PriceResponseDto> getPrices(){
         return priceMapper.getAllPrice()
                 .stream()
                 .map(price -> new PriceResponseDto(price))
@@ -146,10 +154,10 @@ public class ReservationService {
     //reserveCode로 예약정보 + 보관정보를 보자
     public ReserveViewResponseDto getReserveMyInfo(final Long reserveIdx) {
         final Reserve reserve = reservationMapper.findReserveByReserveIdx(reserveIdx);
-        final Store store = reserve.getStore();
         //예약내역이 없으면?
         if (reserve == null) throw new NotFoundReserveException();
 
+        final Store store = reserve.getStore();
         final StoreDto storeDto = StoreDto.builder()
                 .store(store)
                 .build();

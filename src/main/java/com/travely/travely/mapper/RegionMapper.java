@@ -17,4 +17,12 @@ public interface RegionMapper {
     })
     List<Region> findAllRegion();
 
+    @Select("select *,@temp := #{userIdx} as temp from region")
+    @Results(value = {
+            @Result(property = "regionIdx", column = "regionIdx"),
+            @Result(property = "stores", javaType = List.class, column = "{temp=temp,regionIdx=regionIdx}",
+                    many = @Many(select = "com.travely.travely.mapper.StoreMapper.findStoreByFavoriteUserIdx", fetchType = FetchType.LAZY))
+    })
+    List<Region> findAllRegionByUserIdx(@Param("userIdx") Long userIdx);
+
 }

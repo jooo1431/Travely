@@ -1,8 +1,13 @@
 package com.travely.travely.dto.store;
 
 import com.travely.travely.domain.Store;
+import com.travely.travely.domain.StoreImg;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
+import java.sql.Timestamp;
+
+@Slf4j
 @Getter
 public class StoreInfoResponseDto {
     private Long storeIdx;
@@ -16,6 +21,7 @@ public class StoreInfoResponseDto {
     private Double latitude;
     private Double longitude;
     private Long limit;
+    private String storeImage;
 
     public StoreInfoResponseDto(Store store) {
         this.storeIdx = store.getStoreIdx();
@@ -29,5 +35,12 @@ public class StoreInfoResponseDto {
         this.latitude = store.getLatitude();
         this.longitude = store.getLongitude();
         this.limit = store.getLimit();
+        StoreImg storeImg = store.getStoreImgs().stream().findFirst().orElse(null);
+        if (storeImg == null) {
+            this.storeImage = "";
+        } else {
+            this.storeImage = storeImg.getStoreImgUrl();
+        }
+        log.info(new Timestamp(1546942800000L)+"@@@@@@@@@@@@@@@@");
     }
 }

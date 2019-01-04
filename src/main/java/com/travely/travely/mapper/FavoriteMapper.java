@@ -17,5 +17,5 @@ public interface FavoriteMapper {
     Favorite findByFavorite(@Param("favorite") Favorite favorite);
 
     @Select("select * from favorite where userIdx=#{userIdx}")
-    List<Favorite> findFavoriteByUserIdx(@Param("userIdx") Long userIdx);
+    Favorite findFavoriteByUserIdx(@Param("userIdx") Long userIdx);
 }

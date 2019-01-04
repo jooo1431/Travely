@@ -4,6 +4,7 @@ import com.travely.travely.domain.Payment;
 import com.travely.travely.domain.Reserve;
 import com.travely.travely.domain.Store;
 import com.travely.travely.dto.baggage.BagDto;
+import com.travely.travely.util.typeHandler.PayType;
 import com.travely.travely.util.typeHandler.ProgressType;
 import com.travely.travely.util.typeHandler.StateType;
 import org.apache.ibatis.annotations.*;
@@ -140,6 +141,11 @@ public interface ReservationMapper {
     @Update("UPDATE reserve SET state = #{state} WHERE reserveIdx = #{reserveIdx}")
     void updateReservation(@Param("reserveIdx") final long reserveIdx, @Param("state") final StateType stateType);
 
+    @Update("UPDATE reserve A natural JOIN payment B\n" +
+            "SET A.state = #{reserve_cancle}, B.progressType = #{pay_cancle}\n" +
+            "where A.startTime <= utc_timestamp() and B.progressType = 0")
+    void deleteReservationAndPayment(@Param("reserve_cancle") final StateType stateType, @Param("pay_cancle") final ProgressType progressType);
+
     //결제 목록 취소 처리
     @Update("UPDATE payment SET progressType = #{progress} WHERE reserveIdx = #{reserveIdx}")
     void updatePayment(@Param("reserveIdx") final long reserveIdx, @Param("progress") final ProgressType progressType);
@@ -149,7 +155,7 @@ public interface ReservationMapper {
 
     //예약 조회용 쿼리
     ///////////////////////////////////////////
-    @Select("SELECT * FROM reserve WHERE reserveCode = #{reserveCode} AND state < 3")
+    @Select("SELECT * FROM reserve WHERE reserveCode = #{reserveCode} AND storeIdx = #{storeIdx} AND state < 3")
     @Results(value = {
             @Result(property = "reserveIdx", javaType = Long.class, column = "reserveIdx"),
             @Result(property = "storeIdx", javaType = Long.class, column = "storeIdx"),
@@ -165,7 +171,7 @@ public interface ReservationMapper {
             @Result(property = "users", javaType = Store.class, column = "userIdx",
                     one = @One(select = "com.travely.travely.mapper.UserMapper.findUserByUserIdx", fetchType = FetchType.LAZY))
     })
-    Reserve findReserveByReserveCode(@Param("reserveCode") final String reserveCode);
+    Reserve findReserveByReserveCode(@Param("reserveCode") final String reserveCode, @Param("storeIdx") final Long storeIdx);
 
 
     //특정 상태의 예약 목록만 가져오기 limit개수만
