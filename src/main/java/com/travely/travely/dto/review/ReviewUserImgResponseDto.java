@@ -1,7 +1,9 @@
 package com.travely.travely.dto.review;
 
 import com.travely.travely.domain.Review;
+import lombok.Getter;
 
+@Getter
 public class ReviewUserImgResponseDto {
     private Long reviewIdx;
     private Long storeIdx;

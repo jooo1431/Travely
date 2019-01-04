@@ -1,5 +1,6 @@
 package com.travely.travely.service;
 
+import com.travely.travely.config.CommonConfig;
 import com.travely.travely.domain.Review;
 import com.travely.travely.domain.Store;
 import com.travely.travely.dto.review.ReviewRequestDto;
@@ -51,15 +52,14 @@ public class ReviewService {
     public List<ReviewStoreResponseDto>  getMyReviews(final Long userIdx) {
 
         List<Store> storeList = storeMapper.findMyReviewOfStoreByUserIdx(userIdx);
-        log.info("@"+storeList.get(0).getOwnerIdx());
-        if(storeList == null) return new ArrayList<>();
+        storeList = CommonConfig.getCheckedList(storeList);
         List<ReviewStoreResponseDto> reviewStoreResponseDtos = storeList.stream().map(store -> new ReviewStoreResponseDto(store)).collect(Collectors.toList());
         return reviewStoreResponseDtos;
     }
 
     public List<ReviewStoreResponseDto> getMoreMyReviews(final Long userIdx, final Long reviewIdx) {
         List<Store> storeList = storeMapper.findMoreMyReviewOfStoreByUserIdx(userIdx,reviewIdx);
-        if(storeList == null) return new ArrayList<>();
+        storeList = CommonConfig.getCheckedList(storeList);
         List<ReviewStoreResponseDto> reviewStoreResponseDtos = storeList.stream().map(store -> new ReviewStoreResponseDto(store)).collect(Collectors.toList());
         return reviewStoreResponseDtos;
     }
