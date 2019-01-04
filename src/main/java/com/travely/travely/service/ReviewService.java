@@ -39,7 +39,9 @@ public class ReviewService {
 
         reviewMapper.saveReview(review);
 
-        return review;
+        Review savedReview = reviewMapper.findReviewByReviewIdx(review.getReviewIdx());
+
+        return savedReview;
     }
 
     public List<ReviewStoreResponseDto> getMyReviews(final Long userIdx) {
