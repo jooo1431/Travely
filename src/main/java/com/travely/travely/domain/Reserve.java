@@ -2,6 +2,7 @@ package com.travely.travely.domain;
 
 import com.travely.travely.config.CommonConfig;
 import com.travely.travely.exception.AlreadyExistsReserveException;
+import com.travely.travely.exception.NotFoundStoreException;
 import com.travely.travely.util.typeHandler.StateType;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -64,7 +65,7 @@ public class Reserve {
     }
 
     public Store getStore() {
-        if (store == null) throw new RuntimeException();
+        if (store == null) throw new NotFoundStoreException();
         return store;
     }
 

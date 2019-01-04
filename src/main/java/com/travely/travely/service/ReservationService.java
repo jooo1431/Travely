@@ -154,10 +154,10 @@ public class ReservationService {
     //reserveCode로 예약정보 + 보관정보를 보자
     public ReserveViewResponseDto getReserveMyInfo(final Long reserveIdx) {
         final Reserve reserve = reservationMapper.findReserveByReserveIdx(reserveIdx);
-        final Store store = reserve.getStore();
         //예약내역이 없으면?
         if (reserve == null) throw new NotFoundReserveException();
 
+        final Store store = reserve.getStore();
         final StoreDto storeDto = StoreDto.builder()
                 .store(store)
                 .build();
