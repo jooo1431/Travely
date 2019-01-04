@@ -37,8 +37,7 @@ public class Store {
     private List<RestWeek> restWeeks;
     private Users users;
 
-    public List<Review> getReviews() {
-        return CommonConfig.getCheckedList(reviews);
+    public List<Review> getReviews() { return CommonConfig.getCheckedList(reviews);
     }
 
     public List<StoreImg> getStoreImgs() {
