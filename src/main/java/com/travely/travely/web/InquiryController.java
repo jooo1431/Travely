@@ -19,27 +19,17 @@ public class InquiryController {
 
     final InquiryService inquiryService;
 
-    @ApiOperation(value = "문의사항 조회", notes = "문의 사항을 조회한다")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "문의사항 조회 성공"),
-            @ApiResponse(code = 500, message = "서버에러")})
-    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @GetMapping("/{inquiryIdx}")
-    public ResponseEntity<String> findInquiryIdx(@PathVariable final Long inquiryIdx) {
-        return ResponseEntity.ok(inquiryService.findInquiry(inquiryIdx).getCreateAt().toString());
-    }
-
-
     @ApiOperation(value = "문의사항 작성", notes = "문의 사항을 작성한다")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "문의사항 작성 성공"),
             @ApiResponse(code = 500, message = "서버에러")})
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PostMapping("")
-    public ResponseEntity saveInquiry(@ApiIgnore Authentication authentication,
+    public ResponseEntity<Void> saveInquiry(@ApiIgnore Authentication authentication,
                                       @RequestBody final InquiryDto inquiryDto) {
         Long userIdx = Long.parseLong((String) authentication.getPrincipal());
-        return new ResponseEntity<>(inquiryService.saveInquiry(userIdx, inquiryDto));
+        inquiryService.saveInquiry(userIdx, inquiryDto);
+        return ResponseEntity.ok().build();
     }
 
 
