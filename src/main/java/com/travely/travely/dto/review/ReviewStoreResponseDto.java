@@ -1,5 +1,6 @@
 package com.travely.travely.dto.review;
 
+import com.travely.travely.domain.Store;
 import lombok.Getter;
 
 import java.sql.Timestamp;
@@ -25,4 +26,27 @@ public class ReviewStoreResponseDto {
     private long limit;
     //storeImgUrl
     private String storeImgUrl;
+
+    public ReviewStoreResponseDto(Store store) {
+        this.reviewIdx = store.getReviews().get(0).getReviewIdx();
+        this.content = store.getReviews().get(0).getContent();
+        this.liked = store.getReviews().get(0).getLiked();
+        this.createAt = store.getReviews().get(0).getLiked();
+        this.storeIdx = store.getStoreIdx();
+        this.ownerIdx = store.getOwnerIdx();
+        this.storeName = store.getStoreName();
+        this.regionIdx = store.getRegionIdx();
+        this.storeCall = store.getStoreCall();
+        this.storeUrl = store.getStoreUrl();
+        this.address = store.getAddress();
+        this.openTime = store.getOpenTime().getTime();
+        this.closeTime = store.getCloseTime().getTime();
+        this.latitude = store.getLatitude();
+        this.longitude = store.getLongitude();
+        this.limit = store.getLimit();
+        if (store.getStoreImgs().size() == 0)
+            this.storeImgUrl = "";
+        else
+            this.storeImgUrl = store.getStoreImgs().get(0).getStoreImgUrl();
+    }
 }

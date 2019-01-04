@@ -67,4 +67,12 @@ public interface ReviewMapper {
             one = @One(select = "com.travely.travely.mapper.UserMapper.findUserByUserIdxFromReview", fetchType = FetchType.EAGER))
     })
     Review findReviewByReviewIdx(@Param("reviewIdx")final Long reviewIdx);
+
+
+    @Select("SELECT * FROM review WHERE storeIdx = #{storeIdx}")
+    @Results(value = {
+            @Result(property = "users", column = "userIdx", javaType = Long.class,
+                    one = @One(select = "com.travely.travely.mapper.UserMapper.findUserByUserIdxFromReview", fetchType = FetchType.EAGER))
+    })
+    List<Review> findMyReviewsByStoreIdx();
 }

@@ -144,8 +144,8 @@ public class ReservationService {
     }
 
     //reserveCode로 예약정보 + 보관정보를 보자
-    public ReserveViewResponseDto getReserveMyInfo(final Long reserveIdx) {
-        final Reserve reserve = reservationMapper.findReserveByReserveIdx(reserveIdx);
+    public ReserveViewResponseDto getReserveMyInfo(final Long userIdx) {
+        final Reserve reserve = reservationMapper.findReserveByUserIdx(userIdx);
         //예약내역이 없으면?
         if (reserve == null) throw new NotFoundReserveException();
 
