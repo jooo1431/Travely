@@ -58,9 +58,9 @@ public class ReserveRequestDto {
         if (this.startTime > this.endTime) throw new NotCorrectTimeException();
     }
 
-    public void checkCurrentTime(){
+    public void checkCurrentTime() {
         final Long currentTime = new Timestamp(System.currentTimeMillis()).getTime();
-        if(this.startTime-currentTime<0) throw new NotCorrectTimeException();
+        if (this.startTime - currentTime < 0) throw new NotCorrectTimeException();
     }
 
     public Long gainBagsCount() {

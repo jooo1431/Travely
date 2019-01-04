@@ -149,7 +149,7 @@ public interface ReservationMapper {
 
     //예약 조회용 쿼리
     ///////////////////////////////////////////
-    @Select("SELECT * FROM reserve WHERE reserveCode = #{reserveCode} AND state < 3")
+    @Select("SELECT * FROM reserve WHERE reserveCode = #{reserveCode} AND storeIdx = #{storeIdx} AND state < 3")
     @Results(value = {
             @Result(property = "reserveIdx", javaType = Long.class, column = "reserveIdx"),
             @Result(property = "storeIdx", javaType = Long.class, column = "storeIdx"),
@@ -165,7 +165,7 @@ public interface ReservationMapper {
             @Result(property = "users", javaType = Store.class, column = "userIdx",
                     one = @One(select = "com.travely.travely.mapper.UserMapper.findUserByUserIdx", fetchType = FetchType.LAZY))
     })
-    Reserve findReserveByReserveCode(@Param("reserveCode") final String reserveCode);
+    Reserve findReserveByReserveCode(@Param("reserveCode") final String reserveCode, @Param("storeIdx") final Long storeIdx);
 
 
     //특정 상태의 예약 목록만 가져오기 limit개수만

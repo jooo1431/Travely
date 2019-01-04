@@ -123,12 +123,12 @@ public class OwnerController {
             @ApiResponse(code = 500, message = "서버에러")
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @GetMapping("/reserve/{reserveCode}")
-    public ResponseEntity<ReserveArchiveInfoResponseDto> readReserveCode(@ApiIgnore Authentication authentication, @PathVariable String reserveCode) {
+    @GetMapping("/reserve/{storeIdx}/{reserveCode}")
+    public ResponseEntity<ReserveArchiveInfoResponseDto> readReserveCode(@ApiIgnore Authentication authentication, @PathVariable final Long storeIdx, @PathVariable final String reserveCode) {
 
         Long ownerIdx = Long.parseLong((String) authentication.getPrincipal());
 
-        ReserveArchiveInfoResponseDto reserveArchiveInfoResponseDto = ownerService.readReserveCode(ownerIdx, reserveCode);
+        ReserveArchiveInfoResponseDto reserveArchiveInfoResponseDto = ownerService.readReserveCode(ownerIdx, storeIdx, reserveCode);
 
         return ResponseEntity.ok(reserveArchiveInfoResponseDto);
     }

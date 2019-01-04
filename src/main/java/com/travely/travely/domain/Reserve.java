@@ -53,6 +53,16 @@ public class Reserve {
         this.payment = payment;
     }
 
+    public Timestamp getDepositTime() {
+        if (depositTime == null) return new Timestamp(0);
+        return depositTime;
+    }
+
+    public Timestamp getTakeTime() {
+        if (takeTime == null) return new Timestamp(0);
+        return takeTime;
+    }
+
     public List<Baggage> getBaggages() {
         return CommonConfig.getCheckedList(baggages);
     }

@@ -5,10 +5,8 @@ import com.travely.travely.dto.baggage.BagDto;
 import com.travely.travely.dto.baggage.BagImgDto;
 import com.travely.travely.util.typeHandler.PayType;
 import com.travely.travely.util.typeHandler.ProgressType;
-import lombok.Builder;
 import lombok.Getter;
 
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,6 +26,8 @@ public class ReserveArchiveInfoResponseDto {
     private ProgressType progressType;
     private Long price;
     private List<BagImgDto> bagImgDtos;
+    //초과시간
+    private Long overTime;
 
     public ReserveArchiveInfoResponseDto(final Reserve reserve) {
         this.reserveIdx = reserve.getReserveIdx();

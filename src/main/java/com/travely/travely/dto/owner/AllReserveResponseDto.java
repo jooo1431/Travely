@@ -1,6 +1,5 @@
 package com.travely.travely.dto.owner;
 
-import com.travely.travely.dto.owner.ReserveArchiveResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -13,7 +12,7 @@ public class AllReserveResponseDto {
     private List<ReserveArchiveResponseDto> storeResponseDtoList;     //보관목록
 
     @Builder
-    public AllReserveResponseDto(List<ReserveArchiveResponseDto> reserveResponseDtoList, List<ReserveArchiveResponseDto> storeResponseDtoList){
+    public AllReserveResponseDto(List<ReserveArchiveResponseDto> reserveResponseDtoList, List<ReserveArchiveResponseDto> storeResponseDtoList) {
         this.reserveResponseDtoList = reserveResponseDtoList;
         this.storeResponseDtoList = storeResponseDtoList;
     }
