@@ -141,6 +141,9 @@ public interface ReservationMapper {
     @Update("UPDATE reserve SET state = #{state} WHERE reserveIdx = #{reserveIdx}")
     void updateReservation(@Param("reserveIdx") final long reserveIdx, @Param("state") final StateType stateType);
 
+    @Update("UPDATE reserve as r NATURAL JOIN  payment as p SET  r.state = #{state}, p.progressType = #{progress} WHERE reserveIdx = #{reserveIdx}")
+    void deleteReserveAndPaymentByReserveIdx(@Param("reserveIdx") final Long reserveIdx ,@Param("state")final StateType stateType,@Param("progress")final ProgressType progressType);
+
     @Update("UPDATE reserve A natural JOIN payment B\n" +
             "SET A.state = #{reserve_cancle}, B.progressType = #{pay_cancle}\n" +
             "where A.startTime <= utc_timestamp() and B.progressType = 0")

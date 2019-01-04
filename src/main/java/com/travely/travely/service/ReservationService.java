@@ -4,10 +4,7 @@ import com.travely.travely.domain.Payment;
 import com.travely.travely.domain.Price;
 import com.travely.travely.domain.Reserve;
 import com.travely.travely.domain.Store;
-import com.travely.travely.dto.reservation.PriceResponseDto;
-import com.travely.travely.dto.reservation.ReserveRequestDto;
-import com.travely.travely.dto.reservation.ReserveResponseDto;
-import com.travely.travely.dto.reservation.ReserveViewResponseDto;
+import com.travely.travely.dto.reservation.*;
 import com.travely.travely.dto.store.StoreDto;
 import com.travely.travely.exception.NotFoundReserveException;
 import com.travely.travely.mapper.PriceMapper;
@@ -122,21 +119,16 @@ public class ReservationService {
         }
 
         return reserveResponseDto;
-
     }
 
     @Transactional
     public void cancelReservation(final long userIdx) {
-        final StateType cancelState = StateType.CANCEL;
-        final ProgressType cancelProgress = ProgressType.CANCEL;
         //예약 취소하면 결제테이블에 있는 것도 결제 취소로 전부 바꿔버린다.
         //정상적으로 예약된게 있는지 확인
-
         final Reserve reserve = reservationMapper.findReserveByUserIdx(userIdx);
         if (reserve == null) throw new NotFoundReserveException();
 
-        reservationMapper.updateReservation(reserve.getReserveIdx(), cancelState);
-        reservationMapper.updatePayment(reserve.getReserveIdx(), cancelProgress);
+        reservationMapper.deleteReserveAndPaymentByReserveIdx(reserve.getReserveIdx(), StateType.CANCEL,ProgressType.CANCEL);
     }
 
     @Transactional
@@ -204,4 +196,7 @@ public class ReservationService {
         return price;
     }
 
+    public ReserveFlagDto getReserveFlagDto(Long userIdx) {
+        return new ReserveFlagDto(reservationMapper.findReserveByUserIdx(userIdx));
+    }
 }

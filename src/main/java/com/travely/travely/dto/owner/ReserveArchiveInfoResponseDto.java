@@ -31,7 +31,10 @@ public class ReserveArchiveInfoResponseDto {
     private Long overTime;
 
     private Long overTimeCalculator(final Reserve reserve) {
-        final Long et = reserve.getTakeTime().getTime() - reserve.getEndTime().getTime();
+        final Long et;
+        if (reserve.getTakeTime() != null)
+            et = reserve.getTakeTime().getTime() - reserve.getEndTime().getTime();
+        else et = new Timestamp(0).getTime() - reserve.getEndTime().getTime();
         if (et > 0) return et;
         return 0L;
     }
