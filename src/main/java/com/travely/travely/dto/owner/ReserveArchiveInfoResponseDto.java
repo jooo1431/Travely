@@ -5,7 +5,6 @@ import com.travely.travely.dto.baggage.BagDto;
 import com.travely.travely.dto.baggage.BagImgDto;
 import com.travely.travely.util.typeHandler.PayType;
 import com.travely.travely.util.typeHandler.ProgressType;
-import lombok.Builder;
 import lombok.Getter;
 
 import java.sql.Timestamp;
@@ -28,6 +27,14 @@ public class ReserveArchiveInfoResponseDto {
     private ProgressType progressType;
     private Long price;
     private List<BagImgDto> bagImgDtos;
+    //초과시간
+    private Long overTime;
+
+    private Long overTimeCalculator(final Reserve reserve) {
+        final Long et = new Timestamp(System.currentTimeMillis()).getTime() - reserve.getEndTime().getTime();
+        if (et > 0) return et;
+        return 0L;
+    }
 
     public ReserveArchiveInfoResponseDto(final Reserve reserve) {
         this.reserveIdx = reserve.getReserveIdx();
@@ -44,5 +51,6 @@ public class ReserveArchiveInfoResponseDto {
         this.progressType = reserve.getPayment().getProgressType();
         this.price = reserve.getPrice();
         this.bagImgDtos = reserve.getBaggageImgs().stream().map(baggageImg -> new BagImgDto(baggageImg)).collect(Collectors.toList());
+        this.overTime = overTimeCalculator(reserve);
     }
 }
