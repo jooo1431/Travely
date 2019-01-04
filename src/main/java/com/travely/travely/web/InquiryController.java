@@ -27,7 +27,7 @@ public class InquiryController {
     @PostMapping("")
     public ResponseEntity<Void> saveInquiry(@ApiIgnore Authentication authentication,
                                       @RequestBody final InquiryDto inquiryDto) {
-        Long userIdx = Long.parseLong((String) authentication.getPrincipal());
+        Long userIdx = Long.parseLong((String)authentication.getPrincipal());
         inquiryService.saveInquiry(userIdx, inquiryDto);
         return ResponseEntity.ok().build();
     }
