@@ -39,7 +39,7 @@ public interface StoreMapper {
     @Select("SELECT * FROM store WHERE userIdx = #{userIdx}")
     Store findStoreByUserIdx(@Param("userIdx") final Long userIdx);
 
-    @Select("SELECT * FROM store natural join favorite WHERE favorite.userIdx = #{temp} and isFavorite = 1 and regionIdx = #{regionIdx}")
+    @Select("SELECT * FROM store inner join favorite on store.storeIdx = favorite.storeIdx WHERE favorite.userIdx = #{temp} and isFavorite = 1 and regionIdx = #{regionIdx}")
     @Results(value = {
             @Result(column = "storeIdx", property = "storeIdx"),
             @Result(column = "userIdx", property = "ownerIdx"),
