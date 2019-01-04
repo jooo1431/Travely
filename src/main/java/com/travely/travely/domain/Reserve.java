@@ -53,16 +53,6 @@ public class Reserve {
         this.payment = payment;
     }
 
-    public Timestamp getDepositTime() {
-        if (depositTime == null) return new Timestamp(0);
-        return depositTime;
-    }
-
-    public Timestamp getTakeTime() {
-        if (takeTime == null) return new Timestamp(0);
-        return takeTime;
-    }
-
     public List<Baggage> getBaggages() {
         return CommonConfig.getCheckedList(baggages);
     }
@@ -95,7 +85,7 @@ public class Reserve {
     }
 
     public Long getTotalBag() {
-        return baggages.stream().mapToLong(Baggage::getBagCount).sum();
+        return getBaggages().stream().mapToLong(Baggage::getBagCount).sum();
     }
 
     public void checkReserved(final Long userIdx) {
