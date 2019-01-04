@@ -74,7 +74,7 @@ public interface ReservationMapper {
     })
     List<Reserve> findArchiveReserveByOwnerIdx(@Param("ownerIdx") final Long ownerIdx);
 
-    @Select("select * from reserve where useridx=#{userIdx} order by reserveIdx desc limit 1;")
+    @Select("select * from reserve where useridx=#{userIdx} order by reserveIdx desc limit 5;")
     @Results(value = {
             @Result(property = "reserveIdx", column = "reserveIdx"),
             @Result(property = "baggages", javaType = List.class, column = "reserveIdx",
