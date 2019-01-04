@@ -51,6 +51,7 @@ public class ReviewService {
     public List<ReviewStoreResponseDto>  getMyReviews(final Long userIdx) {
 
         List<Store> storeList = storeMapper.findMyReviewOfStoreByUserIdx(userIdx);
+        log.info("@"+storeList.get(0).getOwnerIdx());
         if(storeList == null) return new ArrayList<>();
         List<ReviewStoreResponseDto> reviewStoreResponseDtos = storeList.stream().map(store -> new ReviewStoreResponseDto(store)).collect(Collectors.toList());
         return reviewStoreResponseDtos;
