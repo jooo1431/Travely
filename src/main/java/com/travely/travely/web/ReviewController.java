@@ -42,7 +42,23 @@ public class ReviewController {
         return ResponseEntity.ok().body(reviewResponseDto);
     }
 
-    @ApiOperation(value = "나의 리뷰 조회", notes = "리뷰 조회")
+    @ApiOperation(value = "나의 리뷰 조회", notes = " \"address\": \"가게의 주소 String\",\n" +
+            "    \"closeTime\": 영업종료시간 Long,\n" +
+            "    \"content\": \"리뷰 내용 String\",\n" +
+            "    \"createAt\": 리뷰작성시간 Long,\n" +
+            "    \"latitude\": 위도 double,\n" +
+            "    \"liked\": 별점 Long,\n" +
+            "    \"limit\": 최대 수용량 Long,\n" +
+            "    \"longitude\": 경도 double,\n" +
+            "    \"openTime\": 영업시작시작 Long,\n" +
+            "    \"ownerIdx\": 업주 고유번호 Long,\n" +
+            "    \"regionIdx\": 지역 고유번호 Long,\n" +
+            "    \"reviewIdx\": 리뷰 고유번호 Long,\n" +
+            "    \"storeCall\": 가게 전화번호 000-0000-0000 String,\n" +
+            "    \"storeIdx\": 가게 고유번호 Long,\n" +
+            "    \"storeImgUrl\": 가게 사진URL String,\n" +
+            "    \"storeName\": 가게 이름 String,\n" +
+            "    \"storeUrl\": 가게 홈페이지 url String")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "리뷰 조회 성공"),
             @ApiResponse(code = 204, message = "작성 리뷰 없음"),

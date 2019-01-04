@@ -1,6 +1,7 @@
 package com.travely.travely.mapper;
 
 
+import com.travely.travely.domain.Review;
 import com.travely.travely.domain.Store;
 import com.travely.travely.domain.Users;
 import com.travely.travely.dto.store.StoreJoinUsersDto;
@@ -37,6 +38,11 @@ public interface StoreMapper {
     List<Store> findStoresByRegionIdx(@Param("regionIdx") final long regionIdx);
 
     @Select("SELECT * FROM store WHERE userIdx = #{userIdx}")
+    @Results(value = {
+            @Result(column = "storeIdx", property = "storeIdx"),
+            @Result(column = "userIdx", property = "ownerIdx"),
+            @Result(property = "reviews", javaType = Review.class, column = "storeIdx", many = @Many(select = "com.travely.travely.mapper.ReviewMapper.findReviewsByStoreIdx", fetchType = FetchType.LAZY))
+    })
     Store findStoreByUserIdx(@Param("userIdx") final Long userIdx);
 
     @Select("SELECT * FROM store inner join favorite on store.storeIdx = favorite.storeIdx WHERE favorite.userIdx = #{temp} and isFavorite = 1 and regionIdx = #{regionIdx}")

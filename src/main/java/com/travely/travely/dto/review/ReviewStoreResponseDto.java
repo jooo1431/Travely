@@ -31,7 +31,7 @@ public class ReviewStoreResponseDto {
         this.reviewIdx = store.getReviews().get(0).getReviewIdx();
         this.content = store.getReviews().get(0).getContent();
         this.liked = store.getReviews().get(0).getLiked();
-        this.createAt = store.getReviews().get(0).getLiked();
+        this.createAt = store.getReviews().get(0).getCreateAt().getTime();
         this.storeIdx = store.getStoreIdx();
         this.ownerIdx = store.getOwnerIdx();
         this.storeName = store.getStoreName();

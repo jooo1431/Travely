@@ -115,7 +115,6 @@ public class OwnerController {
     @ApiOperation(value = "가게 예약 보관 목록 조회", notes = "가게 예약 보관 목록 조회")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "가게 예약 보관 목록 조회"),
-            @ApiResponse(code = 204, message = "예약 및 보관내역 없음"),
             @ApiResponse(code = 401, message = "인증 에러"),
             @ApiResponse(code = 500, message = "서버에러")
     })
@@ -123,7 +122,6 @@ public class OwnerController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/reserve")
     public ResponseEntity<AllReserveResponseDto> getAllReserveArchive(@ApiIgnore Authentication authentication) {
-
         Long ownerIdx = Long.parseLong((String) authentication.getPrincipal());
 
         List<ReserveArchiveResponseDto> reserveResponseDtos = ownerService.getReserved(ownerIdx);
