@@ -127,16 +127,13 @@ public class ReservationService {
 
     @Transactional
     public void cancelReservation(final long userIdx) {
-        final StateType cancelState = StateType.CANCEL;
-        final ProgressType cancelProgress = ProgressType.CANCEL;
         //예약 취소하면 결제테이블에 있는 것도 결제 취소로 전부 바꿔버린다.
         //정상적으로 예약된게 있는지 확인
 
         final Reserve reserve = reservationMapper.findReserveByUserIdx(userIdx);
         if (reserve == null) throw new NotFoundReserveException();
 
-        reservationMapper.updateReservation(reserve.getReserveIdx(), cancelState);
-        reservationMapper.updatePayment(reserve.getReserveIdx(), cancelProgress);
+        reservationMapper.deleteReserveAndPaymentByReserveIdx(reserve.getReserveIdx(), StateType.CANCEL,ProgressType.CANCEL);
     }
 
     @Transactional

@@ -16,6 +16,5 @@ public class Scheduler {
     @Scheduled(cron = "0 0/5 * * * *")
     public void updatePendingOrderHistory() {
         reservationService.cancelReservation();
-        log.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
     }
 }
