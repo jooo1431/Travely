@@ -93,7 +93,7 @@ public class OwnerController {
 
         List<ReviewUserImgResponseDto> reviewUserImgResponseDtos = ownerService.getReviews(ownerIdx);
 
-        return ResponseEntity.ok(reviewUserImgResponseDtos);
+        return ResponseEntity.ok().body(reviewUserImgResponseDtos);
     }
 
     @ApiOperation(value = "가게 리뷰 추가 보기", notes = "가게 리뷰 추가 보기")
@@ -133,7 +133,7 @@ public class OwnerController {
 
         AllReserveResponseDto allReserveResponseDto = ownerService.getReservedAndStoring(reserveResponseDtos, storeResponseDtos);
 
-        return ResponseEntity.ok(allReserveResponseDto);
+        return ResponseEntity.ok().body(allReserveResponseDto);
     }
 
     @ApiOperation(value = "예약코드 조회", notes = "예약코드 조회")
