@@ -8,6 +8,7 @@ import com.travely.travely.dto.owner.AllReserveResponseDto;
 import com.travely.travely.dto.owner.ReserveArchiveInfoResponseDto;
 import com.travely.travely.dto.owner.ReserveArchiveResponseDto;
 import com.travely.travely.dto.review.ReviewUserImgResponseDto;
+import com.travely.travely.dto.store.StoreGradeReview;
 import com.travely.travely.exception.AuthenticationErrorException;
 import com.travely.travely.exception.NotFoundReserveException;
 import com.travely.travely.exception.NotFoundStoringException;
@@ -37,6 +38,11 @@ public class OwnerService {
     final private StateType ARCHIVE = StateType.ARCHIVE;
     final private StateType PICKUP = StateType.PICKUP;
 
+
+    public StoreGradeReview getStoreTotalReviewCountAndGrade(final Long ownerIdx){
+        Store store = storeMapper.findStoreByOwnerIdx(ownerIdx);
+       return new StoreGradeReview(store);
+    }
 
     public ReserveArchiveInfoResponseDto getArchiveByReserveIdx(final Long ownerIdx, final Long reserveIdx) {
         final Reserve reserve = reservationMapper.findReserveByReserveIdx(reserveIdx);

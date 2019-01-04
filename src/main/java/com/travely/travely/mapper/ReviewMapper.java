@@ -77,9 +77,19 @@ public interface ReviewMapper {
     List<Review> findMyReviewsByStoreIdx();
 
 
-    @Select("SELECT r.* FROM review as r INNER JOIN store as s WHERE r.storeIdx = s.storeIdx AND s.userIdx = #{ownerIdx} ORDER BY r.reviewIdx LIMIT 5")
+    @Select("SELECT r.* FROM review as r INNER JOIN store as s WHERE r.storeIdx = s.storeIdx AND s.userIdx = #{ownerIdx} ORDER BY r.reviewIdx DESC LIMIT 5")
+    @Results(value = {
+            @Result(property = "userIdx", column = "userIdx"),
+            @Result(property = "users", column = "userIdx", javaType = Long.class,
+                    one = @One(select = "com.travely.travely.mapper.UserMapper.findUserByUserIdxFromReview", fetchType = FetchType.EAGER))
+    })
     List<Review> findReviewsByOwnerIdx(@Param("ownerIdx")final Long ownerIdx);
 
-    @Select("SELECT r.* FROM review as r INNER JOIN store as s WHERE r.storeIdx = s.storeIdx AND s.userIdx = #{ownerIdx} AND r.reviewIdx < #{reviewIdx} ORDER BY r.reviewIdx LIMIT 5")
+    @Select("SELECT r.* FROM review as r INNER JOIN store as s WHERE r.storeIdx = s.storeIdx AND s.userIdx = #{ownerIdx} AND r.reviewIdx < #{reviewIdx} ORDER BY r.reviewIdx DESC LIMIT 5")
+    @Results(value = {
+            @Result(property = "userIdx", column = "userIdx"),
+            @Result(property = "users", column = "userIdx", javaType = Long.class,
+                    one = @One(select = "com.travely.travely.mapper.UserMapper.findUserByUserIdxFromReview", fetchType = FetchType.EAGER))
+    })
     List<Review> findMoreReviewsByOwnerIdx(@Param("ownerIdx")final Long ownerIdx, @Param("reviewIdx")final Long reviewIdx);
 }
