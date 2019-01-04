@@ -1,10 +1,12 @@
 package com.travely.travely.service;
 
 import com.travely.travely.domain.Review;
+import com.travely.travely.domain.Store;
 import com.travely.travely.dto.review.ReviewRequestDto;
 import com.travely.travely.dto.review.ReviewResponseDto;
 import com.travely.travely.dto.review.ReviewStoreResponseDto;
 import com.travely.travely.mapper.ReviewMapper;
+import com.travely.travely.mapper.StoreMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -20,6 +23,7 @@ import java.util.stream.Collectors;
 public class ReviewService {
 
     private final ReviewMapper reviewMapper;
+    private final StoreMapper storeMapper;
 
     public List<ReviewResponseDto> getReviewResponseDtos(final Long storeIdx, final Long reviewIdx) {
         return reviewMapper
@@ -44,15 +48,19 @@ public class ReviewService {
         return savedReview;
     }
 
-    public List<ReviewStoreResponseDto> getMyReviews(final Long userIdx) {
-        List<ReviewStoreResponseDto> reviewStoreResponseDtos = reviewMapper.findReviewsAndStoreByUserIdx(userIdx);
-        if (reviewStoreResponseDtos == null) return new ArrayList<>();
+    public List<ReviewStoreResponseDto>  getMyReviews(final Long userIdx) {
+
+        List<Store> storeList = storeMapper.findMyReviewOfStoreByUserIdx(userIdx);
+        log.info("@"+storeList.get(0).getOwnerIdx());
+        if(storeList == null) return new ArrayList<>();
+        List<ReviewStoreResponseDto> reviewStoreResponseDtos = storeList.stream().map(store -> new ReviewStoreResponseDto(store)).collect(Collectors.toList());
         return reviewStoreResponseDtos;
     }
 
     public List<ReviewStoreResponseDto> getMoreMyReviews(final Long userIdx, final Long reviewIdx) {
-        List<ReviewStoreResponseDto> reviewStoreResponseDtos = reviewMapper.findMoreReviewsAndStoreByUserIdx(userIdx, reviewIdx);
-        if (reviewStoreResponseDtos == null) return new ArrayList<>();
+        List<Store> storeList = storeMapper.findMoreMyReviewOfStoreByUserIdx(userIdx,reviewIdx);
+        if(storeList == null) return new ArrayList<>();
+        List<ReviewStoreResponseDto> reviewStoreResponseDtos = storeList.stream().map(store -> new ReviewStoreResponseDto(store)).collect(Collectors.toList());
         return reviewStoreResponseDtos;
     }
 

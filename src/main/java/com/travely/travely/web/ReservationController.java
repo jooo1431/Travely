@@ -64,8 +64,8 @@ public class ReservationController {
         return ResponseEntity.ok().build();
     }
 
-    @ApiOperation(value = "예약 세부정보 조회", notes = "reserveIdx로 예약 내용 조회\n" +
-            "stateType : 예약의 상태를 나타내는 Enum입니다. String으로 읽으세요.\n" +
+    @ApiOperation(value = "예약 세부정보 조회", notes = "userIdx 예약 내용 조회\n" +
+            "stateType : 예약의 상태를 나타내는 Enum입니다 RESERVED,PAYED,ARCHIVE,PICKUP,CANCEL. String으로 읽으세요.\n" +
             "reserveCode : 예약고유코드로 String입니다.\n" +
             "startTime, endTime : getTime한 밀리세컨드 값으로 Long입니다.\n" +
             "depositTime, takeTime 도 동일합니다.\n" +

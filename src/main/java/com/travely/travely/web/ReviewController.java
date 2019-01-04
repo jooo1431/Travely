@@ -59,9 +59,9 @@ public class ReviewController {
         return ResponseEntity.ok().body(reviewStoreResponseDtos);
     }
 
-    @ApiOperation(value = "나의 리뷰 조회", notes = "리뷰 조회")
+    @ApiOperation(value = "나의 리뷰 추가 조회", notes = "리뷰 추가 조회")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "리뷰 조회 성공"),
+            @ApiResponse(code = 200, message = "리뷰 추가 조회 성공"),
             @ApiResponse(code = 204, message = "작성 리뷰 없음"),
             @ApiResponse(code = 400, message = "잘못 된 접근"),
             @ApiResponse(code = 500, message = "서버에러")
