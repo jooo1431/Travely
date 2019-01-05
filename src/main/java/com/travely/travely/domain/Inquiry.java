@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 @Getter
@@ -13,10 +14,10 @@ public class Inquiry {
     private Long inquiryIdx;
     private Long userIdx;
     private String content;
-    private Date createAt;
+    private Timestamp createAt;
 
     @Builder
-    public Inquiry(Long inquiryIdx, Long userIdx, String content, Date createAt) {
+    public Inquiry(Long inquiryIdx, Long userIdx, String content, Timestamp createAt) {
         this.inquiryIdx = inquiryIdx;
         this.userIdx = userIdx;
         this.content = content;
