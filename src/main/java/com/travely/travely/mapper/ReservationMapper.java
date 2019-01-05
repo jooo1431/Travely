@@ -235,4 +235,7 @@ public interface ReservationMapper {
 
     @Select("SELECT * FROM reserve WHERE state < 3 AND storeIdx = #{storeIdx}")
     List<Reserve> findUnderPickupReserveByStoreIdx();
+
+    @Select("SELECT COUNT(*) FROM reserve WHERE userIdx = #{userIdx}")
+    int findReserveCntByuserIdx(@Param("userIdx")final Long userIdx);
 }
