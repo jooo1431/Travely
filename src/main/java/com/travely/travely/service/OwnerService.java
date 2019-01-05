@@ -112,4 +112,8 @@ public class OwnerService {
         Store store = storeMapper.findStoreByOwnerIdxForMyPage(ownerIdx);
         return new OwnerInfoResponseDto(store);
     }
+
+    public void toggleStoreAvailable(final Long ownerIdx){
+        storeMapper.updateStoreAvailable(ownerIdx);
+    }
 }

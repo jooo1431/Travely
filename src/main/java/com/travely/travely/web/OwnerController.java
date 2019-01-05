@@ -178,4 +178,23 @@ public class OwnerController {
 
         return ResponseEntity.ok(ownerInfoResponseDto);
     }
+
+    @ApiOperation(value = "상가의 예약 On/Off기능을 반전시킵니다.", notes = "관리자 마이페이지")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "관리자 마이페이지"),
+            @ApiResponse(code = 400, message = "잘못 된 접근"),
+            @ApiResponse(code = 403, message = "인증 에러"),
+            @ApiResponse(code = 500, message = "서버에러")
+    })
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PutMapping("/mypage/onoff")
+    public ResponseEntity<Void> toggleAvailable(@ApiIgnore Authentication authentication) {
+
+        Long ownerIdx = Long.parseLong((String) authentication.getPrincipal());
+
+        ownerService.toggleStoreAvailable(ownerIdx);
+
+        return ResponseEntity.ok().build();
+    }
 }

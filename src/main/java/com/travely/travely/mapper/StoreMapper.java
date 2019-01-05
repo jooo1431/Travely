@@ -109,5 +109,8 @@ public interface StoreMapper {
                     one = @One(select = "com.travely.travely.mapper.UserMapper.findUserByUserIdxFromReview", fetchType = FetchType.EAGER))
     })
     Store findStoreByOwnerIdxForMyPage(@Param("ownerIdx") final long ownerIdx);
+
+    @Update("UPDATE store SET available = available * -1 WHERE userIdx = #{ownerIdx}")
+    void updateStoreAvailable(@Param("ownerIdx")final Long ownerIdx);
 }
 
