@@ -1,6 +1,7 @@
 package com.travely.travely.web;
 
 import com.travely.travely.dto.owner.AllReserveResponseDto;
+import com.travely.travely.dto.owner.OwnerInfoResponseDto;
 import com.travely.travely.dto.owner.ReserveArchiveInfoResponseDto;
 import com.travely.travely.dto.owner.ReserveArchiveResponseDto;
 import com.travely.travely.dto.review.ReviewStoreGradeResponseDto;
@@ -157,5 +158,24 @@ public class OwnerController {
         ReserveArchiveInfoResponseDto reserveArchiveInfoResponseDto = ownerService.readReserveCode(ownerIdx, storeIdx, reserveCode);
 
         return ResponseEntity.ok(reserveArchiveInfoResponseDto);
+    }
+
+    @ApiOperation(value = "관리자 마이페이지", notes = "관리자 마이페이지")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "관리자 마이페이지"),
+            @ApiResponse(code = 400, message = "잘못 된 접근"),
+            @ApiResponse(code = 403, message = "인증 에러"),
+            @ApiResponse(code = 500, message = "서버에러")
+    })
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/mypage")
+    public ResponseEntity<OwnerInfoResponseDto> readReserveCode(@ApiIgnore Authentication authentication) {
+
+        Long ownerIdx = Long.parseLong((String) authentication.getPrincipal());
+
+        OwnerInfoResponseDto ownerInfoResponseDto = ownerService.MyPage(ownerIdx);
+
+        return ResponseEntity.ok(ownerInfoResponseDto);
     }
 }

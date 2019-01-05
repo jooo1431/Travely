@@ -37,6 +37,10 @@ public class Store {
     private List<RestWeek> restWeeks;
     private Users users;
 
+    private List<Reserve> reserves;
+
+
+
     public List<Review> getReviews() { return CommonConfig.getCheckedList(reviews);
     }
 
@@ -51,6 +55,10 @@ public class Store {
     public Users getUsers() {
         if (this.users == null) throw new RuntimeException();
         return this.users;
+    }
+
+    public List<Reserve> getReserves() {
+        return CommonConfig.getCheckedList(reserves);
     }
 
     public Double getGrade() {
