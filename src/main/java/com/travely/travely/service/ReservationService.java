@@ -36,7 +36,7 @@ public class ReservationService {
 
     @Transactional
     public ReserveResponseDto saveReservation(final long userIdx, final ReserveRequestDto reserveRequestDto) {
-        if(reservationMapper.findReserveCntByuserIdx(userIdx)>1) throw new AlreadyExistsReserveException();
+        if(reservationMapper.findReserveCntByuserIdx(userIdx)>=1) throw new AlreadyExistsReserveException();
 
         final List<Reserve> reserves = reservationMapper.findReserveStateUnderPickUpByStoreIdx(reserveRequestDto.getStoreIdx());
         final Store store = storeMapper.findStoreByStoreIdx(reserveRequestDto.getStoreIdx());
@@ -56,7 +56,7 @@ public class ReservationService {
 
         //해당 업체에 진행중(예약+결제+보관)인 항목이 있다면
         if (reserves.size() != 0) {
-            
+
 //            //user가 이미 예약 했는지 확인
 //            for (Reserve reserve : reserves) {
 //                reserve.checkReserved(userIdx);
