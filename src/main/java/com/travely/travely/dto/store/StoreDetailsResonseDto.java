@@ -29,6 +29,7 @@ public class StoreDetailsResonseDto {
     private Long currentBag;
     private Double grade;
     private String addressNumber;
+    private int available;
 
     private List<ReviewResponseDto> reviewResponseDtos;
     private List<StoreImageResponseDto> storeImageResponseDtos;
@@ -48,6 +49,7 @@ public class StoreDetailsResonseDto {
         this.limit = store.getLimit();
         this.currentBag = currentBag;
         this.addressNumber = store.getAddressNumber();
+        this.available = store.getAvailable();
         this.reviewResponseDtos = store.getReviews().stream()
                 .map(review -> new ReviewResponseDto(review)).collect(Collectors.toList());
         this.storeImageResponseDtos = store.getStoreImgs().stream()

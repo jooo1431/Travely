@@ -160,7 +160,20 @@ public class OwnerController {
         return ResponseEntity.ok(reserveArchiveInfoResponseDto);
     }
 
-    @ApiOperation(value = "관리자 마이페이지", notes = "관리자 마이페이지")
+    @ApiOperation(value = "관리자 마이페이지", notes = "  \"address\": \"가게도로명주소\" String,\n" +
+            "  \"addressNumber\": \"가게지번주소\" String,\n" +
+            "  \"closeTime\": 영업종료시간 getTime값 Long,\n" +
+            "  \"onOff\": 예약설정On/Off값 1/-1 int,\n" +
+            "  \"openTime\": 영업개시시간,\n" +
+            "  \"ownerImgUrl\": \"업주 프로필 이미지 URL\"String,\n" +
+            "  \"ownerName\": \"업주이름\"String,\n" +
+            "  \"reviewCount\": 리뷰갯수 int,\n" +
+            "  \"serviceCount\": 현재 이용중인 서비스의 갯수,int\n" +
+            "  \"storeCall\": \"가게전화번호\"String,\n" +
+            "  \"storeGrade\": 가게평점 double,\n" +
+            "  \"storeIdx\": 가게 고유번호 Long,\n" +
+            "  \"storeName\": \"가게이름\"String,\n" +
+            "  \"storeUrl\": \"가게 홈페이지 주소\"String")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "관리자 마이페이지"),
             @ApiResponse(code = 400, message = "잘못 된 접근"),
