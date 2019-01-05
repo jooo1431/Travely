@@ -82,7 +82,7 @@ public class ReservationService {
 
         final UUID uuid = UUID.randomUUID();
         //결제 코드 생성 = 고유번호 앞 8자리
-        final String reserveCode = uuid.toString().substring(0, 7);
+        final String reserveCode = uuid.toString().substring(0, 7).toUpperCase();
 
         //결제타입과 무관하게 일단 예약 완료 상태로 만든다.
         final StateType stateType = StateType.RESERVED;

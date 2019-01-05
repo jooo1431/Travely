@@ -93,6 +93,6 @@ public class Store {
     }
 
     public void checkAvailable() {
-        if (this.available == 0) throw new NotOpenStoreException();
+        if (this.available == -1) throw new NotOpenStoreException();
     }
 }
