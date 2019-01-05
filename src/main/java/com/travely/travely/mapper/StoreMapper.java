@@ -92,13 +92,22 @@ public interface StoreMapper {
                     many = @Many(select = "com.travely.travely.mapper.StoreImgMapper.findStoreImgsByStoreIdx", fetchType = FetchType.LAZY)),
             @Result(property = "restWeeks", javaType = List.class, column = "storeIdx",
                     many = @Many(select = "com.travely.travely.mapper.RestWeekMapper.findRestWeeksByStoreIdx", fetchType = FetchType.LAZY)),
-            @Result(property = "users", javaType = Users.class, column = "userIdx",
-                    one = @One(select = "com.travely.travely.mapper.UserMapper.findUserByUserIdxFromReview", fetchType = FetchType.EAGER)),
-            @Result(property = "reserves", javaType = Reserve.class, column = "storeIdx",
+            @Result(property = "reserves", javaType = List.class, column = "storeIdx",
                     many = @Many(select = "com.travely.travely.mapper.ReservationMapper.findUnderPickupReserveByStoreIdx", fetchType = FetchType.EAGER))
     })
     Store findStoreByOwnerIdx(@Param("ownerIdx") final long ownerIdx);
 
-
+    @Select("SELECT * FROM store WHERE userIdx = #{ownerIdx}")
+    @Results(value = {
+            @Result(column = "storeIdx", property = "storeIdx"),
+            @Result(column = "userIdx", property = "ownerIdx"),
+            @Result(property = "reserves", javaType = List.class, column = "storeIdx",
+                    many = @Many(select = "com.travely.travely.mapper.ReservationMapper.findUnderPickupReserveByStoreIdx", fetchType = FetchType.EAGER)),
+            @Result(property = "reviews", javaType = List.class, column = "storeIdx",
+                    many = @Many(select = "com.travely.travely.mapper.ReviewMapper.findReviewsByStoreIdxForMyPage", fetchType = FetchType.LAZY)),
+            @Result(property = "users", javaType = Users.class, column = "userIdx",
+                    one = @One(select = "com.travely.travely.mapper.UserMapper.findUserByUserIdxFromReview", fetchType = FetchType.EAGER))
+    })
+    Store findStoreByOwnerIdxForMyPage(@Param("ownerIdx") final long ownerIdx);
 }
 

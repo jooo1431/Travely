@@ -170,11 +170,11 @@ public class OwnerController {
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/mypage")
-    public ResponseEntity<OwnerInfoResponseDto> readReserveCode(@ApiIgnore Authentication authentication) {
+    public ResponseEntity<OwnerInfoResponseDto> myPage(@ApiIgnore Authentication authentication) {
 
         Long ownerIdx = Long.parseLong((String) authentication.getPrincipal());
 
-        OwnerInfoResponseDto ownerInfoResponseDto = ownerService.MyPage(ownerIdx);
+        OwnerInfoResponseDto ownerInfoResponseDto = ownerService.myPage(ownerIdx);
 
         return ResponseEntity.ok(ownerInfoResponseDto);
     }

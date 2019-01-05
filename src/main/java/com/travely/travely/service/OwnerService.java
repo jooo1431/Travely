@@ -108,9 +108,8 @@ public class OwnerService {
         return reserveArchiveInfoResponseDto;
     }
 
-    public OwnerInfoResponseDto MyPage(final Long ownerIdx){
-        Store store = storeMapper.findStoreByOwnerIdx(ownerIdx);
-        log.info(store.getStoreName());
+    public OwnerInfoResponseDto myPage(final Long ownerIdx){
+        Store store = storeMapper.findStoreByOwnerIdxForMyPage(ownerIdx);
         return new OwnerInfoResponseDto(store);
     }
 }
