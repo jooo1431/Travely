@@ -150,16 +150,14 @@ public class ReservationService {
         if (reserve == null) throw new NotFoundReserveException();
 
         final Store store = reserve.getStore();
-        final StoreDto storeDto = StoreDto.builder()
-                .store(store)
-                .build();
+        final StoreDto storeDto = new StoreDto(store);
 
         //가격단위와 단위에 해당하는 시간
         final List<Price> priceList = priceMapper.getAllPrice();
-        final Long hour = priceList.get(0).getMillsecToHour(reserve.getStartTime().getTime(), reserve.getEndTime().getTime());
-        final Long priceUnit = priceList.get(0).getPriceUnit(priceList, hour);
-        final Long priceIdx = priceList.get(0).findPriceIdxByUnit(priceList, priceUnit);
-        final Long extraChargeCount = priceList.get(0).getExtraChargeCount(hour, priceList.get(priceList.size() - 1).getPriceIdx());
+        final Long hour = getMillsecToHour(reserve.getStartTime().getTime(), reserve.getEndTime().getTime());
+        final Long priceUnit = getPriceUnit(priceList, hour);
+        final Long priceIdx = findPriceIdxByUnit(priceList, priceUnit);
+        final Long extraChargeCount = getExtraChargeCount(hour, priceList.get(priceList.size() - 1).getPriceIdx());
         final Long extraCharge = priceList.get(0).getPrice();
 
         final ReserveViewResponseDto reserveViewResponseDto = ReserveViewResponseDto.builder()
@@ -181,14 +179,14 @@ public class ReservationService {
         List<Price> priceList = priceMapper.getAllPrice();
 
         //계산에 쓰일 시간값
-        final Long hour = priceList.get(0).getMillsecToHour(reserveRequestDto.getStartTime(), reserveRequestDto.getEndTime());
+        final Long hour = getMillsecToHour(reserveRequestDto.getStartTime(), reserveRequestDto.getEndTime());
         //단위 가격 책정
-        final Long unit = priceList.get(0).getPriceUnit(priceList, hour);
+        final Long unit = getPriceUnit(priceList, hour);
         //가방의 갯수.
         final Long count = reserveRequestDto.gainBagsCount();
 
         //추가시간 계산
-        final Long extraChargeCount = priceList.get(0).getExtraChargeCount(hour, priceList.get(priceList.size() - 1).getPriceIdx());
+        final Long extraChargeCount = getExtraChargeCount(hour, priceList.get(priceList.size() - 1).getPriceIdx());
         final Long extraCharge = priceList.get(0).getPrice();
         //총 가격
         final Long price = count * (unit + extraChargeCount * extraCharge);
@@ -198,5 +196,37 @@ public class ReservationService {
 
     public ReserveFlagDto getReserveFlagDto(Long userIdx) {
         return new ReserveFlagDto(reservationMapper.findReserveByUserIdx(userIdx));
+    }
+
+    public Long getMillsecToHour(final Long start, final Long end) {
+        Long hour = (end - start) / 1000 / 60 / 60;
+        if (hour * 1000 * 60 * 60 != end - start)
+            hour++;
+        return hour;
+    }
+
+    public Long getPriceUnit(final List<Price> prices, final Long hour) {
+        Long unit = 0L;
+        for (int i = 0; i < prices.size(); i++) {
+            unit = prices.get(i).compareHour(hour, unit);
+        }
+        return unit;
+    }
+
+    public Long getExtraChargeCount(final Long hour, final Long finalIdx) {
+        Long extra = 0L;
+        if (hour > finalIdx) {
+            final Long temp = hour - finalIdx;
+            extra = temp / 12;
+            if (temp % 12 == 0) extra--;
+        }
+        return extra;
+    }
+
+    public Long findPriceIdxByUnit(final List<Price> prices, final Long unit) {
+        for (Price price : prices) {
+            if (price.getPrice() == unit) return price.getPriceIdx();
+        }
+        throw new RuntimeException();
     }
 }
