@@ -1,7 +1,7 @@
 package com.travely.travely.web;
 
-import com.travely.travely.dto.inquiry.InquiryDto;
-import com.travely.travely.service.InquiryService;
+import com.travely.travely.dto.report.ReportResponseDto;
+import com.travely.travely.service.ReportService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,27 +10,25 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
-
 @Slf4j
 @RestController
-@RequestMapping("/api/inquiry")
+@RequestMapping("/api/report")
 @RequiredArgsConstructor
-public class InquiryController {
+public class ReportController {
+    final ReportService reportService;
 
-    final InquiryService inquiryService;
-
-    @ApiOperation(value = "문의사항 작성", notes = "문의 사항을 작성한다")
+    @ApiOperation(value = "신고 버튼 누르기", notes = "신고 버튼을 누른다")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "문의사항 작성 성공"),
+            @ApiResponse(code = 200, message = "신고하기 성공"),
             @ApiResponse(code = 500, message = "서버에러")})
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @PostMapping("")
-    public ResponseEntity<Void> saveInquiry(@ApiIgnore Authentication authentication,
-                                      @RequestBody final InquiryDto inquiryDto) {
+    @PostMapping("/{reviewIdx}")
+    public ResponseEntity<Void> saveReport(@ApiIgnore Authentication authentication,
+                                           @PathVariable final Long reviewIdx){
         Long userIdx = Long.parseLong((String)authentication.getPrincipal());
-        inquiryService.saveInquiry(userIdx, inquiryDto);
+        ReportResponseDto reportResponseDto = new ReportResponseDto(reviewIdx, userIdx);
+        reportService.saveReport(reportResponseDto);
         return ResponseEntity.ok().build();
     }
-
 
 }
