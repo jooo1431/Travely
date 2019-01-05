@@ -233,5 +233,6 @@ public interface ReservationMapper {
     })
     Reserve findReserveByReserveIdx(@Param("reserveIdx") final Long reserveIdx);
 
-
+    @Select("SELECT * FROM reserve WHERE state < 3 AND storeIdx = #{storeIdx}")
+    List<Reserve> findUnderPickupReserveByStoreIdx();
 }

@@ -1,6 +1,7 @@
 package com.travely.travely.mapper;
 
 
+import com.travely.travely.domain.Reserve;
 import com.travely.travely.domain.Review;
 import com.travely.travely.domain.Store;
 import com.travely.travely.domain.Users;
@@ -92,8 +93,12 @@ public interface StoreMapper {
             @Result(property = "restWeeks", javaType = List.class, column = "storeIdx",
                     many = @Many(select = "com.travely.travely.mapper.RestWeekMapper.findRestWeeksByStoreIdx", fetchType = FetchType.LAZY)),
             @Result(property = "users", javaType = Users.class, column = "userIdx",
-                    one = @One(select = "com.travely.travely.mapper.UserMapper.findUserByUserIdx", fetchType = FetchType.EAGER))
+                    one = @One(select = "com.travely.travely.mapper.UserMapper.findUserByUserIdxFromReview", fetchType = FetchType.EAGER)),
+            @Result(property = "reserves", javaType = Reserve.class, column = "storeIdx",
+                    many = @Many(select = "com.travely.travely.mapper.ReservationMapper.findUnderPickupReserveByStoreIdx", fetchType = FetchType.EAGER))
     })
     Store findStoreByOwnerIdx(@Param("ownerIdx") final long ownerIdx);
+
+
 }
 

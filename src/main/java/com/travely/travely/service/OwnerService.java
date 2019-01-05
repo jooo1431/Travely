@@ -5,6 +5,7 @@ import com.travely.travely.domain.Reserve;
 import com.travely.travely.domain.Review;
 import com.travely.travely.domain.Store;
 import com.travely.travely.dto.owner.AllReserveResponseDto;
+import com.travely.travely.dto.owner.OwnerInfoResponseDto;
 import com.travely.travely.dto.owner.ReserveArchiveInfoResponseDto;
 import com.travely.travely.dto.owner.ReserveArchiveResponseDto;
 import com.travely.travely.dto.review.ReviewUserImgResponseDto;
@@ -107,4 +108,9 @@ public class OwnerService {
         return reserveArchiveInfoResponseDto;
     }
 
+    public OwnerInfoResponseDto MyPage(final Long ownerIdx){
+        Store store = storeMapper.findStoreByOwnerIdx(ownerIdx);
+        log.info(store.getStoreName());
+        return new OwnerInfoResponseDto(store);
+    }
 }
