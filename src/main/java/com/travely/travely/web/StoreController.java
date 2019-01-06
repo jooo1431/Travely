@@ -26,7 +26,22 @@ public class StoreController {
 
     private final ReviewService reviewService;
 
-    @ApiOperation(value = "상가 세부정보 조회", notes = "상가테이블과 지역테이블을 조인한 모든 컬럼을 반환합니다")
+    @ApiOperation(value = "상가 세부정보 조회", notes = "상가테이블과 지역테이블을 조인한 모든 컬럼을 반환합니다\n" +
+            "Long storeIdx;\n" +
+            "Long ownerIdx;\n" +
+            "String storeName;\n" +
+            "String storeCall;\n" +
+            "String storeUrl;\n" +
+            "String address;\n" +
+            "Long openTime;\n" +
+            "Long closeTime;\n" +
+            "Double latitude;\n" +
+            "Double longitude;\n" +
+            "Long limit;-> 상가 최대 수용량\n" +
+            "Long currentBag;-> 현재 상가 수용중인 짐의 양\n" +
+            "Double grade;-> 상가 평점\n" +
+            "String addressNumber;\n" +
+            "int available; -> -1 == close, 1 == open")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "세부정보 조회 성공"),
             @ApiResponse(code = 500, message = "서버에러")
