@@ -9,6 +9,8 @@ import java.util.List;
 
 @Mapper
 public interface RestWeekMapper {
+
+    //StoreMapper Store findStoreByStoreIdx(@Param("storeIdx") final long storeIdx); 에서 사용중
     @Select("select * from restweek where storeIdx = #{storeIdx}")
     List<RestWeek> findRestWeeksByStoreIdx(@Param("storeIdx") final Long storeIdx);
 }

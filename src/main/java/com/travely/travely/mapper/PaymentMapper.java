@@ -10,9 +10,7 @@ import org.apache.ibatis.annotations.Update;
 @Mapper
 public interface PaymentMapper {
 
+    // ReservationMapper List<Reserve> findUnderArvhiceReserveByOwnerIdx(@Param("ownerIdx") final Long ownerIdx); 에서 사용중
     @Select("SELECT * FROM payment WHERE reserveIdx = #{reserveIdx}")
     Payment findPaymentByReserveIdx(@Param("reserveIdx") final Long reserveIdx);
-
-    @Update("UPDATE payment SET progressType = #{progressType} WHERE payIdx = #{payIdx}")
-    void updatePaymentByPayIdx(@Param("payIdx") final Long payIdx, @Param("progressType") final ProgressType progressType);
 }
