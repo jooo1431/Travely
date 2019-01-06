@@ -37,10 +37,11 @@ public interface StoreMapper {
     @Results(value = {
             @Result(column = "storeIdx", property = "storeIdx"),
             @Result(column = "userIdx", property = "ownerIdx"),
-            @Result(property = "reviews", javaType = Review.class, column = "storeIdx", many = @Many(select = "com.travely.travely.mapper.ReviewMapper.findReviewsByStoreIdx", fetchType = FetchType.LAZY))
+            @Result(property = "reviews", javaType = List.class, column = "storeIdx", many = @Many(select = "com.travely.travely.mapper.ReviewMapper.findReviewsByStoreIdx", fetchType = FetchType.LAZY))
     })
     Store findStoreByUserIdx(@Param("userIdx") final Long userIdx);
 
+    //RegionMapper List<Region> findAllRegionByUserIdx(@Param("userIdx") Long userIdx);
     @Select("SELECT * FROM store inner join favorite on store.storeIdx = favorite.storeIdx WHERE favorite.userIdx = #{temp} and isFavorite = 1 and regionIdx = #{regionIdx}")
     @Results(value = {
             @Result(column = "storeIdx", property = "storeIdx"),
@@ -50,7 +51,10 @@ public interface StoreMapper {
             @Result(property = "restWeeks", javaType = List.class, column = "storeIdx",
                     many = @Many(select = "com.travely.travely.mapper.RestWeekMapper.findRestWeeksByStoreIdx", fetchType = FetchType.EAGER)),
             @Result(property = "users", javaType = Users.class, column = "userIdx",
-                    one = @One(select = "com.travely.travely.mapper.UserMapper.findUserByUserIdx", fetchType = FetchType.EAGER))
+                    one = @One(select = "com.travely.travely.mapper.UserMapper.findUserByUserIdx", fetchType = FetchType.EAGER)),
+            @Result(property = "reviews", javaType = List.class, column = "storeIdx",
+                    many = @Many(select = "com.travely.travely.mapper.ReviewMapper.findReviewsByStoreIdxForMyPage", fetchType = FetchType.EAGER))
+
     })
     Store findStoreByFavoriteUserIdx();
 

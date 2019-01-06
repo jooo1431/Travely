@@ -1,5 +1,6 @@
 package com.travely.travely.dto.store;
 
+import com.travely.travely.domain.Reserve;
 import com.travely.travely.domain.Store;
 import com.travely.travely.dto.review.ReviewResponseDto;
 import lombok.AccessLevel;
@@ -35,7 +36,7 @@ public class StoreDetailsResonseDto {
     private List<StoreImageResponseDto> storeImageResponseDtos;
     private List<RestWeekResponseDto> restWeekResponseDtos;
 
-    public StoreDetailsResonseDto(Store store, Long currentBag) {
+    public StoreDetailsResonseDto(Store store) {
         this.storeIdx = store.getStoreIdx();
         this.ownerIdx = store.getOwnerIdx();
         this.storeName = store.getStoreName();
@@ -47,7 +48,7 @@ public class StoreDetailsResonseDto {
         this.latitude = store.getLatitude();
         this.longitude = store.getLongitude();
         this.limit = store.getLimit();
-        this.currentBag = currentBag;
+        this.currentBag = store.getReserves().stream().mapToLong(Reserve::getTotalBag).sum();
         this.addressNumber = store.getAddressNumber();
         this.available = store.getAvailable();
         this.reviewResponseDtos = store.getReviews().stream()
