@@ -66,11 +66,18 @@
     </appender>
 
     <logger name="com.travely.travely" level="INFO">
-        <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE-INFO"/>
+    </logger>
+
+    <root level="WARN">
         <appender-ref ref="FILE-WARN"/>
         <appender-ref ref="FILE-ERROR"/>
-    </logger>
+    </root>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
 
 </configuration>
 
