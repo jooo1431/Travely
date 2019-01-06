@@ -50,7 +50,6 @@ public class ReviewService {
     }
 
     public List<ReviewStoreResponseDto>  getMyReviews(final Long userIdx) {
-
         List<Store> storeList = storeMapper.findMyReviewOfStoreByUserIdx(userIdx);
         storeList = CommonConfig.getCheckedList(storeList);
         List<ReviewStoreResponseDto> reviewStoreResponseDtos = storeList.stream().map(store -> new ReviewStoreResponseDto(store)).collect(Collectors.toList());
