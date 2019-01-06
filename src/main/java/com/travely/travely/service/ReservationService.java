@@ -36,9 +36,10 @@ public class ReservationService {
 
     @Transactional
     public ReserveResponseDto saveReservation(final long userIdx, final ReserveRequestDto reserveRequestDto) {
+
+        //예약여부 검사
         if(reservationMapper.findReserveCntByuserIdx(userIdx)>=1) throw new AlreadyExistsReserveException();
 
-        final List<Reserve> reserves = reservationMapper.findReserveStateUnderPickUpByStoreIdx(reserveRequestDto.getStoreIdx());
         final Store store = storeMapper.findStoreByStoreIdx(reserveRequestDto.getStoreIdx());
 
         //예약기능 On/Off 검사
@@ -55,20 +56,13 @@ public class ReservationService {
         Long limit = store.getLimit();
 
         //해당 업체에 진행중(예약+결제+보관)인 항목이 있다면
-        if (reserves.size() != 0) {
-
-//            //user가 이미 예약 했는지 확인
-//            for (Reserve reserve : reserves) {
-//                reserve.checkReserved(userIdx);
-//            }
-//
-
+        if (store.getReserves().size() != 0) {
             //해당 업체에서 보관할수 있는지 확인, 보관가능하면 보관 가능한 양을 반환, 보관 불가능하면 익셉션
             Long totalBagCount = 0L;
-            for (Reserve reserve : reserves) {
+            for (Reserve reserve : store.getReserves()) {
                 totalBagCount += reserve.getTotalBag();
             }
-            limit = reserves.get(0).getStore().getSpace(totalBagCount);
+            limit = store.getSpace(totalBagCount);
         }
 
         //휴무일에 예약이 시작되거나 끝나는지 확인
