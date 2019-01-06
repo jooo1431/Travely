@@ -5,16 +5,16 @@
     <property name="LOG_CHILD_INFO" value="info"/>
     <property name="LOG_CHILD_WARN" value="warn"/>
     <property name="LOG_CHILD_ERROR" value="error"/>
-    <property name="LOG_CHILD_BACKUP" value="backup"/>
-    <property name="MAX_HISTORY" value="30"/>
+    <property name="LOG_CHILD_BACKUP" value="backup"/> <!-- 하루지난 파일은 zip으로 압축해서 backup파일에 올려짐 -->
+    <property name="MAX_HISTORY" value="30"/> <!-- 생성기준 30일 지나면 삭제됨 -->
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread] %-5level %logger{35} : %msg%n</pattern>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative] %green([%thread]) %highlight(%-5level) %logger{35} : %msg%n</pattern>
         </encoder>
     </appender>
 
-    <timestamp key="byDate" datePattern="yyyyMMdd"/>
+    <timestamp key="byDate" datePattern="yyyy-MM-dd"/>
     <appender name="FILE-INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_PARENT_PATH}/${LOG_CHILD_INFO}/info-${byDate}.log</file>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -23,15 +23,15 @@
             <onMismatch>DENY</onMismatch>
         </filter>
         <encoder>
-            <pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread] %yellow%-5level %logger{35} : %msg%n</pattern>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative] [%thread] %highlight(%-5level) %logger{35} : %msg%n</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOGS_PATH}/${LOG_CHILD_BACKUP}/info-%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+            <fileNamePattern>${LOG_PARENT_PATH}/${LOG_CHILD_BACKUP}/info-%d{yyyy-MM-dd}.zip</fileNamePattern>
             <maxHistory>${MAX_HISTORY}</maxHistory>
         </rollingPolicy>
     </appender>
 
-    <timestamp key="byDate" datePattern="yyyyMMdd"/>
+    <timestamp key="byDate" datePattern="yyyy-MM-dd"/>
     <appender name="FILE-WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_PARENT_PATH}/${LOG_CHILD_WARN}/warn-${byDate}.log</file>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -40,15 +40,15 @@
             <onMismatch>DENY</onMismatch>
         </filter>
         <encoder>
-            <pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread] %-5level %logger{35} : %msg%n</pattern>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative] [%thread] %highlight(%-5level) %logger{35} : %msg%n</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOGS_PATH}/${LOG_CHILD_BACKUP}/warn-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>${LOG_PARENT_PATH}/${LOG_CHILD_BACKUP}/warn-%d{yyyy-MM-dd}.zip</fileNamePattern>
             <maxHistory>${MAX_HISTORY}</maxHistory>
         </rollingPolicy>
     </appender>
 
-    <timestamp key="byDate" datePattern="yyyyMMdd"/>
+    <timestamp key="byDate" datePattern="yyyy-MM-dd"/>
     <appender name="FILE-ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_PARENT_PATH}/${LOG_CHILD_ERROR}/error-${byDate}.log</file>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -57,10 +57,10 @@
             <onMismatch>DENY</onMismatch>
         </filter>
         <encoder>
-            <pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread] %-5level %logger{35} : %msg%n</pattern>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative] [%thread] %highlight(%-5level) %logger{35} : %msg%n</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PARENT_PATH}/${LOG_CHILD_BACKUP}/error-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>${LOG_PARENT_PATH}/${LOG_CHILD_BACKUP}/error-%d{yyyy-MM-dd}.zip</fileNamePattern>
             <maxHistory>${MAX_HISTORY}</maxHistory>
         </rollingPolicy>
     </appender>
@@ -69,15 +69,11 @@
         <appender-ref ref="FILE-INFO"/>
     </logger>
 
-    <root level="WARN">
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE-WARN"/>
         <appender-ref ref="FILE-ERROR"/>
     </root>
-
-    <root level="INFO">
-        <appender-ref ref="CONSOLE"/>
-    </root>
-
 
 </configuration>
 
