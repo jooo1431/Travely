@@ -236,6 +236,10 @@ public interface ReservationMapper {
 
     //StoreMapper Store findStoreByOwnerIdx(@Param("ownerIdx") final long ownerIdx); 에서 사용중
     @Select("SELECT * FROM reserve WHERE state < 3 AND storeIdx = #{storeIdx}")
+    @Results(value = {
+            @Result(property = "baggages", javaType = List.class, column = "reserveIdx",
+                    many = @Many(select = "com.travely.travely.mapper.BaggageMapper.findBaggageByReserveIdx", fetchType = FetchType.LAZY))
+    })
     List<Reserve> findUnderPickupReserveByStoreIdx();
 
     @Select("SELECT COUNT(*) FROM reserve WHERE userIdx = #{userIdx} AND state < 3")
