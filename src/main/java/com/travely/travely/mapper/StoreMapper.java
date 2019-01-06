@@ -37,7 +37,7 @@ public interface StoreMapper {
     @Results(value = {
             @Result(column = "storeIdx", property = "storeIdx"),
             @Result(column = "userIdx", property = "ownerIdx"),
-            @Result(property = "reviews", javaType = Review.class, column = "storeIdx", many = @Many(select = "com.travely.travely.mapper.ReviewMapper.findReviewsByStoreIdx", fetchType = FetchType.LAZY))
+            @Result(property = "reviews", javaType = List.class, column = "storeIdx", many = @Many(select = "com.travely.travely.mapper.ReviewMapper.findReviewsByStoreIdx", fetchType = FetchType.LAZY))
     })
     Store findStoreByUserIdx(@Param("userIdx") final Long userIdx);
 
