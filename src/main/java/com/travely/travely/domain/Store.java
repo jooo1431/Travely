@@ -36,10 +36,15 @@ public class Store {
     private List<StoreImg> storeImgs;
     private List<RestWeek> restWeeks;
     private Users users;
+    private Favorite favorite;
 
     private List<Reserve> reserves;
 
 
+    public Integer getFavoriteState(){
+        if(this.favorite==null) return -1;
+        return this.favorite.getIsFavorite();
+    }
 
     public List<Review> getReviews() { return CommonConfig.getCheckedList(reviews);
     }

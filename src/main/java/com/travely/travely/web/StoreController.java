@@ -8,10 +8,12 @@ import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 
@@ -48,8 +50,9 @@ public class StoreController {
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @GetMapping("/{storeIdx}")
-    public ResponseEntity<StoreDetailsResonseDto> getStoreDetails(@PathVariable Long storeIdx) {
-        return ResponseEntity.ok(storeService.getStoreDetails(storeIdx));
+    public ResponseEntity<StoreDetailsResonseDto> getStoreDetails(@PathVariable Long storeIdx, @ApiIgnore Authentication authentication) {
+        Long userIdx = Long.parseLong((String) authentication.getPrincipal());
+        return ResponseEntity.ok(storeService.getStoreDetails(storeIdx,userIdx));
     }
 
     @ApiOperation(value = "상가에 대한 리뷰 조회", notes = "상가의 리뷰를 조회합니다. 상가인덱스와 최근 리뷰의 마지막 인데스를 불러 조회합니다.")
