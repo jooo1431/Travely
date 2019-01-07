@@ -31,6 +31,7 @@ public class StoreDetailsResonseDto {
     private Double grade;
     private String addressNumber;
     private int available;
+    private int isFavorite;
 
     private List<ReviewResponseDto> reviewResponseDtos;
     private List<StoreImageResponseDto> storeImageResponseDtos;
@@ -58,6 +59,7 @@ public class StoreDetailsResonseDto {
         this.restWeekResponseDtos = store.getRestWeeks().stream()
                 .map(restWeek -> new RestWeekResponseDto(restWeek)).collect(Collectors.toList());
         this.grade = Double.parseDouble(String.format("%.1f",store.getGrade()));
+        this.isFavorite= store.getFavoriteState();
     }
 }
 
