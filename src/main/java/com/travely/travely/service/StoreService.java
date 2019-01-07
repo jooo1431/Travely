@@ -20,8 +20,8 @@ public class StoreService {
     private final BaggageMapper baggageMapper;
 
     @Transactional
-    public StoreDetailsResonseDto getStoreDetails(final Long storeIdx) {
-        Store store = storeMapper.findStoreByStoreIdx(storeIdx);
+    public StoreDetailsResonseDto getStoreDetails(final Long storeIdx, final Long userIdx) {
+        Store store = storeMapper.findStoreByStoreIdxAndUserIdx(storeIdx, userIdx);
         if (store == null) throw new NotFoundStoreException();
         return new StoreDetailsResonseDto(store);
     }
