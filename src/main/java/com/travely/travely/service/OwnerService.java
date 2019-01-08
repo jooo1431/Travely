@@ -4,14 +4,12 @@ import com.travely.travely.config.CommonConfig;
 import com.travely.travely.domain.Reserve;
 import com.travely.travely.domain.Review;
 import com.travely.travely.domain.Store;
-import com.travely.travely.dto.owner.AllReserveResponseDto;
-import com.travely.travely.dto.owner.OwnerInfoResponseDto;
-import com.travely.travely.dto.owner.ReserveArchiveInfoResponseDto;
-import com.travely.travely.dto.owner.ReserveArchiveResponseDto;
+import com.travely.travely.dto.owner.*;
 import com.travely.travely.dto.review.ReviewUserImgResponseDto;
 import com.travely.travely.dto.store.StoreGradeReview;
 import com.travely.travely.exception.AuthenticationErrorException;
 import com.travely.travely.exception.NotFoundReserveException;
+import com.travely.travely.exception.NotFoundStoreException;
 import com.travely.travely.exception.NotFoundStoringException;
 import com.travely.travely.mapper.ReservationMapper;
 import com.travely.travely.mapper.ReviewMapper;
@@ -40,9 +38,9 @@ public class OwnerService {
     final private StateType PICKUP = StateType.PICKUP;
 
 
-    public StoreGradeReview getStoreTotalReviewCountAndGrade(final Long ownerIdx){
+    public StoreGradeReview getStoreTotalReviewCountAndGrade(final Long ownerIdx) {
         Store store = storeMapper.findStoreByOwnerIdx(ownerIdx);
-       return new StoreGradeReview(store);
+        return new StoreGradeReview(store);
     }
 
     public ReserveArchiveInfoResponseDto getArchiveByReserveIdx(final Long ownerIdx, final Long reserveIdx) {
@@ -76,7 +74,7 @@ public class OwnerService {
     }
 
     public List<ReviewUserImgResponseDto> getMoreReviews(final Long ownerIdx, final Long reviewIdx) {
-        List<Review> reviewList = reviewMapper.findMoreReviewsByOwnerIdx(ownerIdx,reviewIdx);
+        List<Review> reviewList = reviewMapper.findMoreReviewsByOwnerIdx(ownerIdx, reviewIdx);
         reviewList = CommonConfig.getCheckedList(reviewList);
 
         List<ReviewUserImgResponseDto> reviewUserImgResponseDtos = reviewList.stream().map(review -> new ReviewUserImgResponseDto(review)).collect(Collectors.toList());
@@ -108,12 +106,19 @@ public class OwnerService {
         return reserveArchiveInfoResponseDto;
     }
 
-    public OwnerInfoResponseDto myPage(final Long ownerIdx){
+    public OwnerInfoResponseDto myPage(final Long ownerIdx) {
         Store store = storeMapper.findStoreByOwnerIdxForMyPage(ownerIdx);
         return new OwnerInfoResponseDto(store);
     }
 
-    public void toggleStoreAvailable(final Long ownerIdx){
+    public void toggleStoreAvailable(final Long ownerIdx) {
         storeMapper.updateStoreAvailable(ownerIdx);
+    }
+
+    public StoreIdxDto findStoreIdxByOwnerIdx(final Long ownerIdx) {
+        Store store = storeMapper.findStoreByOwnerIdx(ownerIdx);
+        if (store == null) throw new NotFoundStoreException();
+        StoreIdxDto storeIdxDto = new StoreIdxDto(store);
+        return storeIdxDto;
     }
 }
