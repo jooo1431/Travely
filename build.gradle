@@ -10,10 +10,7 @@ buildscript {
     }
 }
 
-//for rest docs
-plugins {
-    id "org.asciidoctor.convert" version "1.5.3"
-}
+
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
@@ -26,16 +23,7 @@ group = 'com.travely'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
-asciidoctor {
-    dependsOn test // (2)
-}
 
-bootJar {
-    dependsOn asciidoctor // (3)
-    from ("${asciidoctor.outputDir}/html5") { // (4)
-        into 'static/docs'
-    }
-}
 
 
 repositories {
@@ -64,26 +52,10 @@ dependencies {
     testImplementation('org.springframework.security:spring-security-test')
     implementation('com.auth0:java-jwt:3.3.0')
 
-    //for rest docs
-    asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor:2.0.3.RELEASE'
-    testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc:2.0.3.RELEASE'
+
 }
 
-//for rest docs
-ext {
-    snippetsDir = file('build/generated-snippets')
-}
 
-//for rest docs
-test {
-    outputs.dir snippetsDir
-}
-
-//for rest docs
-asciidoctor {
-    inputs.dir snippetsDir
-    dependsOn test
-}
 
 dependencyManagement {
     imports {
