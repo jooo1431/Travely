@@ -1,9 +1,6 @@
 package com.travely.travely.web;
 
-import com.travely.travely.dto.owner.AllReserveResponseDto;
-import com.travely.travely.dto.owner.OwnerInfoResponseDto;
-import com.travely.travely.dto.owner.ReserveArchiveInfoResponseDto;
-import com.travely.travely.dto.owner.ReserveArchiveResponseDto;
+import com.travely.travely.dto.owner.*;
 import com.travely.travely.dto.review.ReviewStoreGradeResponseDto;
 import com.travely.travely.dto.review.ReviewUserImgResponseDto;
 import com.travely.travely.dto.store.StoreGradeReview;
@@ -209,5 +206,22 @@ public class OwnerController {
         ownerService.toggleStoreAvailable(ownerIdx);
 
         return ResponseEntity.ok().build();
+    }
+
+    @ApiOperation(value = "ownerIdx를 기반으로 storeIdx를 반환합니다.", notes = "ownerIdx를 기반으로 storeIdx를 반환합니다")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "반환성공"),
+            @ApiResponse(code = 400, message = "잘못 된 접근"),
+            @ApiResponse(code = 403, message = "인증 에러"),
+            @ApiResponse(code = 500, message = "서버에러")
+    })
+    @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/store")
+    public ResponseEntity<StoreIdxDto> getStoreIdx(@ApiIgnore Authentication authentication) {
+
+        Long ownerIdx = Long.parseLong((String) authentication.getPrincipal());
+
+        return ResponseEntity.ok().body(ownerService.findStoreIdxByOwnerIdx(ownerIdx));
     }
 }
