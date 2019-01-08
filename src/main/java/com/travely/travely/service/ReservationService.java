@@ -7,6 +7,7 @@ import com.travely.travely.domain.Store;
 import com.travely.travely.dto.reservation.*;
 import com.travely.travely.dto.store.StoreDto;
 import com.travely.travely.exception.AlreadyExistsReserveException;
+import com.travely.travely.exception.AuthenticationErrorException;
 import com.travely.travely.exception.NotFoundReserveException;
 import com.travely.travely.mapper.PriceMapper;
 import com.travely.travely.mapper.ReservationMapper;
@@ -140,12 +141,26 @@ public class ReservationService {
                 .collect(Collectors.toList());
     }
 
-    //reserveCode로 예약정보 + 보관정보를 보자
+    //현재 진행형인 예약정보 + 보관정보를 보자
     public ReserveViewResponseDto getReserveMyInfo(final Long userIdx) {
         final Reserve reserve = reservationMapper.findReserveByUserIdx(userIdx);
         //예약내역이 없으면?
         if (reserve == null) throw new NotFoundReserveException();
 
+        return getReserveViewResponseDto(reserve);
+    }
+
+    public ReserveViewResponseDto getReserveMyInfoByReserveIdx(final Long userIdx,final Long reserveIdx){
+        final Reserve reserve = reservationMapper.findReserveByReserveIdx(reserveIdx);
+        //예약내역이 없으면?
+        if (reserve == null) throw new NotFoundReserveException();
+        //userIdx가 다르면?
+        if(reserve.getUserIdx()!=userIdx) throw new AuthenticationErrorException();
+
+        return getReserveViewResponseDto(reserve);
+    }
+
+    private ReserveViewResponseDto getReserveViewResponseDto(final Reserve reserve){
         final Store store = reserve.getStore();
         final StoreDto storeDto = new StoreDto(store);
 
