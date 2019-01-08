@@ -74,7 +74,8 @@ public interface StoreMapper {
             @Result(property = "users", javaType = Users.class, column = "userIdx",
                     one = @One(select = "com.travely.travely.mapper.UserMapper.findUserByUserIdx", fetchType = FetchType.EAGER)),
             @Result(property = "reviews", javaType = List.class, column = "storeIdx",
-                    many = @Many(select = "com.travely.travely.mapper.ReviewMapper.findReviewsByStoreIdxForMyPage", fetchType = FetchType.EAGER))
+                    many = @Many(select = "com.travely.travely.mapper.ReviewMapper.findReviewsByStoreIdxForMyPage", fetchType = FetchType.EAGER)),
+            @Result(property = "reserves", column = "storeIdx", many = @Many(select = "com.travely.travely.mapper.ReservationMapper.findUnderPickupReserveByStoreIdx"))
 
     })
     Store findStoreByFavoriteUserIdx();
