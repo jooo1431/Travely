@@ -1,7 +1,12 @@
 package com.travely.travely.dto.region;
 
+import com.travely.travely.domain.Reserve;
 import com.travely.travely.domain.Store;
+import com.travely.travely.dto.store.RestWeekResponseDto;
 import lombok.Getter;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 public class SimpleStoreResponseDto {
@@ -12,6 +17,9 @@ public class SimpleStoreResponseDto {
     private Long closeTime;
     private double grade;
     private String storeImgUrl;
+    private Long limit;
+    private Long currentBag;
+    private List<RestWeekResponseDto> restWeekResponseDtos;
 
 
     public SimpleStoreResponseDto(Store store) {
@@ -24,6 +32,9 @@ public class SimpleStoreResponseDto {
         if (store.getStoreImgs().size() != 0)
             this.storeImgUrl = store.getStoreImgs().get(0).getStoreImgUrl();
         else this.storeImgUrl="";
-
+        this.limit=store.getLimit();
+        this.currentBag=store.getReserves().stream().mapToLong(Reserve::getTotalBag).sum();
+        this.restWeekResponseDtos = store.getRestWeeks().stream()
+                .map(restWeek -> new RestWeekResponseDto(restWeek)).collect(Collectors.toList());
     }
 }

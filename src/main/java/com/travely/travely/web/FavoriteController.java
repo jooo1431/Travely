@@ -47,7 +47,7 @@ public class FavoriteController {
             "      }\n" +
             "    ]")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "즐겨찾기 조 성공"),
+            @ApiResponse(code = 200, message = "즐겨찾기 조회 성공"),
             @ApiResponse(code = 400, message = "잘못된 요청"),
             @ApiResponse(code = 500, message = "서버에러")
     })
