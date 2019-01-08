@@ -38,14 +38,30 @@ public class FavoriteController {
         return ResponseEntity.ok(favoriteService.updateFavorite(userIdx, storeIdx));
     }
 
-    @ApiOperation(value = "즐겨찾기 리스트 조회", notes = "\"regionIdx\": 지역의 고유 번호 Long,\n" +
-            "    \"regionName\": \"지역이름 String (ex.홍대입구역,건대입구역...)\",\n" +
+    @ApiOperation(value = "즐겨찾기 리스트 조회", notes = "  {\n" +
+            "    \"regionName\": \"string\",\n" +
             "    \"simpleStoreResponseDtos\": [\n" +
             "      {\n" +
-            "        \"storeIdx\": 가게고유번호 Long,\n" +
-            "        \"storeName\": \"가게이름\" String\n" +
+            "        \"address\": \"string\",\n" +
+            "        \"closeTime\": 0/Long,\n" +
+            "        \"currentBag\": 0/Long,\n" +
+            "        \"grade\": 0/double,\n" +
+            "        \"limit\": 0/Long,\n" +
+            "        \"openTime\": 0/Long,\n" +
+            "        int available -> -1, 1로 판별" +
+            "        \"restWeekResponseDtos\": [\n" +
+            "          {\n" +
+            "            \"storeIdx\": 0/Long,\n" +
+            "            \"week\": 0/Long,\n" +
+            "            \"weekIdx\": 0/Long\n" +
+            "          }\n" +
+            "        ],\n" +
+            "        \"storeIdx\": 0/Long,\n" +
+            "        \"storeImgUrl\": \"string\",\n" +
+            "        \"storeName\": \"string\"\n" +
             "      }\n" +
-            "    ]")
+            "    ]\n" +
+            "  }")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "즐겨찾기 조회 성공"),
             @ApiResponse(code = 400, message = "잘못된 요청"),

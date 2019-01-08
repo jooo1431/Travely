@@ -19,6 +19,7 @@ public class SimpleStoreResponseDto {
     private String storeImgUrl;
     private Long limit;
     private Long currentBag;
+    private int available;
     private List<RestWeekResponseDto> restWeekResponseDtos;
 
 
@@ -34,6 +35,7 @@ public class SimpleStoreResponseDto {
         else this.storeImgUrl="";
         this.limit=store.getLimit();
         this.currentBag=store.getReserves().stream().mapToLong(Reserve::getTotalBag).sum();
+        this.available=store.getAvailable();
         this.restWeekResponseDtos = store.getRestWeeks().stream()
                 .map(restWeek -> new RestWeekResponseDto(restWeek)).collect(Collectors.toList());
     }

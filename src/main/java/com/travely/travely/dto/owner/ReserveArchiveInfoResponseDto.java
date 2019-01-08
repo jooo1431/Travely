@@ -48,9 +48,17 @@ public class ReserveArchiveInfoResponseDto {
         this.payType = reserve.getPayment().getPayType();
         this.bagDtoList = reserve.getBaggages().stream().map(baggage -> new BagDto(baggage)).collect(Collectors.toList());
         this.startTime = reserve.getStartTime().getTime();
-        this.depositTime = reserve.getDepositTime().getTime();
+        if(reserve.getDepositTime()==null){
+            this.depositTime = 0L;
+        }else{
+            this.depositTime = reserve.getDepositTime().getTime();
+        }
         this.endTime = reserve.getEndTime().getTime();
-        this.takeTime = reserve.getTakeTime().getTime();
+        if(reserve.getTakeTime()==null){
+            this.takeTime = 0L;
+        }else{
+            this.takeTime = reserve.getTakeTime().getTime();
+        }
         this.progressType = reserve.getPayment().getProgressType();
         this.price = reserve.getPrice();
         this.bagImgDtos = reserve.getBaggageImgs().stream().map(baggageImg -> new BagImgDto(baggageImg)).collect(Collectors.toList());
