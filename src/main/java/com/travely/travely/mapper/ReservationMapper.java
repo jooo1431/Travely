@@ -17,23 +17,23 @@ public interface ReservationMapper {
 
     ///save에 쓰이는 쿼리
     //reserve와 연결된 예약 정보 불러오기
-    @Select("SELECT * FROM reserve WHERE storeIdx = #{storeIdx} AND state < 3")
-    @Results(value = {
-            @Result(property = "reserveIdx", javaType = Long.class, column = "reserveIdx"),
-            @Result(property = "storeIdx", javaType = Long.class, column = "storeIdx"),
-            @Result(property = "userIdx", javaType = Long.class, column = "userIdx"),
-            @Result(property = "baggages", javaType = List.class, column = "reserveIdx",
-                    many = @Many(select = "com.travely.travely.mapper.BaggageMapper.findBaggageByReserveIdx", fetchType = FetchType.LAZY)),
-            @Result(property = "baggageImgs", javaType = List.class, column = "reserveIdx",
-                    many = @Many(select = "com.travely.travely.mapper.BaggageImgMapper.findBaggageImgByReserveIdx", fetchType = FetchType.LAZY)),
-            @Result(property = "payment", javaType = Payment.class, column = "reserveIdx",
-                    one = @One(select = "com.travely.travely.mapper.PaymentMapper.findPaymentByReserveIdx", fetchType = FetchType.LAZY)),
-            @Result(property = "store", javaType = Store.class, column = "storeIdx",
-                    one = @One(select = "com.travely.travely.mapper.StoreMapper.findStoreByStoreIdx", fetchType = FetchType.LAZY)),
-            @Result(property = "users", javaType = Store.class, column = "userIdx",
-                    one = @One(select = "com.travely.travely.mapper.UserMapper.findUserByUserIdx", fetchType = FetchType.LAZY))
-    })
-    List<Reserve> findReserveStateUnderPickUpByStoreIdx(@Param("storeIdx") final Long storeIdx);
+//    @Select("SELECT * FROM reserve WHERE storeIdx = #{storeIdx} AND state < 3")
+//    @Results(value = {
+//            @Result(property = "reserveIdx", javaType = Long.class, column = "reserveIdx"),
+//            @Result(property = "storeIdx", javaType = Long.class, column = "storeIdx"),
+//            @Result(property = "userIdx", javaType = Long.class, column = "userIdx"),
+//            @Result(property = "baggages", javaType = List.class, column = "reserveIdx",
+//                    many = @Many(select = "com.travely.travely.mapper.BaggageMapper.findBaggageByReserveIdx", fetchType = FetchType.LAZY)),
+//            @Result(property = "baggageImgs", javaType = List.class, column = "reserveIdx",
+//                    many = @Many(select = "com.travely.travely.mapper.BaggageImgMapper.findBaggageImgByReserveIdx", fetchType = FetchType.LAZY)),
+//            @Result(property = "payment", javaType = Payment.class, column = "reserveIdx",
+//                    one = @One(select = "com.travely.travely.mapper.PaymentMapper.findPaymentByReserveIdx", fetchType = FetchType.LAZY)),
+//            @Result(property = "store", javaType = Store.class, column = "storeIdx",
+//                    one = @One(select = "com.travely.travely.mapper.StoreMapper.findStoreByStoreIdx", fetchType = FetchType.LAZY)),
+//            @Result(property = "users", javaType = Store.class, column = "userIdx",
+//                    one = @One(select = "com.travely.travely.mapper.UserMapper.findUserByUserIdx", fetchType = FetchType.LAZY))
+//    })
+//    List<Reserve> findReserveStateUnderPickUpByStoreIdx(@Param("storeIdx") final Long storeIdx);
 
 
     //reserve와 연결된 예약 정보 불러오기
@@ -74,7 +74,8 @@ public interface ReservationMapper {
     })
     List<Reserve> findArchiveReserveByOwnerIdx(@Param("ownerIdx") final Long ownerIdx);
 
-    @Select("select * from reserve where useridx=#{userIdx} order by reserveIdx desc limit 5;")
+    //UserMapper  Users findUserByUserIdx(@Param("userIdx") final Long userIdx); 에서 사용중
+    @Select("select * from reserve where useridx=#{userIdx} AND state < 4 order by reserveIdx desc limit 5;")
     @Results(value = {
             @Result(property = "reserveIdx", column = "reserveIdx"),
             @Result(property = "baggages", javaType = List.class, column = "reserveIdx",
@@ -85,7 +86,7 @@ public interface ReservationMapper {
     List<Reserve> findReserveByUserIdxOrderByReviewIdx(@Param("userIdx") final Long userIdx);
 
 
-    @Select("select * from reserve where useridx=#{userIdx} and reserveidx<#{reserveIdx} limit 5;")
+    @Select("select * from reserve where useridx=#{userIdx} and reserveidx<#{reserveIdx} AND state < 4 limit 5;")
     @Results(value = {
             @Result(property = "reserveIdx", column = "reserveIdx"),
             @Result(property = "baggages", javaType = List.class, column = "reserveIdx",
@@ -149,9 +150,9 @@ public interface ReservationMapper {
             "where A.startTime <= utc_timestamp() and B.progressType = 0")
     void deleteReservationAndPayment(@Param("reserve_cancle") final StateType stateType, @Param("pay_cancle") final ProgressType progressType);
 
-    //결제 목록 취소 처리
-    @Update("UPDATE payment SET progressType = #{progress} WHERE reserveIdx = #{reserveIdx}")
-    void updatePayment(@Param("reserveIdx") final long reserveIdx, @Param("progress") final ProgressType progressType);
+//    //결제 목록 취소 처리
+//    @Update("UPDATE payment SET progressType = #{progress} WHERE reserveIdx = #{reserveIdx}")
+//    void updatePayment(@Param("reserveIdx") final long reserveIdx, @Param("progress") final ProgressType progressType);
 
     ///delete에 쓰이는 쿼리
     ///////////////////////////////////////////////
@@ -177,24 +178,24 @@ public interface ReservationMapper {
     Reserve findReserveByReserveCode(@Param("reserveCode") final String reserveCode, @Param("storeIdx") final Long storeIdx);
 
 
-    //특정 상태의 예약 목록만 가져오기 limit개수만
-    @Select("SELECT * FROM reserve WHERE storeIdx = #{storeIdx} AND state = #{stateType} ORDER BY reserveIdx DESC limit 5")
-    @Results(value = {
-            @Result(property = "reserveIdx", javaType = Long.class, column = "reserveIdx"),
-            @Result(property = "storeIdx", javaType = Long.class, column = "storeIdx"),
-            @Result(property = "userIdx", javaType = Long.class, column = "userIdx"),
-            @Result(property = "baggages", javaType = List.class, column = "reserveIdx",
-                    many = @Many(select = "com.travely.travely.mapper.BaggageMapper.findBaggageByReserveIdx", fetchType = FetchType.LAZY)),
-            @Result(property = "baggageImgs", javaType = List.class, column = "reserveIdx",
-                    many = @Many(select = "com.travely.travely.mapper.BaggageImgMapper.findBaggageImgByReserveIdx", fetchType = FetchType.LAZY)),
-            @Result(property = "payment", javaType = Payment.class, column = "reserveIdx",
-                    one = @One(select = "com.travely.travely.mapper.PaymentMapper.findPaymentByReserveIdx", fetchType = FetchType.LAZY)),
-            @Result(property = "store", javaType = Store.class, column = "storeIdx",
-                    one = @One(select = "com.travely.travely.mapper.StoreMapper.findStoreByStoreIdx", fetchType = FetchType.LAZY)),
-            @Result(property = "users", javaType = Store.class, column = "userIdx",
-                    one = @One(select = "com.travely.travely.mapper.UserMapper.findUserByUserIdx", fetchType = FetchType.LAZY))
-    })
-    List<Reserve> findReserveByStoreIdxAndStateType(@Param("storeIdx") final Long storeIdx, @Param("stateType") final StateType stateType);
+//    //특정 상태의 예약 목록만 가져오기 limit개수만
+//    @Select("SELECT * FROM reserve WHERE storeIdx = #{storeIdx} AND state = #{stateType} ORDER BY reserveIdx DESC limit 5")
+//    @Results(value = {
+//            @Result(property = "reserveIdx", javaType = Long.class, column = "reserveIdx"),
+//            @Result(property = "storeIdx", javaType = Long.class, column = "storeIdx"),
+//            @Result(property = "userIdx", javaType = Long.class, column = "userIdx"),
+//            @Result(property = "baggages", javaType = List.class, column = "reserveIdx",
+//                    many = @Many(select = "com.travely.travely.mapper.BaggageMapper.findBaggageByReserveIdx", fetchType = FetchType.LAZY)),
+//            @Result(property = "baggageImgs", javaType = List.class, column = "reserveIdx",
+//                    many = @Many(select = "com.travely.travely.mapper.BaggageImgMapper.findBaggageImgByReserveIdx", fetchType = FetchType.LAZY)),
+//            @Result(property = "payment", javaType = Payment.class, column = "reserveIdx",
+//                    one = @One(select = "com.travely.travely.mapper.PaymentMapper.findPaymentByReserveIdx", fetchType = FetchType.LAZY)),
+//            @Result(property = "store", javaType = Store.class, column = "storeIdx",
+//                    one = @One(select = "com.travely.travely.mapper.StoreMapper.findStoreByStoreIdx", fetchType = FetchType.LAZY)),
+//            @Result(property = "users", javaType = Store.class, column = "userIdx",
+//                    one = @One(select = "com.travely.travely.mapper.UserMapper.findUserByUserIdx", fetchType = FetchType.LAZY))
+//    })
+//    List<Reserve> findReserveByStoreIdxAndStateType(@Param("storeIdx") final Long storeIdx, @Param("stateType") final StateType stateType);
 
     //특정 상태의 예약 목록만 추가로 가져오기 limit개수만
     @Select("SELECT * FROM reserve WHERE storeIdx = #{storeIdx} AND state = #{stateType} AND reserveIdx < #{reserveIdx} ORDER BY reserveIdx DESC limit 5")
@@ -233,7 +234,12 @@ public interface ReservationMapper {
     })
     Reserve findReserveByReserveIdx(@Param("reserveIdx") final Long reserveIdx);
 
+    //StoreMapper Store findStoreByOwnerIdx(@Param("ownerIdx") final long ownerIdx); 에서 사용중
     @Select("SELECT * FROM reserve WHERE state < 3 AND storeIdx = #{storeIdx}")
+    @Results(value = {
+            @Result(property = "baggages", javaType = List.class, column = "reserveIdx",
+                    many = @Many(select = "com.travely.travely.mapper.BaggageMapper.findBaggageByReserveIdx", fetchType = FetchType.LAZY))
+    })
     List<Reserve> findUnderPickupReserveByStoreIdx();
 
     @Select("SELECT COUNT(*) FROM reserve WHERE userIdx = #{userIdx} AND state < 3")

@@ -36,10 +36,15 @@ public class Store {
     private List<StoreImg> storeImgs;
     private List<RestWeek> restWeeks;
     private Users users;
+    private Favorite favorite;
 
     private List<Reserve> reserves;
 
 
+    public Integer getFavoriteState(){
+        if(this.favorite==null) return -1;
+        return this.favorite.getIsFavorite();
+    }
 
     public List<Review> getReviews() { return CommonConfig.getCheckedList(reviews);
     }
@@ -81,8 +86,8 @@ public class Store {
     }
 
     public void checkReserveTime(ReserveRequestDto reserveRequestDto) {
-        if (!checkHour(new Timestamp(reserveRequestDto.getStartTime()))) throw new NotCorrectTimeException();
-        if (!checkHour(new Timestamp(reserveRequestDto.getEndTime()))) throw new NotCorrectTimeException();
+        if (!checkHour(new Timestamp(reserveRequestDto.getStartTime()))) throw new NotCorrectTimeException("예약시작시간이 잘못 입력되었습니다.");
+        if (!checkHour(new Timestamp(reserveRequestDto.getEndTime()))) throw new NotCorrectTimeException("예약종료시간이 잘못 입력되었습니다.");
     }
 
     private Boolean checkHour(Timestamp timestamp) {
