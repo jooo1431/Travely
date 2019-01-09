@@ -75,7 +75,7 @@ public interface ReservationMapper {
     List<Reserve> findArchiveReserveByOwnerIdx(@Param("ownerIdx") final Long ownerIdx);
 
     //UserMapper  Users findUserByUserIdx(@Param("userIdx") final Long userIdx); 에서 사용중
-    @Select("select * from reserve where useridx=#{userIdx} AND state < 4 order by reserveIdx desc limit 5;")
+    @Select("select * from reserve where useridx=#{userIdx} AND (state = 2 OR state = 3) order by reserveIdx desc limit 5;")
     @Results(value = {
             @Result(property = "reserveIdx", column = "reserveIdx"),
             @Result(property = "baggages", javaType = List.class, column = "reserveIdx",
