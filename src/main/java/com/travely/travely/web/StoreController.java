@@ -52,7 +52,7 @@ public class StoreController {
     @GetMapping("/{storeIdx}")
     public ResponseEntity<StoreDetailsResonseDto> getStoreDetails(@PathVariable Long storeIdx, @ApiIgnore Authentication authentication) {
         Long userIdx = Long.parseLong((String) authentication.getPrincipal());
-        return ResponseEntity.ok(storeService.getStoreDetails(storeIdx,userIdx));
+        return ResponseEntity.ok(storeService.getStoreDetails(storeIdx, userIdx));
     }
 
     @ApiOperation(value = "상가에 대한 리뷰 조회", notes = "상가의 리뷰를 조회합니다. 상가인덱스와 최근 리뷰의 마지막 인데스를 불러 조회합니다.")

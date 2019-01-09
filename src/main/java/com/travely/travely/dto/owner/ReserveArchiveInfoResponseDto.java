@@ -48,15 +48,15 @@ public class ReserveArchiveInfoResponseDto {
         this.payType = reserve.getPayment().getPayType();
         this.bagDtoList = reserve.getBaggages().stream().map(baggage -> new BagDto(baggage)).collect(Collectors.toList());
         this.startTime = reserve.getStartTime().getTime();
-        if(reserve.getDepositTime()==null){
+        if (reserve.getDepositTime() == null) {
             this.depositTime = 0L;
-        }else{
+        } else {
             this.depositTime = reserve.getDepositTime().getTime();
         }
         this.endTime = reserve.getEndTime().getTime();
-        if(reserve.getTakeTime()==null){
+        if (reserve.getTakeTime() == null) {
             this.takeTime = 0L;
-        }else{
+        } else {
             this.takeTime = reserve.getTakeTime().getTime();
         }
         this.progressType = reserve.getPayment().getProgressType();

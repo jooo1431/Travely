@@ -93,7 +93,7 @@ public class Store {
                     "\n입력된 예약시작 시간 : " + new Timestamp(reserveRequestDto.getStartTime()));
         if (!checkHour(new Timestamp(reserveRequestDto.getEndTime())))
             throw new NotCorrectTimeException("예약종료시간이 잘못 입력되었습니다.\n" +
-                    "storeIdx : " + reserveRequestDto.getStoreIdx() + "클로즈시간 : " + getCloseTime()+
+                    "storeIdx : " + reserveRequestDto.getStoreIdx() + "클로즈시간 : " + getCloseTime() +
                     "\n입력된 예약종료 시간 : " + new Timestamp(reserveRequestDto.getEndTime()));
     }
 

@@ -97,7 +97,7 @@ public class OwnerController {
         StoreGradeReview storeGradeReview = ownerService.getStoreTotalReviewCountAndGrade(ownerIdx);
 
 
-        return ResponseEntity.ok().body(new ReviewStoreGradeResponseDto(reviewUserImgResponseDtos,storeGradeReview));
+        return ResponseEntity.ok().body(new ReviewStoreGradeResponseDto(reviewUserImgResponseDtos, storeGradeReview));
     }
 
     @ApiOperation(value = "가게 리뷰 추가 보기", notes = "가게 리뷰 추가 보기")

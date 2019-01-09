@@ -150,11 +150,11 @@ public class ReservationController {
     })
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @GetMapping("/{reserveIdx}")
-    public ResponseEntity<ReserveViewResponseDto> getReservationByUserIdxAndReserveIdx(@ApiIgnore Authentication authentication,@PathVariable final Long reserveIdx) {
+    public ResponseEntity<ReserveViewResponseDto> getReservationByUserIdxAndReserveIdx(@ApiIgnore Authentication authentication, @PathVariable final Long reserveIdx) {
 
         Long userIdx = Long.parseLong((String) authentication.getPrincipal());
 
-        ReserveViewResponseDto reserveViewResponseDto = reservationService.getReserveMyInfoByReserveIdx(userIdx,reserveIdx);
+        ReserveViewResponseDto reserveViewResponseDto = reservationService.getReserveMyInfoByReserveIdx(userIdx, reserveIdx);
 
         return ResponseEntity.ok().body(reserveViewResponseDto);
     }

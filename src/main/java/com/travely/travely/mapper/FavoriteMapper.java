@@ -18,7 +18,7 @@ public interface FavoriteMapper {
 
     @Select("SELECT * FROM favorite WHERE userIdx = #{temp} AND storeIdx = #{storeIdx}")
     Favorite findFavoriteByUserIdxAndStoreIdx();
-    
+
     //UserMapper Users findUserByUserIdx(@Param("userIdx") final Long userIdx); 에서 사용중
     @Select("select * from favorite where userIdx=#{userIdx} AND isFavorite = 1")
     Favorite findFavoriteByUserIdx(@Param("userIdx") Long userIdx);

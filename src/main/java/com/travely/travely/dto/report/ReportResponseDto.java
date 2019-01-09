@@ -18,7 +18,7 @@ public class ReportResponseDto {
         this.userIdx = userIdx;
     }
 
-    public Report toEntity(){
+    public Report toEntity() {
         return Report.builder()
                 .reportIdx(this.reportIdx)
                 .reviewIdx(this.reviewIdx)
