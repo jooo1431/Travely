@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.List;
 
 @Getter
@@ -93,15 +94,45 @@ public class Store {
                     "\n입력된 예약시작 시간 : " + new Timestamp(reserveRequestDto.getStartTime()));
         if (!checkHour(new Timestamp(reserveRequestDto.getEndTime())))
             throw new NotCorrectTimeException("예약종료시간이 잘못 입력되었습니다.\n" +
-                    "storeIdx : " + reserveRequestDto.getStoreIdx() + "클로즈시간 : " + getCloseTime()+
+                    "storeIdx : " + reserveRequestDto.getStoreIdx() + "클로즈시간 : " + getCloseTime() +
                     "\n입력된 예약종료 시간 : " + new Timestamp(reserveRequestDto.getEndTime()));
     }
 
     private Boolean checkHour(Timestamp timestamp) {
-        if (this.openTime.getHours() <= timestamp.getHours() &&
-                this.closeTime.getHours() >= timestamp.getHours())
+
+        final Long startMil = timestamp.getTime();
+        Long openMil = this.openTime.getTime();
+        Long closeMil = this.closeTime.getTime();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(startMil);
+
+        final int sYear = calendar.get(Calendar.YEAR);
+        final int sMonth = calendar.get(Calendar.MONTH);
+        final int sDay = calendar.get(Calendar.DATE);
+
+        calendar.setTimeInMillis(openMil);
+        int openDate = calendar.get(Calendar.DATE);
+        int openHour = calendar.get(Calendar.HOUR_OF_DAY);
+        int openMinute = calendar.get(Calendar.MINUTE);
+        calendar.setTimeInMillis(closeMil);
+        int closeDate = calendar.get(Calendar.DATE);
+        int closeHour = calendar.get(Calendar.HOUR_OF_DAY);
+        int closeMinute = calendar.get(Calendar.MINUTE);
+
+        calendar.set(sYear, sMonth, sDay, openHour, openMinute);
+        openMil = calendar.getTimeInMillis();
+        calendar.set(sYear, sMonth, sDay, closeHour, closeMinute);
+        closeMil = calendar.getTimeInMillis();
+
+        if (openDate != closeDate) {
+            closeMil = closeMil + 24 * 1000 * 60 * 60;
+        }
+
+        if ((openMil <= startMil && closeMil >= startMil))
             return true;
-        return false;
+        else
+            return false;
     }
 
     public void checkAvailable() {

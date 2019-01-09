@@ -6,6 +6,7 @@ import com.travely.travely.domain.Store;
 import com.travely.travely.dto.review.ReviewRequestDto;
 import com.travely.travely.dto.review.ReviewResponseDto;
 import com.travely.travely.dto.review.ReviewStoreResponseDto;
+import com.travely.travely.exception.NotFoundStoreException;
 import com.travely.travely.mapper.ReviewMapper;
 import com.travely.travely.mapper.StoreMapper;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +43,10 @@ public class ReviewService {
 
         Review review = reviewRequestDto.toEntity(userIdx);
 
+        //리뷰가 올바른 곳에 쓰이는지 확인
+        Store store = storeMapper.findStoreByStoreIdx(review.getStoreIdx());
+        if (store == null) throw new NotFoundStoreException();
+
         reviewMapper.saveReview(review);
 
         Review savedReview = reviewMapper.findReviewByReviewIdx(review.getReviewIdx());
@@ -49,7 +54,7 @@ public class ReviewService {
         return savedReview;
     }
 
-    public List<ReviewStoreResponseDto>  getMyReviews(final Long userIdx) {
+    public List<ReviewStoreResponseDto> getMyReviews(final Long userIdx) {
         List<Store> storeList = storeMapper.findMyReviewOfStoreByUserIdx(userIdx);
         storeList = CommonConfig.getCheckedList(storeList);
         List<ReviewStoreResponseDto> reviewStoreResponseDtos = storeList.stream().map(store -> new ReviewStoreResponseDto(store)).collect(Collectors.toList());
@@ -57,7 +62,7 @@ public class ReviewService {
     }
 
     public List<ReviewStoreResponseDto> getMoreMyReviews(final Long userIdx, final Long reviewIdx) {
-        List<Store> storeList = storeMapper.findMoreMyReviewOfStoreByUserIdx(userIdx,reviewIdx);
+        List<Store> storeList = storeMapper.findMoreMyReviewOfStoreByUserIdx(userIdx, reviewIdx);
         storeList = CommonConfig.getCheckedList(storeList);
         List<ReviewStoreResponseDto> reviewStoreResponseDtos = storeList.stream().map(store -> new ReviewStoreResponseDto(store)).collect(Collectors.toList());
         return reviewStoreResponseDtos;

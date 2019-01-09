@@ -32,10 +32,10 @@ public class SimpleStoreResponseDto {
         this.grade = store.getGrade();
         if (store.getStoreImgs().size() != 0)
             this.storeImgUrl = store.getStoreImgs().get(0).getStoreImgUrl();
-        else this.storeImgUrl="";
-        this.limit=store.getLimit();
-        this.currentBag=store.getReserves().stream().mapToLong(Reserve::getTotalBag).sum();
-        this.available=store.getAvailable();
+        else this.storeImgUrl = "";
+        this.limit = store.getLimit();
+        this.currentBag = store.getReserves().stream().mapToLong(Reserve::getTotalBag).sum();
+        this.available = store.getAvailable();
         this.restWeekResponseDtos = store.getRestWeeks().stream()
                 .map(restWeek -> new RestWeekResponseDto(restWeek)).collect(Collectors.toList());
     }

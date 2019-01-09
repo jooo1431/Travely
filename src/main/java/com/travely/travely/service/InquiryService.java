@@ -16,6 +16,7 @@ public class InquiryService {
 
     /**
      * 문의 사항 저장하기
+     *
      * @param userIdx
      * @param inquiryDto
      */
@@ -24,8 +25,8 @@ public class InquiryService {
         Inquiry inquiry = inquiryDto.toEntity();
         Long inquiryIdx = inquiryMapper.saveInquiry(userIdx, inquiry);
 
-        for( String ImgUrl : inquiryDto.getInquiryImgs()){
-            inquiryMapper.saveInquiryImg( inquiryIdx, ImgUrl);
+        for (String ImgUrl : inquiryDto.getInquiryImgs()) {
+            inquiryMapper.saveInquiryImg(inquiryIdx, ImgUrl);
         }
     }
 }

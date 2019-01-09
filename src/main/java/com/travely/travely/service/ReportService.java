@@ -16,7 +16,7 @@ public class ReportService {
     private final ReportMapper reportMapper;
 
     @Transactional
-    public void saveReport(ReportResponseDto reportResponseDto){
+    public void saveReport(ReportResponseDto reportResponseDto) {
         Report report = reportResponseDto.toEntity();
         reportMapper.saveReport(report);
     }

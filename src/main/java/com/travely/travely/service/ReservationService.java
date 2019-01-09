@@ -39,7 +39,7 @@ public class ReservationService {
     public ReserveResponseDto saveReservation(final long userIdx, final ReserveRequestDto reserveRequestDto) {
 
         //예약여부 검사
-        if(reservationMapper.findReserveCntByuserIdx(userIdx)>=1) throw new AlreadyExistsReserveException();
+        if (reservationMapper.findReserveCntByuserIdx(userIdx) >= 1) throw new AlreadyExistsReserveException();
 
         final Store store = storeMapper.findStoreByStoreIdx(reserveRequestDto.getStoreIdx());
 
@@ -126,15 +126,15 @@ public class ReservationService {
         final Reserve reserve = reservationMapper.findReserveByUserIdx(userIdx);
         if (reserve == null) throw new NotFoundReserveException();
 
-        reservationMapper.deleteReserveAndPaymentByReserveIdx(reserve.getReserveIdx(), StateType.CANCEL,ProgressType.CANCEL);
+        reservationMapper.deleteReserveAndPaymentByReserveIdx(reserve.getReserveIdx(), StateType.CANCEL, ProgressType.CANCEL);
     }
 
     @Transactional
     public void cancelReservation() {
-        reservationMapper.deleteReservationAndPayment(StateType.CANCEL,ProgressType.CANCEL);
+        reservationMapper.deleteReservationAndPayment(StateType.CANCEL, ProgressType.CANCEL);
     }
 
-    public List<PriceResponseDto> getPrices(){
+    public List<PriceResponseDto> getPrices() {
         return priceMapper.getAllPrice()
                 .stream()
                 .map(price -> new PriceResponseDto(price))
@@ -150,17 +150,17 @@ public class ReservationService {
         return getReserveViewResponseDto(reserve);
     }
 
-    public ReserveViewResponseDto getReserveMyInfoByReserveIdx(final Long userIdx,final Long reserveIdx){
+    public ReserveViewResponseDto getReserveMyInfoByReserveIdx(final Long userIdx, final Long reserveIdx) {
         final Reserve reserve = reservationMapper.findReserveByReserveIdx(reserveIdx);
         //예약내역이 없으면?
         if (reserve == null) throw new NotFoundReserveException();
         //userIdx가 다르면?
-        if(reserve.getUserIdx()!=userIdx) throw new AuthenticationErrorException();
+        if (reserve.getUserIdx() != userIdx) throw new AuthenticationErrorException();
 
         return getReserveViewResponseDto(reserve);
     }
 
-    private ReserveViewResponseDto getReserveViewResponseDto(final Reserve reserve){
+    private ReserveViewResponseDto getReserveViewResponseDto(final Reserve reserve) {
         final Store store = reserve.getStore();
         final StoreDto storeDto = new StoreDto(store);
 

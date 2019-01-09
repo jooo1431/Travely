@@ -24,8 +24,8 @@ public class ReportController {
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PostMapping("/{reviewIdx}")
     public ResponseEntity<Void> saveReport(@ApiIgnore Authentication authentication,
-                                           @PathVariable final Long reviewIdx){
-        Long userIdx = Long.parseLong((String)authentication.getPrincipal());
+                                           @PathVariable final Long reviewIdx) {
+        Long userIdx = Long.parseLong((String) authentication.getPrincipal());
         ReportResponseDto reportResponseDto = new ReportResponseDto(reviewIdx, userIdx);
         reportService.saveReport(reportResponseDto);
         return ResponseEntity.ok().build();

@@ -1,5 +1,6 @@
 package com.travely.travely.web;
 
+import com.travely.travely.dto.baggage.BagImgRequestDto;
 import com.travely.travely.dto.owner.*;
 import com.travely.travely.dto.review.ReviewStoreGradeResponseDto;
 import com.travely.travely.dto.review.ReviewUserImgResponseDto;
@@ -71,11 +72,11 @@ public class OwnerController {
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/reserve/{reserveIdx}")
-    public ResponseEntity<Void> updateReserveToPickUp(@ApiIgnore Authentication authentication, @PathVariable final Long reserveIdx) {
+    public ResponseEntity<Void> updateReserveToPickUp(@ApiIgnore Authentication authentication, @PathVariable final Long reserveIdx, @RequestBody final BagImgRequestDto bagImgRequestDto) {
 
         Long ownerIdx = Long.parseLong((String) authentication.getPrincipal());
 
-        ownerService.updateBaggageState(ownerIdx, reserveIdx);
+        ownerService.updateBaggageState(ownerIdx, reserveIdx, bagImgRequestDto);
 
         return ResponseEntity.ok().build();
     }
@@ -97,7 +98,7 @@ public class OwnerController {
         StoreGradeReview storeGradeReview = ownerService.getStoreTotalReviewCountAndGrade(ownerIdx);
 
 
-        return ResponseEntity.ok().body(new ReviewStoreGradeResponseDto(reviewUserImgResponseDtos,storeGradeReview));
+        return ResponseEntity.ok().body(new ReviewStoreGradeResponseDto(reviewUserImgResponseDtos, storeGradeReview));
     }
 
     @ApiOperation(value = "가게 리뷰 추가 보기", notes = "가게 리뷰 추가 보기")
