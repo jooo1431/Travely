@@ -26,8 +26,8 @@ public class InquiryController {
     @ApiImplicitParams({@ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PostMapping("")
     public ResponseEntity<Void> saveInquiry(@ApiIgnore Authentication authentication,
-                                      @RequestBody final InquiryDto inquiryDto) {
-        Long userIdx = Long.parseLong((String)authentication.getPrincipal());
+                                            @RequestBody final InquiryDto inquiryDto) {
+        Long userIdx = Long.parseLong((String) authentication.getPrincipal());
         inquiryService.saveInquiry(userIdx, inquiryDto);
         return ResponseEntity.ok().build();
     }

@@ -8,9 +8,9 @@ public class ReserveFlagDto {
     private Boolean isReserve;
 
     public ReserveFlagDto(Reserve reserve) {
-        if(reserve == null){
+        if (reserve == null) {
             this.isReserve = false;
-        }else{
+        } else {
             this.isReserve = true;
         }
     }

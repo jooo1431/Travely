@@ -48,8 +48,8 @@ public class StoreInfoResponseDto {
         } else {
             this.storeImage = storeImg.getStoreImgUrl();
         }
-        this.currentBag=store.getReserves().stream().mapToLong(Reserve::getTotalBag).sum();
-        this.available=store.getAvailable();
+        this.currentBag = store.getReserves().stream().mapToLong(Reserve::getTotalBag).sum();
+        this.available = store.getAvailable();
         this.restWeekResponseDtos = store.getRestWeeks().stream()
                 .map(restWeek -> new RestWeekResponseDto(restWeek)).collect(Collectors.toList());
     }
