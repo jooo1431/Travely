@@ -57,15 +57,15 @@ public class ReserveRequestDto {
     }
 
     public void checkTime() {
-        if (this.startTime > this.endTime){
+        if (this.startTime > this.endTime) {
             throw new NotCorrectTimeException("예약 시작시간 보다 예약 종료시간이 뒤에 있어야합니다.");
         }
     }
 
     public void checkCurrentTime() {
-        final Long currentTime = new Timestamp(System.currentTimeMillis()).getTime()-1000*60*3;
+        final Long currentTime = new Timestamp(System.currentTimeMillis()).getTime() - 1000 * 60 * 3;
         if (this.startTime - currentTime < 0) {
-            throw new NotCorrectTimeException("사용자가 입력한 시작시간 : "+new Timestamp(this.startTime)+"입력시 시간 - 3분 : "+new Timestamp(currentTime));
+            throw new NotCorrectTimeException("사용자가 입력한 시작시간 : " + new Timestamp(this.startTime) + "입력시 시간 - 3분 : " + new Timestamp(currentTime));
         }
     }
 

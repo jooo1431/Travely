@@ -44,8 +44,8 @@ public class ReserveViewResponseDto {
         return CommonConfig.getCheckedList(bagImgDtos);
     }
 
-    public Long getTimeFromTimestamp(Timestamp timestamp){
-        if(timestamp == null) return new Timestamp(0).getTime();
+    public Long getTimeFromTimestamp(Timestamp timestamp) {
+        if (timestamp == null) return new Timestamp(0).getTime();
         return timestamp.getTime();
     }
 

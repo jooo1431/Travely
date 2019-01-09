@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.*;
 @Mapper
 public interface InquiryMapper {
 
-    @Insert({"INSERT inquiry SET userIdx = #{userIdx}, content = #{inquiry.content}, createAt = #{inquiry.createAt}", })
+    @Insert({"INSERT inquiry SET userIdx = #{userIdx}, content = #{inquiry.content}, createAt = #{inquiry.createAt}",})
     @Options(useGeneratedKeys = true, keyColumn = "inquiry.inquiryIdx", keyProperty = "inquiry.inquiryIdx")
     Long saveInquiry(@Param("userIdx") final Long userIdx, @Param("inquiry") final Inquiry inquiry);
 

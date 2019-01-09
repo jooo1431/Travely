@@ -9,6 +9,7 @@ public class InquiryImgDto {
     private Long inquiryIdx;
     private String inquiryImgUrl;
 
-    public InquiryImgDto(InquiryImg inquiryImg){
-        this.inquiryImgUrl = inquiryImg.getInquiryImg();}
+    public InquiryImgDto(InquiryImg inquiryImg) {
+        this.inquiryImgUrl = inquiryImg.getInquiryImg();
+    }
 }

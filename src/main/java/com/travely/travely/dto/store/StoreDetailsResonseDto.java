@@ -58,8 +58,8 @@ public class StoreDetailsResonseDto {
                 .map(storeImg -> new StoreImageResponseDto(storeImg)).collect(Collectors.toList());
         this.restWeekResponseDtos = store.getRestWeeks().stream()
                 .map(restWeek -> new RestWeekResponseDto(restWeek)).collect(Collectors.toList());
-        this.grade = Double.parseDouble(String.format("%.1f",store.getGrade()));
-        this.isFavorite= store.getFavoriteState();
+        this.grade = Double.parseDouble(String.format("%.1f", store.getGrade()));
+        this.isFavorite = store.getFavoriteState();
     }
 }
 
