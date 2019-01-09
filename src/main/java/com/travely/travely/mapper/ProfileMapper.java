@@ -1,8 +1,10 @@
 package com.travely.travely.mapper;
 
 import com.travely.travely.domain.Profile;
-import org.apache.ibatis.annotations.*;
-import org.apache.ibatis.mapping.FetchType;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 @Mapper
 public interface ProfileMapper {

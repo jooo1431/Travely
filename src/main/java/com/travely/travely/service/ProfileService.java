@@ -19,10 +19,11 @@ public class ProfileService {
 
     /**
      * userIdx로 user 정보 얻어오기
+     *
      * @param userIdx
      * @return profileDto
      */
-    public ProfileDto findUserInfo(final Long userIdx){
+    public ProfileDto findUserInfo(final Long userIdx) {
         Profile profile = profileMapper.findByUserIdx(userIdx);
         ProfileDto profileDto = new ProfileDto(profile);
         return profileDto;
@@ -30,18 +31,18 @@ public class ProfileService {
 
     /**
      * 프로필 정보 수정
+     *
      * @param userIdx
      * @param profileDto
      * @return HttpStatus
      */
     @Transactional
-    public HttpStatus updateProfile(final Long userIdx, final ProfileDto profileDto){
-        if(profileDto.checkProperties()) {
+    public HttpStatus updateProfile(final Long userIdx, final ProfileDto profileDto) {
+        if (profileDto.checkProperties()) {
             Profile profile = profileDto.toEntity();
             profileMapper.updateProfile(userIdx, profile);
             return HttpStatus.OK;
-        }
-        else return HttpStatus.BAD_REQUEST;
+        } else return HttpStatus.BAD_REQUEST;
     }
 
 

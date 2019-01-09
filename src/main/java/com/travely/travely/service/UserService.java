@@ -43,13 +43,16 @@ public class UserService {
         return userMapper.findByEmail(email) != null;
     }
 
+
+    @Transactional
     public UsersInfoResponseDto getMyProfile(Long userIdx) {
         Users users = userMapper.findUserByUserIdx(userIdx);
         return new UsersInfoResponseDto(users);
     }
 
-    public List<StoreInfoResponseDto> getLikedStoreDtos(Long userIdx, Long reserveIdx){
-        List<Store> likedStores = reservationMapper.findReserveByUserIdxAndReserveIdx(userIdx,reserveIdx).stream()
+
+    public List<StoreInfoResponseDto> getLikedStoreDtos(Long userIdx, Long reserveIdx) {
+        List<Store> likedStores = reservationMapper.findReserveByUserIdxAndReserveIdx(userIdx, reserveIdx).stream()
                 .map(reserve -> reserve.getStore()).collect(Collectors.toList());
 
         return likedStores.stream().map(store -> new StoreInfoResponseDto(store)).collect(Collectors.toList());

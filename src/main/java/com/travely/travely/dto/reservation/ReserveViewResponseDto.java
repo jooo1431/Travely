@@ -16,13 +16,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
-public class ReserveViewDto {
+public class ReserveViewResponseDto {
     private StateType stateType;
     private String reserveCode;
-    private Timestamp startTime;
-    private Timestamp endTime;
-    private Timestamp depositTime;
-    private Timestamp takeTime;
+    private Long startTime;
+    private Long endTime;
+    private Long depositTime;
+    private Long takeTime;
     private List<BagDto> bagDtos;
     private Long priceIdx;
     private Long priceUnit;
@@ -44,14 +44,19 @@ public class ReserveViewDto {
         return CommonConfig.getCheckedList(bagImgDtos);
     }
 
+    public Long getTimeFromTimestamp(Timestamp timestamp){
+        if(timestamp == null) return new Timestamp(0).getTime();
+        return timestamp.getTime();
+    }
+
     @Builder
-    public ReserveViewDto(final Reserve reserve, final StoreDto storeDto, final Long priceIdx, final Long priceUnit, final Long extraCharge, final Long extraChargeCount) {
+    public ReserveViewResponseDto(final Reserve reserve, final StoreDto storeDto, final Long priceIdx, final Long priceUnit, final Long extraCharge, final Long extraChargeCount) {
         this.stateType = reserve.getState();
         this.reserveCode = reserve.getReserveCode();
-        this.startTime = reserve.getStartTime();
-        this.endTime = reserve.getEndTime();
-        this.depositTime = reserve.getDepositTime();
-        this.takeTime = reserve.getTakeTime();
+        this.startTime = reserve.getStartTime().getTime();
+        this.endTime = reserve.getEndTime().getTime();
+        this.depositTime = getTimeFromTimestamp(reserve.getDepositTime());
+        this.takeTime = getTimeFromTimestamp(reserve.getTakeTime());
         this.bagDtos = reserve.getBaggages().stream()
                 .map(baggage -> new BagDto(baggage)).collect(Collectors.toList());
         this.price = reserve.getPrice();

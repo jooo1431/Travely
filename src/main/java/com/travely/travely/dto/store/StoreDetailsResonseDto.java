@@ -1,5 +1,6 @@
 package com.travely.travely.dto.store;
 
+import com.travely.travely.domain.Reserve;
 import com.travely.travely.domain.Store;
 import com.travely.travely.dto.review.ReviewResponseDto;
 import lombok.AccessLevel;
@@ -7,8 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,12 +30,14 @@ public class StoreDetailsResonseDto {
     private Long currentBag;
     private Double grade;
     private String addressNumber;
+    private int available;
+    private int isFavorite;
 
     private List<ReviewResponseDto> reviewResponseDtos;
     private List<StoreImageResponseDto> storeImageResponseDtos;
     private List<RestWeekResponseDto> restWeekResponseDtos;
 
-    public StoreDetailsResonseDto(Store store, Long currentBag) {
+    public StoreDetailsResonseDto(Store store) {
         this.storeIdx = store.getStoreIdx();
         this.ownerIdx = store.getOwnerIdx();
         this.storeName = store.getStoreName();
@@ -48,15 +49,17 @@ public class StoreDetailsResonseDto {
         this.latitude = store.getLatitude();
         this.longitude = store.getLongitude();
         this.limit = store.getLimit();
-        this.currentBag = currentBag;
+        this.currentBag = store.getReserves().stream().mapToLong(Reserve::getTotalBag).sum();
         this.addressNumber = store.getAddressNumber();
+        this.available = store.getAvailable();
         this.reviewResponseDtos = store.getReviews().stream()
                 .map(review -> new ReviewResponseDto(review)).collect(Collectors.toList());
         this.storeImageResponseDtos = store.getStoreImgs().stream()
                 .map(storeImg -> new StoreImageResponseDto(storeImg)).collect(Collectors.toList());
         this.restWeekResponseDtos = store.getRestWeeks().stream()
                 .map(restWeek -> new RestWeekResponseDto(restWeek)).collect(Collectors.toList());
-        this.grade = store.getGrade();
+        this.grade = Double.parseDouble(String.format("%.1f",store.getGrade()));
+        this.isFavorite= store.getFavoriteState();
     }
 }
 

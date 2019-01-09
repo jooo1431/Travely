@@ -2,15 +2,19 @@ package com.travely.travely.dto.reservation;
 
 import com.travely.travely.dto.baggage.BagDto;
 import com.travely.travely.exception.ExceedCapacityException;
+import com.travely.travely.exception.NotCorrectTimeException;
 import com.travely.travely.exception.NotFoundBaggageException;
 import com.travely.travely.util.typeHandler.PayType;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Getter
+@Slf4j
 @NoArgsConstructor
 public class ReserveRequestDto {
 
@@ -50,6 +54,19 @@ public class ReserveRequestDto {
         getBagDtos().forEach(bagDto -> {
             if (!bagDto.checkCount()) throw new NotFoundBaggageException();
         });
+    }
+
+    public void checkTime() {
+        if (this.startTime > this.endTime){
+            throw new NotCorrectTimeException("예약 시작시간 보다 예약 종료시간이 뒤에 있어야합니다.");
+        }
+    }
+
+    public void checkCurrentTime() {
+        final Long currentTime = new Timestamp(System.currentTimeMillis()).getTime()-1000*60*3;
+        if (this.startTime - currentTime < 0) {
+            throw new NotCorrectTimeException("사용자가 입력한 시작시간 : "+new Timestamp(this.startTime)+"입력시 시간 - 3분 : "+new Timestamp(currentTime));
+        }
     }
 
     public Long gainBagsCount() {

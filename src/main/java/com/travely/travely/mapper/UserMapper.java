@@ -28,4 +28,8 @@ public interface UserMapper {
     })
     Users findUserByUserIdx(@Param("userIdx") final Long userIdx);
 
+    //ReviewMapper Review findReviewByReviewIdx(@Param("reviewIdx")final Long reviewIdx); 에서 사용중
+    @Select("SELECT * FROM users WHERE userIdx = #{userIdx}")
+    Users findUserByUserIdxFromReview(@Param("userIdx") final Long userIdx);
+
 }

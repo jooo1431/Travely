@@ -2,6 +2,9 @@ package com.travely.travely.domain;
 
 import com.travely.travely.config.CommonConfig;
 import com.travely.travely.exception.AlreadyExistsReserveException;
+import com.travely.travely.exception.NotFoundPaymentException;
+import com.travely.travely.exception.NotFoundStoreException;
+import com.travely.travely.exception.NotFoundUserException;
 import com.travely.travely.util.typeHandler.StateType;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -59,17 +62,17 @@ public class Reserve {
     }
 
     public Payment getPayment() {
-        if (payment == null) throw new RuntimeException();
+        if (payment == null) throw new NotFoundPaymentException();
         return payment;
     }
 
     public Store getStore() {
-        if (store == null) throw new RuntimeException();
+        if (store == null) throw new NotFoundStoreException();
         return store;
     }
 
     public Users getUsers() {
-        if (this.users == null) throw new RuntimeException();
+        if (this.users == null) throw new NotFoundUserException();
         return this.users;
     }
 
@@ -82,7 +85,7 @@ public class Reserve {
     }
 
     public Long getTotalBag() {
-        return baggages.stream().mapToLong(Baggage::getBagCount).sum();
+        return getBaggages().stream().mapToLong(Baggage::getBagCount).sum();
     }
 
     public void checkReserved(final Long userIdx) {

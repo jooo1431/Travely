@@ -1,30 +1,33 @@
 package com.travely.travely.dto.inquiry;
 
 import com.travely.travely.domain.Inquiry;
-import com.travely.travely.domain.InquiryImg;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Date;
+import java.sql.Timestamp;
+import java.util.List;
 
+@Getter
 @Setter
 @NoArgsConstructor
 public class InquiryDto {
+
+    @ApiModelProperty(example = "문의사항입니다", position = 3)
     private String content;
-    private Date createAt;
+    @ApiModelProperty(example = "1546227587000", position = 4)
+    private Long createAt;
+    private List<String> inquiryImgs;
 
-    private MultipartFile[] inquiryImgs;
-
-    public Inquiry toEntity(){
+    public Inquiry toEntity() {
         return Inquiry.builder()
-//                .userIdx(userIdx)
-                .content(content)
-                .createAt(createAt)
+                .content(this.content)
+                .createAt(new Timestamp(this.createAt))
                 .build();
     }
 
-    public boolean checkProperties(){
+    public boolean checkProperties() {
         return this.content != null;
     }
 }

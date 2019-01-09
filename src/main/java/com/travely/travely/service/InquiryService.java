@@ -5,7 +5,6 @@ import com.travely.travely.dto.inquiry.InquiryDto;
 import com.travely.travely.mapper.InquiryMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,21 +16,16 @@ public class InquiryService {
 
     /**
      * 문의 사항 저장하기
+     * @param userIdx
      * @param inquiryDto
-     * @return HttpStatus
      */
     @Transactional
-    public HttpStatus saveInquiry(final Long userIdx, final InquiryDto inquiryDto){
-        if( inquiryDto.checkProperties() ) {
-            Inquiry inquiry = inquiryDto.toEntity();
-            inquiryMapper.saveInquiry(userIdx, inquiry);
-            return HttpStatus.OK;
-        }
-        else
-            return HttpStatus.BAD_REQUEST;
-    }
+    public void saveInquiry(final Long userIdx, final InquiryDto inquiryDto) {
+        Inquiry inquiry = inquiryDto.toEntity();
+        Long inquiryIdx = inquiryMapper.saveInquiry(userIdx, inquiry);
 
-    public Inquiry findInquiry(final Long inquiryIdx){
-        return inquiryMapper.findByInquiryIdx(inquiryIdx);
+        for( String ImgUrl : inquiryDto.getInquiryImgs()){
+            inquiryMapper.saveInquiryImg( inquiryIdx, ImgUrl);
+        }
     }
 }

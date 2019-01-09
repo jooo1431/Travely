@@ -15,7 +15,7 @@ public class ReserveExceptionControllerAdvice {
 
     @ExceptionHandler(NotFoundBaggageException.class)
     public ResponseEntity<ExceptionResponseDto> notFoundBaggage(NotFoundBaggageException exception) {
-        log.debug("[NotFoundBaggageException]  {}", exception.getMessage());
+        log.info("[NotFoundBaggageException]  {}", exception.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ExceptionResponseDto.builder()
                         .field(FIELD)
@@ -25,7 +25,7 @@ public class ReserveExceptionControllerAdvice {
 
     @ExceptionHandler(ExceedCapacityException.class)
     public ResponseEntity<ExceptionResponseDto> exceedCapcity(ExceedCapacityException exception) {
-        log.debug("[ExceedCapacityException]  {}", exception.getMessage());
+        log.info("[ExceedCapacityException]  {}", exception.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ExceptionResponseDto.builder()
                         .field(FIELD)
@@ -35,7 +35,7 @@ public class ReserveExceptionControllerAdvice {
 
     @ExceptionHandler(AlreadyExistsReserveException.class)
     public ResponseEntity<ExceptionResponseDto> reserveAlreadyExists(AlreadyExistsReserveException exception) {
-        log.debug("[AlreadyExistsReserveException]  {}", exception.getMessage());
+        log.info("[AlreadyExistsReserveException]  {}", exception.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ExceptionResponseDto.builder()
                         .field(FIELD)
@@ -45,7 +45,7 @@ public class ReserveExceptionControllerAdvice {
 
     @ExceptionHandler(NotCorrectTimeException.class)
     public ResponseEntity<ExceptionResponseDto> notCorrectTime(NotCorrectTimeException exception) {
-        log.debug("[NotCorrectTimeException]  {}", exception.getMessage());
+        log.info("[NotCorrectTimeException]  {}", exception.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ExceptionResponseDto.builder()
                         .field(FIELD)
@@ -55,7 +55,7 @@ public class ReserveExceptionControllerAdvice {
 
     @ExceptionHandler(NotCorrectWeekException.class)
     public ResponseEntity<ExceptionResponseDto> notCorrectWeek(NotCorrectWeekException exception) {
-        log.debug("[NotCorrectWeekException]  {}", exception.getMessage());
+        log.info("[NotCorrectWeekException]  {}", exception.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ExceptionResponseDto.builder()
                         .field(FIELD)
@@ -65,7 +65,17 @@ public class ReserveExceptionControllerAdvice {
 
     @ExceptionHandler(NotFoundReserveException.class)
     public ResponseEntity<ExceptionResponseDto> notFoundReserve(NotFoundReserveException exception) {
-        log.debug("[NotFoundReserveException]  {}", exception.getMessage());
+        log.info("[NotFoundReserveException]  {}", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ExceptionResponseDto.builder()
+                        .field(FIELD)
+                        .message(exception.getMessage())
+                        .build());
+    }
+
+    @ExceptionHandler(NotFoundPaymentException.class)
+    public ResponseEntity<ExceptionResponseDto> notFoundPayment(NotFoundPaymentException exception) {
+        log.info("[NotFoundPaymentException]  {}", exception.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ExceptionResponseDto.builder()
                         .field(FIELD)
