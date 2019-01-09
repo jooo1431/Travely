@@ -10,6 +10,6 @@ public class StoreGradeReview {
 
     public StoreGradeReview(Store store) {
         this.grade = Double.parseDouble(String.format("%.1f",store.getGrade()));;
-        this.count = store.getRestWeeks().size();
+        this.count = store.getReviews().size();
     }
 }

@@ -69,7 +69,22 @@ public class UserController {
         return ResponseEntity.ok(userService.getMyProfile(userIdx));
     }
 
-    @ApiOperation(value = "최근 예약 상가 조회", notes = "최근 예약상가를 조회합니다.")
+    @ApiOperation(value = "최근 예약 상가 조회", notes = " Long storeIdx;\n" +
+            "     Long ownerIdx;\n" +
+            "     String storeName;\n" +
+            "     String storeCall;\n" +
+            "     String storeUrl;\n" +
+            "     String address;\n" +
+            "     Long openTime;\n" +
+            "     Long closeTime;\n" +
+            "     Double latitude;\n" +
+            "     Double longitude;\n" +
+            "     Long limit;\n" +
+            "     String storeImage;\n" +
+            "     Long currentBag;\n" +
+            "     int available; -> -1, 1 값으로 업체 예약가능여부를 판별합니다.\n" +
+            "\n" +
+            "     List<RestWeekResponseDto> restWeekResponseDtos;")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "예약상가 조회 성공"),
             @ApiResponse(code = 500, message = "서버 내부 에러")
