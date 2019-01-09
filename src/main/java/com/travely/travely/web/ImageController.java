@@ -1,6 +1,7 @@
 package com.travely.travely.web;
 
 
+import com.travely.travely.dto.baggage.BagImgResponseDto;
 import com.travely.travely.service.ImageService;
 import com.travely.travely.util.S3Util;
 import io.swagger.annotations.*;
@@ -35,7 +36,7 @@ public class ImageController {
             @ApiImplicitParam(name = "jwt", value = "JWT Token", required = true, dataType = "string", paramType = "header")
     })
     @PostMapping()
-    public ResponseEntity<String> uploadImage(@RequestParam("data") MultipartFile multipartFile) throws IOException {
-        return ResponseEntity.status(HttpStatus.CREATED).body(s3Util.upload(multipartFile, "/"));
+    public ResponseEntity<BagImgResponseDto> uploadImage(@RequestParam("data") MultipartFile multipartFile) throws IOException {
+        return ResponseEntity.status(HttpStatus.CREATED).body(new BagImgResponseDto(s3Util.upload(multipartFile, "/")));
     }
 }

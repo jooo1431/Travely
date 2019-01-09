@@ -4,6 +4,7 @@ import com.travely.travely.config.CommonConfig;
 import com.travely.travely.domain.Reserve;
 import com.travely.travely.domain.Review;
 import com.travely.travely.domain.Store;
+import com.travely.travely.dto.baggage.BagImgRequestDto;
 import com.travely.travely.dto.owner.*;
 import com.travely.travely.dto.review.ReviewUserImgResponseDto;
 import com.travely.travely.dto.store.StoreGradeReview;
@@ -11,6 +12,7 @@ import com.travely.travely.exception.AuthenticationErrorException;
 import com.travely.travely.exception.NotFoundReserveException;
 import com.travely.travely.exception.NotFoundStoreException;
 import com.travely.travely.exception.NotFoundStoringException;
+import com.travely.travely.mapper.BaggageImgMapper;
 import com.travely.travely.mapper.ReservationMapper;
 import com.travely.travely.mapper.ReviewMapper;
 import com.travely.travely.mapper.StoreMapper;
@@ -31,6 +33,7 @@ public class OwnerService {
     final private StoreMapper storeMapper;
     final private ReservationMapper reservationMapper;
     final private ReviewMapper reviewMapper;
+    final private BaggageImgMapper baggageImgMapper;
 
     final private StateType RESERVED = StateType.RESERVED;
     final private StateType PAYED = StateType.PAYED;
@@ -53,11 +56,18 @@ public class OwnerService {
         return reserveArchiveInfoResponseDto;
     }
 
-    public void updateBaggageState(final Long ownerIdx, final Long reserveIdx) {
+    @Transactional
+    public void updateBaggageState(final Long ownerIdx, final Long reserveIdx, final BagImgRequestDto bagImgRequestDto) {
         final Reserve reserve = reservationMapper.findReserveByReserveIdx(reserveIdx);
 
         if (reserve == null) throw new NotFoundReserveException();
         if (reserve.getStore().getOwnerIdx() != ownerIdx) throw new AuthenticationErrorException();
+
+        //사진 저장
+        for(String url : bagImgRequestDto.getBagImgUrl()){
+            baggageImgMapper.saveBagImgUrl(url,reserveIdx);
+        }
+
 
         if (reserve.getState() == RESERVED || reserve.getState() == PAYED)
             reservationMapper.updateReservation(reserve.getReserveIdx(), ARCHIVE);
