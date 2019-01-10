@@ -3,8 +3,6 @@ package com.travely.travely.dto.review;
 import com.travely.travely.domain.Store;
 import lombok.Getter;
 
-import java.sql.Timestamp;
-
 @Getter
 public class ReviewStoreResponseDto {
     private Long reviewIdx;
