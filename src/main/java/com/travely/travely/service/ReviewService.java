@@ -6,6 +6,7 @@ import com.travely.travely.domain.Store;
 import com.travely.travely.dto.review.ReviewRequestDto;
 import com.travely.travely.dto.review.ReviewResponseDto;
 import com.travely.travely.dto.review.ReviewStoreResponseDto;
+import com.travely.travely.exception.NotFoundStoreException;
 import com.travely.travely.mapper.ReviewMapper;
 import com.travely.travely.mapper.StoreMapper;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +42,10 @@ public class ReviewService {
         reviewRequestDto.checkLiked();
 
         Review review = reviewRequestDto.toEntity(userIdx);
+
+        //리뷰가 올바른 곳에 쓰이는지 확인
+        Store store = storeMapper.findStoreByStoreIdx(review.getStoreIdx());
+        if (store == null) throw new NotFoundStoreException();
 
         reviewMapper.saveReview(review);
 
