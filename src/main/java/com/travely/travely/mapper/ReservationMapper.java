@@ -37,7 +37,7 @@ public interface ReservationMapper {
 
 
     //reserve와 연결된 예약 정보 불러오기
-    @Select("SELECT r.* FROM reserve as r INNER JOIN store as s WHERE r.storeIdx = s.storeIdx AND s.userIdx = #{ownerIdx} AND r.state < 2")
+    @Select("SELECT r.* FROM reserve as r INNER JOIN store as s WHERE r.storeIdx = s.storeIdx AND s.userIdx = #{ownerIdx} AND r.state < 2 ORDER BY startTime ")
     @Results(value = {
             @Result(property = "reserveIdx", javaType = Long.class, column = "reserveIdx"),
             @Result(property = "storeIdx", javaType = Long.class, column = "storeIdx"),
@@ -56,7 +56,7 @@ public interface ReservationMapper {
     List<Reserve> findUnderArvhiceReserveByOwnerIdx(@Param("ownerIdx") final Long ownerIdx);
 
     //reserve와 연결된 보관 정보 불러오기
-    @Select("SELECT * FROM reserve as r INNER JOIN store as s WHERE r.storeIdx = s.storeIdx AND s.userIdx = #{ownerIdx} AND state = 2")
+    @Select("SELECT * FROM reserve as r INNER JOIN store as s WHERE r.storeIdx = s.storeIdx AND s.userIdx = #{ownerIdx} AND state = 2 ORDER BY endTime")
     @Results(value = {
             @Result(property = "reserveIdx", javaType = Long.class, column = "reserveIdx"),
             @Result(property = "storeIdx", javaType = Long.class, column = "storeIdx"),
