@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Getter
 public class StoreInfoResponseDto {
+    private Long reserveIdx;
     private Long storeIdx;
     private Long ownerIdx;
     private String storeName;
@@ -31,6 +32,32 @@ public class StoreInfoResponseDto {
     private List<RestWeekResponseDto> restWeekResponseDtos;
 
     public StoreInfoResponseDto(Store store) {
+        this.storeIdx = store.getStoreIdx();
+        this.ownerIdx = store.getOwnerIdx();
+        this.storeName = store.getStoreName();
+        this.storeCall = store.getStoreCall();
+        this.storeUrl = store.getStoreUrl();
+        this.address = store.getAddress();
+        this.openTime = store.getOpenTime().getTime();
+        this.closeTime = store.getCloseTime().getTime();
+        this.latitude = store.getLatitude();
+        this.longitude = store.getLongitude();
+        this.limit = store.getLimit();
+        StoreImg storeImg = store.getStoreImgs().stream().findFirst().orElse(null);
+        if (storeImg == null) {
+            this.storeImage = "";
+        } else {
+            this.storeImage = storeImg.getStoreImgUrl();
+        }
+        this.currentBag = store.getReserves().stream().mapToLong(Reserve::getTotalBag).sum();
+        this.available = store.getAvailable();
+        this.restWeekResponseDtos = store.getRestWeeks().stream()
+                .map(restWeek -> new RestWeekResponseDto(restWeek)).collect(Collectors.toList());
+    }
+
+    public StoreInfoResponseDto(final Reserve reserve) {
+        final Store store = reserve.getStore();
+        this.reserveIdx = reserve.getReserveIdx();
         this.storeIdx = store.getStoreIdx();
         this.ownerIdx = store.getOwnerIdx();
         this.storeName = store.getStoreName();

@@ -29,7 +29,7 @@ public class UsersInfoResponseDto {
         this.favoriteCount = users.getFavorites().stream().count();
         this.myBagCount = users.getBagCount();
         this.storeInfoResponseDtoList = users.getReserves().stream()
-                .map(reserve -> new StoreInfoResponseDto(reserve.getStore()))
+                .map(reserve -> new StoreInfoResponseDto(reserve))
                 .collect(Collectors.toList());
     }
 }
