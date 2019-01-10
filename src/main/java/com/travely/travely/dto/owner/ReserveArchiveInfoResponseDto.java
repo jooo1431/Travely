@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 @Getter
 public class ReserveArchiveInfoResponseDto {
     private Long reserveIdx;
+    private String reserveCode;
     private Long userIdx;
     private String userImgUrl;
     private String userName;
@@ -43,6 +44,7 @@ public class ReserveArchiveInfoResponseDto {
 
     public ReserveArchiveInfoResponseDto(final Reserve reserve) {
         this.reserveIdx = reserve.getReserveIdx();
+        this.reserveCode = reserve.getReserveCode();
         this.userIdx = reserve.getUserIdx();
         this.userImgUrl = reserve.getUsers().getProfileImg();
         this.userName = reserve.getUsers().getName();
