@@ -9,7 +9,8 @@ public class StoreGradeReview {
     private int count;
 
     public StoreGradeReview(Store store) {
-        this.grade = Double.parseDouble(String.format("%.1f",store.getGrade()));;
+        this.grade = Double.parseDouble(String.format("%.1f", store.getGrade()));
+        ;
         this.count = store.getRestWeeks().size();
     }
 }

@@ -5,9 +5,7 @@ import com.travely.travely.dto.reservation.ReserveRequestDto;
 import com.travely.travely.exception.ExceedCapacityException;
 import com.travely.travely.exception.NotCorrectTimeException;
 import com.travely.travely.exception.NotOpenStoreException;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Timestamp;
@@ -41,12 +39,13 @@ public class Store {
     private List<Reserve> reserves;
 
 
-    public Integer getFavoriteState(){
-        if(this.favorite==null) return -1;
+    public Integer getFavoriteState() {
+        if (this.favorite == null) return -1;
         return this.favorite.getIsFavorite();
     }
 
-    public List<Review> getReviews() { return CommonConfig.getCheckedList(reviews);
+    public List<Review> getReviews() {
+        return CommonConfig.getCheckedList(reviews);
     }
 
     public List<StoreImg> getStoreImgs() {

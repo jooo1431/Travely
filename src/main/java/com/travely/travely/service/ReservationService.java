@@ -38,7 +38,7 @@ public class ReservationService {
     public ReserveResponseDto saveReservation(final long userIdx, final ReserveRequestDto reserveRequestDto) {
 
         //예약여부 검사
-        if(reservationMapper.findReserveCntByuserIdx(userIdx)>=1) throw new AlreadyExistsReserveException();
+        if (reservationMapper.findReserveCntByuserIdx(userIdx) >= 1) throw new AlreadyExistsReserveException();
 
         final Store store = storeMapper.findStoreByStoreIdx(reserveRequestDto.getStoreIdx());
 
@@ -125,15 +125,15 @@ public class ReservationService {
         final Reserve reserve = reservationMapper.findReserveByUserIdx(userIdx);
         if (reserve == null) throw new NotFoundReserveException();
 
-        reservationMapper.deleteReserveAndPaymentByReserveIdx(reserve.getReserveIdx(), StateType.CANCEL,ProgressType.CANCEL);
+        reservationMapper.deleteReserveAndPaymentByReserveIdx(reserve.getReserveIdx(), StateType.CANCEL, ProgressType.CANCEL);
     }
 
     @Transactional
     public void cancelReservation() {
-        reservationMapper.deleteReservationAndPayment(StateType.CANCEL,ProgressType.CANCEL);
+        reservationMapper.deleteReservationAndPayment(StateType.CANCEL, ProgressType.CANCEL);
     }
 
-    public List<PriceResponseDto> getPrices(){
+    public List<PriceResponseDto> getPrices() {
         return priceMapper.getAllPrice()
                 .stream()
                 .map(price -> new PriceResponseDto(price))

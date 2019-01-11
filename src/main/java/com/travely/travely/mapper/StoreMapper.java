@@ -30,6 +30,7 @@ public interface StoreMapper {
     })
     Store findStoreByStoreIdx(@Param("storeIdx") final long storeIdx);
 
+    //즐겨찾기에서 상가정보 내려줄때 사용
     @Select("SELECT *, @temp := #{userIdx} as temp  FROM store WHERE storeIdx = #{storeIdx}")
     @Results(value = {
             @Result(column = "storeIdx", property = "storeIdx"),

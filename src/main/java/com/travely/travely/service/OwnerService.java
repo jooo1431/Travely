@@ -40,9 +40,9 @@ public class OwnerService {
     final private StateType PICKUP = StateType.PICKUP;
 
 
-    public StoreGradeReview getStoreTotalReviewCountAndGrade(final Long ownerIdx){
+    public StoreGradeReview getStoreTotalReviewCountAndGrade(final Long ownerIdx) {
         Store store = storeMapper.findStoreByOwnerIdx(ownerIdx);
-       return new StoreGradeReview(store);
+        return new StoreGradeReview(store);
     }
 
     public ReserveArchiveInfoResponseDto getArchiveByReserveIdx(final Long ownerIdx, final Long reserveIdx) {
@@ -76,7 +76,7 @@ public class OwnerService {
     }
 
     public List<ReviewUserImgResponseDto> getMoreReviews(final Long ownerIdx, final Long reviewIdx) {
-        List<Review> reviewList = reviewMapper.findMoreReviewsByOwnerIdx(ownerIdx,reviewIdx);
+        List<Review> reviewList = reviewMapper.findMoreReviewsByOwnerIdx(ownerIdx, reviewIdx);
         reviewList = CommonConfig.getCheckedList(reviewList);
 
         List<ReviewUserImgResponseDto> reviewUserImgResponseDtos = reviewList.stream().map(review -> new ReviewUserImgResponseDto(review)).collect(Collectors.toList());
@@ -108,12 +108,12 @@ public class OwnerService {
         return reserveArchiveInfoResponseDto;
     }
 
-    public OwnerInfoResponseDto myPage(final Long ownerIdx){
+    public OwnerInfoResponseDto myPage(final Long ownerIdx) {
         Store store = storeMapper.findStoreByOwnerIdxForMyPage(ownerIdx);
         return new OwnerInfoResponseDto(store);
     }
 
-    public void toggleStoreAvailable(final Long ownerIdx){
+    public void toggleStoreAvailable(final Long ownerIdx) {
         storeMapper.updateStoreAvailable(ownerIdx);
     }
 }

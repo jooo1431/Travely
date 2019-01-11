@@ -59,7 +59,7 @@ public class ReserveRequestDto {
     }
 
     public void checkCurrentTime() {
-        final Long currentTime = new Timestamp(System.currentTimeMillis()).getTime()-1000*60*3;
+        final Long currentTime = new Timestamp(System.currentTimeMillis()).getTime() - 1000 * 60 * 3;
         if (this.startTime - currentTime < 0) throw new NotCorrectTimeException();
     }
 

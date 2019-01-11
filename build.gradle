@@ -4,12 +4,24 @@ buildscript {
     }
     repositories {
         mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath ('org.asciidoctor:asciidoctor-gradle-plugin:1.5.2')
     }
 }
 
+plugins {
+    id "org.asciidoctor.convert" version "1.5.2"
+}
+
+task wrapper(type: Wrapper){
+    gradleVersion = '4.5.1'
+}
+
+
+//apply plugin: 'org.asciidoctor.convert'
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
@@ -19,10 +31,11 @@ group = 'com.travely'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
+
+
 repositories {
     mavenCentral()
     maven { url 'https://repo.spring.io/libs-milestone' }
-
 }
 
 
@@ -43,7 +56,41 @@ dependencies {
     implementation('com.auth0:java-jwt:3.3.0')
 
 
+    implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+    runtimeOnly('com.h2database:h2')
+    testImplementation('org.springframework.restdocs:spring-restdocs-mockmvc')
+    //implementation('org.springframework.boot:spring-boot-starter-hateoas')
+    
 }
+
+
+ext {  snippetsDir = file('build/generated-snippets') }
+
+test {
+    outputs.dir snippetsDir
+}
+
+asciidoctor {
+    attributes 'snippets': snippetsDir
+    inputs.dir snippetsDir
+    dependsOn test
+}
+
+
+bootJar {
+    dependsOn asciidoctor
+    from("${asciidoctor.outputDir}/html5") {
+        into 'static/docs'
+    }
+}
+
+//////////////////////////////////////
+
+
+//eclipseJdt.onlyIf { false }
+//cleanEclipseJdt.onlyIf { false }
+
+////////////////////
 
 dependencyManagement {
     imports {

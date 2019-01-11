@@ -23,7 +23,7 @@ public class SimpleStoreResponseDto {
         this.grade = store.getGrade();
         if (store.getStoreImgs().size() != 0)
             this.storeImgUrl = store.getStoreImgs().get(0).getStoreImgUrl();
-        else this.storeImgUrl="";
+        else this.storeImgUrl = "";
 
     }
 }
