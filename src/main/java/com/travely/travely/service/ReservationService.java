@@ -123,7 +123,7 @@ public class ReservationService {
         final Reserve reserve = reservationMapper.findReserveByUserIdx(userIdx);
         if (reserve == null) throw new NotFoundReserveException();
 
-        reservationMapper.updateReserveAndPaymentByReserveIdx(reserve.getReserveIdx(), StateType.CANCEL, ProgressType.CANCEL);
+        reservationMapper.updateReserveAndPaymentAndDeopositByReserveIdx(reserve.getReserveIdx(), StateType.CANCEL, ProgressType.CANCEL);
     }
 
     @Transactional
