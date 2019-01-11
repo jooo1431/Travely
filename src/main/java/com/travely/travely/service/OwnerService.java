@@ -16,6 +16,7 @@ import com.travely.travely.mapper.BaggageImgMapper;
 import com.travely.travely.mapper.ReservationMapper;
 import com.travely.travely.mapper.ReviewMapper;
 import com.travely.travely.mapper.StoreMapper;
+import com.travely.travely.util.typeHandler.ProgressType;
 import com.travely.travely.util.typeHandler.StateType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -70,7 +71,7 @@ public class OwnerService {
 
 
         if (reserve.getState() == RESERVED || reserve.getState() == PAYED)
-            reservationMapper.updateReservation(reserve.getReserveIdx(), ARCHIVE);
+            reservationMapper.updateReserveAndPaymentByReserveIdx(reserve.getReserveIdx(), ARCHIVE, ProgressType.DONE);
         else if (reserve.getState() == ARCHIVE)
             reservationMapper.updateReservation(reserve.getReserveIdx(), PICKUP);
     }

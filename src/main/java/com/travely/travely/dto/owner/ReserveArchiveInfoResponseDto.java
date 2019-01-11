@@ -5,6 +5,7 @@ import com.travely.travely.dto.baggage.BagDto;
 import com.travely.travely.dto.baggage.BagImgDto;
 import com.travely.travely.util.typeHandler.PayType;
 import com.travely.travely.util.typeHandler.ProgressType;
+import com.travely.travely.util.typeHandler.StateType;
 import lombok.Getter;
 
 import java.sql.Timestamp;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 @Getter
 public class ReserveArchiveInfoResponseDto {
     private Long reserveIdx;
+    private String reserveCode;
     private Long userIdx;
     private String userImgUrl;
     private String userName;
@@ -24,6 +26,7 @@ public class ReserveArchiveInfoResponseDto {
     private Long depositTime;
     private Long endTime;
     private Long takeTime;
+    private StateType stateType;
     private ProgressType progressType;
     private Long price;
     private List<BagImgDto> bagImgDtos;
@@ -41,6 +44,7 @@ public class ReserveArchiveInfoResponseDto {
 
     public ReserveArchiveInfoResponseDto(final Reserve reserve) {
         this.reserveIdx = reserve.getReserveIdx();
+        this.reserveCode = reserve.getReserveCode();
         this.userIdx = reserve.getUserIdx();
         this.userImgUrl = reserve.getUsers().getProfileImg();
         this.userName = reserve.getUsers().getName();
@@ -59,6 +63,7 @@ public class ReserveArchiveInfoResponseDto {
         } else {
             this.takeTime = reserve.getTakeTime().getTime();
         }
+        this.stateType = reserve.getState();
         this.progressType = reserve.getPayment().getProgressType();
         this.price = reserve.getPrice();
         this.bagImgDtos = reserve.getBaggageImgs().stream().map(baggageImg -> new BagImgDto(baggageImg)).collect(Collectors.toList());

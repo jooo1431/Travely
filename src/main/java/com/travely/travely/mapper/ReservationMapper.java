@@ -37,7 +37,7 @@ public interface ReservationMapper {
 
 
     //reserve와 연결된 예약 정보 불러오기
-    @Select("SELECT r.* FROM reserve as r INNER JOIN store as s WHERE r.storeIdx = s.storeIdx AND s.userIdx = #{ownerIdx} AND r.state < 2")
+    @Select("SELECT r.* FROM reserve as r INNER JOIN store as s WHERE r.storeIdx = s.storeIdx AND s.userIdx = #{ownerIdx} AND r.state < 2 ORDER BY startTime ")
     @Results(value = {
             @Result(property = "reserveIdx", javaType = Long.class, column = "reserveIdx"),
             @Result(property = "storeIdx", javaType = Long.class, column = "storeIdx"),
@@ -56,7 +56,7 @@ public interface ReservationMapper {
     List<Reserve> findUnderArvhiceReserveByOwnerIdx(@Param("ownerIdx") final Long ownerIdx);
 
     //reserve와 연결된 보관 정보 불러오기
-    @Select("SELECT * FROM reserve as r INNER JOIN store as s WHERE r.storeIdx = s.storeIdx AND s.userIdx = #{ownerIdx} AND state = 2")
+    @Select("SELECT * FROM reserve as r INNER JOIN store as s WHERE r.storeIdx = s.storeIdx AND s.userIdx = #{ownerIdx} AND state = 2 ORDER BY endTime")
     @Results(value = {
             @Result(property = "reserveIdx", javaType = Long.class, column = "reserveIdx"),
             @Result(property = "storeIdx", javaType = Long.class, column = "storeIdx"),
@@ -138,12 +138,11 @@ public interface ReservationMapper {
     })
     Reserve findReserveByUserIdx(@Param("userIdx") final Long userIdx);
 
-    //예약 목록 삭제처리
     @Update("UPDATE reserve SET state = #{state} WHERE reserveIdx = #{reserveIdx}")
     void updateReservation(@Param("reserveIdx") final long reserveIdx, @Param("state") final StateType stateType);
 
     @Update("UPDATE reserve as r NATURAL JOIN  payment as p SET  r.state = #{state}, p.progressType = #{progress} WHERE reserveIdx = #{reserveIdx}")
-    void deleteReserveAndPaymentByReserveIdx(@Param("reserveIdx") final Long reserveIdx, @Param("state") final StateType stateType, @Param("progress") final ProgressType progressType);
+    void updateReserveAndPaymentByReserveIdx(@Param("reserveIdx") final Long reserveIdx, @Param("state") final StateType stateType, @Param("progress") final ProgressType progressType);
 
     @Update("UPDATE reserve A natural JOIN payment B\n" +
             "SET A.state = #{reserve_cancle}, B.progressType = #{pay_cancle}\n" +

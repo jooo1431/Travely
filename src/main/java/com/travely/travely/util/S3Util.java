@@ -35,7 +35,7 @@ public class S3Util {
 
     private String upload(File uploadFile, String dirName) {
         String fileName = new StringBuilder().append(dirName)
-                .append("/").append(Date.from(LocalDateTime.now().toInstant(ZoneOffset.ofHours(9))).getTime())
+                .append("temp").append(Date.from(LocalDateTime.now().toInstant(ZoneOffset.ofHours(9))).getTime())
                 .append("_").append(uploadFile.getName()).toString();
         String uploadImageUrl = putS3(uploadFile, fileName);
         removeNewFile(uploadFile);

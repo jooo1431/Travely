@@ -9,9 +9,9 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class BagImgRequestDto {
-    private List<String> BagImgUrl;
+    private List<String> bagImgUrl;
 
     public List<String> getBagImgUrl() {
-        return CommonConfig.getCheckedList(this.BagImgUrl);
+        return CommonConfig.getCheckedList(this.bagImgUrl);
     }
 }

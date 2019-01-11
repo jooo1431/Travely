@@ -69,22 +69,23 @@ public class UserController {
         return ResponseEntity.ok(userService.getMyProfile(userIdx));
     }
 
-    @ApiOperation(value = "최근 예약 상가 조회", notes = " Long storeIdx;\n" +
-            "     Long ownerIdx;\n" +
-            "     String storeName;\n" +
-            "     String storeCall;\n" +
-            "     String storeUrl;\n" +
-            "     String address;\n" +
-            "     Long openTime;\n" +
-            "     Long closeTime;\n" +
-            "     Double latitude;\n" +
-            "     Double longitude;\n" +
-            "     Long limit;\n" +
-            "     String storeImage;\n" +
-            "     Long currentBag;\n" +
-            "     int available; -> -1, 1 값으로 업체 예약가능여부를 판별합니다.\n" +
-            "\n" +
-            "     List<RestWeekResponseDto> restWeekResponseDtos;")
+    @ApiOperation(value = "최근 예약 상가 조회", notes = "" +
+            "Long reserveIdx;예약고유번호\n" +
+            "Long storeIdx;상가고유번호\n" +
+            "Long ownerIdx;업주고유번호\n" +
+            "String storeName;상가이름\n" +
+            "String storeCall;상가전화번호\n" +
+            "String storeUrl;상가홈페이지\n" +
+            "String address;상가도로명주소\n" +
+            "Long openTime;상가영업시작시간\n" +
+            "Long closeTime;상가영업종료시간\n" +
+            "Double latitude;위도\n" +
+            "Double longitude;경도\n" +
+            "Long limit;최대 수용량\n" +
+            "String storeImage;상가 사진\n" +
+            "Long currentBag;현재수용중인량\n" +
+            "int available;영업여부\n" +
+            "List<RestWeekResponseDto> restWeekResponseDtos;휴무일 리스트로")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "예약상가 조회 성공"),
             @ApiResponse(code = 500, message = "서버 내부 에러")

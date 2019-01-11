@@ -63,7 +63,8 @@ public class OwnerController {
         return ResponseEntity.ok(reserveArchiveInfoResponseDto);
     }
 
-    @ApiOperation(value = "짐 보관 및 픽업", notes = "짐 보관 및 픽업시 reserve의 state타입 변경")
+    @ApiOperation(value = "짐 보관 및 픽업", notes = "짐 보관 및 픽업시 reserve의 state타입 변경" +
+            "\nBagImgRequestDto 는 List<String> bagImgUrl 이 존재합니다.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "짐 보관 및 픽업 성공"),
             @ApiResponse(code = 401, message = "인증 에러"),

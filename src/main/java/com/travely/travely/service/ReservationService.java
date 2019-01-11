@@ -19,9 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -126,7 +123,7 @@ public class ReservationService {
         final Reserve reserve = reservationMapper.findReserveByUserIdx(userIdx);
         if (reserve == null) throw new NotFoundReserveException();
 
-        reservationMapper.deleteReserveAndPaymentByReserveIdx(reserve.getReserveIdx(), StateType.CANCEL, ProgressType.CANCEL);
+        reservationMapper.updateReserveAndPaymentByReserveIdx(reserve.getReserveIdx(), StateType.CANCEL, ProgressType.CANCEL);
     }
 
     @Transactional
