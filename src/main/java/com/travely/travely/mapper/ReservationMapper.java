@@ -138,11 +138,15 @@ public interface ReservationMapper {
     })
     Reserve findReserveByUserIdx(@Param("userIdx") final Long userIdx);
 
-    @Update("UPDATE reserve SET state = #{state} WHERE reserveIdx = #{reserveIdx}")
+    @Update("UPDATE reserve SET state = #{state}, takeTime = now() WHERE reserveIdx = #{reserveIdx}")
     void updateReservation(@Param("reserveIdx") final long reserveIdx, @Param("state") final StateType stateType);
 
-    @Update("UPDATE reserve as r NATURAL JOIN  payment as p SET  r.state = #{state}, p.progressType = #{progress} WHERE reserveIdx = #{reserveIdx}")
-    void updateReserveAndPaymentByReserveIdx(@Param("reserveIdx") final Long reserveIdx, @Param("state") final StateType stateType, @Param("progress") final ProgressType progressType);
+    @Update("UPDATE reserve as r NATURAL JOIN  payment as p SET  r.state = #{state}, p.progressType = #{progress}, r.depositTime = now() WHERE reserveIdx = #{reserveIdx}")
+    void updateReserveAndPaymentAndDeopositByReserveIdx(@Param("reserveIdx") final Long reserveIdx, @Param("state") final StateType stateType, @Param("progress") final ProgressType progressType);
+
+    @Update("UPDATE reserve as r NATURAL JOIN  payment as p SET  r.state = #{state}, p.progressType = #{progress}, r.take = now() WHERE reserveIdx = #{reserveIdx}")
+    void updateReserveAndPaymentAndTakeByReserveIdx(@Param("reserveIdx") final Long reserveIdx, @Param("state") final StateType stateType, @Param("progress") final ProgressType progressType);
+
 
     @Update("UPDATE reserve A natural JOIN payment B\n" +
             "SET A.state = #{reserve_cancle}, B.progressType = #{pay_cancle}\n" +

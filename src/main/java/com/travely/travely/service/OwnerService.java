@@ -71,7 +71,8 @@ public class OwnerService {
 
 
         if (reserve.getState() == RESERVED || reserve.getState() == PAYED)
-            reservationMapper.updateReserveAndPaymentByReserveIdx(reserve.getReserveIdx(), ARCHIVE, ProgressType.DONE);
+            reservationMapper.updateReserveAndPaymentAndDeopositByReserveIdx(reserve.getReserveIdx(), ARCHIVE, ProgressType.DONE);
+
         else if (reserve.getState() == ARCHIVE)
             reservationMapper.updateReservation(reserve.getReserveIdx(), PICKUP);
     }
